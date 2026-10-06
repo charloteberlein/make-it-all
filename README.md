@@ -1,5 +1,15 @@
 # Team 2
 
+## Team members
+| Team member | Responsibility |
+|---|---|
+Yasmin Ahrabi | TBD |
+Eleanor Cooke | TBD |
+Juliette Crossman | TBD |
+Charlot Eberlein | TBD |
+Kei Mann | TBD |
+Elizabeth Watson | TBD |
+
 ## Repository structure
 ```
 src/
