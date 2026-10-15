@@ -49,10 +49,10 @@ python app.py
 ### Team members
 | Team member | Responsibility |
 |---|---|
-Charlot Eberlein | TBD |
+Charlot Eberlein | Initial Repo Set-Up, Readme Authors & Mock-data .JSON files |
 Yasmin Ahrabi | TBD |
 Eleanor Cooke | TBD |
 Juliette Crossman | TBD |
-Kei Mann | TBD |
+Kei Mann | Login, Register, Light & Dark Theme, Readme Instructions & File Structure |
 Elizabeth Watson | TBD |
 
