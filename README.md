@@ -1,15 +1,6 @@
-# PySide6 Productivity and Knowledge Management System Desktop Application
+# Team 2 (Team Projects - Part 1): PySide6 Productivity and Knowledge Management System Desktop Application
 
-# Team 2 (Team Projects: Part 1)
-## Team members
-| Team member | Responsibility |
-|---|---|
-Charlot Eberlein | TBD |
-Yasmin Ahrabi | TBD |
-Eleanor Cooke | TBD |
-Juliette Crossman | TBD |
-Kei Mann | TBD |
-Elizabeth Watson | TBD |
+## Key Features
 
 ## Repository structure
 ```
@@ -23,3 +14,21 @@ Elizabeth Watson | TBD |
 │   └── main_window.py  # MainWindow controller, sidebar navigation, and theme toggling
 └── README.md
 ```
+
+## Getting Started
+### Prerequisites
+### Installation Guide
+
+## Running the Application
+
+## Authors & Acknowledgements
+### Team members
+| Team member | Responsibility |
+|---|---|
+Charlot Eberlein | TBD |
+Yasmin Ahrabi | TBD |
+Eleanor Cooke | TBD |
+Juliette Crossman | TBD |
+Kei Mann | TBD |
+Elizabeth Watson | TBD |
+
