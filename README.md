@@ -1,28 +1,25 @@
-# Team 2
+# PySide6 Productivity and Knowledge Management System Desktop Application
 
+# Team 2 (Team Projects: Part 1)
 ## Team members
 | Team member | Responsibility |
 |---|---|
+Charlot Eberlein | TBD |
 Yasmin Ahrabi | TBD |
 Eleanor Cooke | TBD |
 Juliette Crossman | TBD |
-Charlot Eberlein | TBD |
 Kei Mann | TBD |
 Elizabeth Watson | TBD |
 
 ## Repository structure
 ```
-src/
-    mockData/
-        users.json — Pre-filled test users and rol
-        tasks.json — Sample to-dos with assignee task counts
-        topics.json — Sample knowledge base topics (e.g., Printing, Software Dev)
-        posts.json — Sample posts with verified/unverified 
-    components/
-        LoginModal.tsx — UI that simulates login and @make-it-all.co.uk domain check
-        ManagerDashboard.tsx — Renders workload metrics and task count charts from tasks.json
-        TaskBoard.tsx — Personal vs. Team/Project task lists
-        KnowledgeBase.tsx — Filterable post feed with topic tags
-    App.tsx — Main application layout and view route
-README.md
+├── app.py              # Main application entry point & QStackedWidget navigation controller
+├── styles/
+│   ├── light.qss       # Light theme Qt Style Sheet
+│   └── dark.qss        # Dark theme Qt Style Sheet
+├── pages/
+│   ├── sign_in.py      # SignInPage widget
+│   ├── register.py     # RegisterPage widget
+│   └── main_window.py  # MainWindow controller, sidebar navigation, and theme toggling
+└── README.md
 ```
