@@ -22,7 +22,8 @@
 
 ### Installation Guide
 1. **Clone the Repository:**
-2. **Create & activate the virtual environment**
+2. **Create & activate the virtual environment:**
+
    Windows -
    ```powershell
    python -m venv C:\dev\env
@@ -34,7 +35,7 @@
    python3 -m venv venv
    source venv/bin/activate
    ```
-3. **Install dependencies:**
+4. **Install dependencies:**
    ```bash
    pip install PySide6
    ```
