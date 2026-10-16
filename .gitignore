@@ -1,7 +1,4 @@
 # Python bytecode and caches
 __pycache__/
-*.pyc
-
-# Virtual environment folder (optional, but good practice)
-env/
-venv/
+.*
+!.gitignore
