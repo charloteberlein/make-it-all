@@ -1,0 +1,80 @@
+/* light.qss - Stylesheet used for the light mode.*/
+
+QWidget {
+    background-color: #ffffff;
+    color: #0f172a;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+QLabel#TitleLabel {
+    font-size: 26px;
+    font-weight: bold;
+    color: #EAB308;
+    background: transparent;
+}
+
+QLabel#HeadingLabel {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    background: transparent;
+}
+
+QLabel#SubheadingLabel {
+    font-size: 13px;
+    color: #64748b;
+    background: transparent;
+}
+
+QLineEdit {
+    background-color: #f8fafc;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+QLineEdit:focus {
+    border: 2px solid #EAB308;
+}
+
+QPushButton#LoginButton {
+    background-color: #EAB308;
+    color: #000000;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    padding: 11px;
+}
+
+QPushButton#LoginButton:hover {
+    background-color: #CA8A04;
+}
+
+QPushButton#NavButton {
+    background-color: transparent;
+    color: #EAB308
+    border: 1px solid #EAB308;
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+QPushButton#NavButton:hover {
+    background-color: #EAB308;
+    color: #000000;
+}
+
+QPushButton#ToggleButton {
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 2px solid #9a9a9a;
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    border-width: 1px;
+}
