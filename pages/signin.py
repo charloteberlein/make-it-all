@@ -5,6 +5,7 @@ from pages.base_page import BasePage
 
 class SignInPage(BasePage):
     switch_to_Register = Signal()
+    switch_to_ForgotPassword = Signal()
 
     def __init__(self):
         super().__init__()
@@ -52,6 +53,11 @@ class SignInPage(BasePage):
         self.login_btn.setObjectName("LoginButton")
         self.login_btn.setCursor(Qt.PointingHandCursor)
 
+        self.forgot_btn = QPushButton("Forgotten Password?")
+        self.forgot_btn.setObjectName("NavButton")
+        self.forgot_btn.setCursor(Qt.PointingHandCursor)
+        self.forgot_btn.clicked.connect(self.switch_to_ForgotPassword.emit)
+
     def assemble_widgets(self) -> None:
         self.layout.addLayout(self.top_bar)
         self.layout.addWidget(self.title)
@@ -62,6 +68,7 @@ class SignInPage(BasePage):
         self.layout.addWidget(self.password_input)
         self.layout.addSpacing(10)
         self.layout.addWidget(self.login_btn)
+        self.layout.addWidget(self.forgot_btn)
         self.layout.addStretch()
 
         self.setLayout(self.layout)
