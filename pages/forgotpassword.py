@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QHBoxLayout, QLineEdit, QPushButton, QLabel
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLineEdit, QPushButton, QLabel
 from PySide6.QtCore import Qt, Signal
 
 from pages.base_page import BasePage
@@ -15,6 +15,9 @@ class ForgotPasswordPage(BasePage):
 
     def define_widgets(self) -> None:
         # Navigation
+        self.top_frame = QFrame()
+        self.top_frame.setObjectName("TopBar")
+
         self.top_bar = QHBoxLayout()
         self.top_bar.addStretch()
 
@@ -29,6 +32,8 @@ class ForgotPasswordPage(BasePage):
         self.toggle_btn.setObjectName("ToggleButton")
         self.toggle_btn.setCursor(Qt.PointingHandCursor)
         self.top_bar.addWidget(self.toggle_btn)
+
+        self.top_frame.setLayout(self.top_bar)
 
         # Header (references stylesheet)
         self.title = QLabel("Make-It-All")
@@ -53,7 +58,8 @@ class ForgotPasswordPage(BasePage):
         self.login_btn.setCursor(Qt.PointingHandCursor)
 
     def assemble_widgets(self) -> None:
-        self.layout.addLayout(self.top_bar)
+        self.layout.addWidget(self.top_frame)
+        self.layout.addSpacing(10)
         self.layout.addWidget(self.title)
         self.layout.addWidget(self.heading)
         self.layout.addWidget(self.subheading)

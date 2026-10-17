@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QPushButton
 
 from pages.base_page import BasePage
 
-class TopicsPage(BasePage):
+class PostsPage(BasePage):
     def __init__(self):
         super().__init__()
 

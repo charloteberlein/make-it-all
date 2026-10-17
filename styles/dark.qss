@@ -1,5 +1,23 @@
 /* dark.qss - Stylesheet used for the dark mode.*/
 
+QPushButton#SideNavButton {
+    background-color: transparent;
+    color: #0f172a;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 30px;
+}
+
+QFrame#Sidebar {
+    background-color: #121820;
+    border-right: 3px solid #EAB308;
+}
+
+QFrame#TopBar {
+    border-bottom: 2px solid #EAB308;
+    background: transparent;
+}
+
 QWidget {
     background-color: #121820;
     color: #e2e8f0;
@@ -11,6 +29,14 @@ QLabel#TitleLabel {
     font-weight: bold;
     color: #EAB308;
     background: transparent;
+}
+
+QLabel#TitleLabelCenter {
+    font-size: 26px;
+    font-weight: bold;
+    color: #EAB308;
+    background: transparent;
+    qproperty-alignment: AlignCenter;
 }
 
 QLabel#HeadingLabel {

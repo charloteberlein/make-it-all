@@ -1,6 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QPushButton
-
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel
 from pages.base_page import BasePage
 
 class TodoPage(BasePage):
@@ -8,7 +7,20 @@ class TodoPage(BasePage):
         super().__init__()
 
     def define_widgets(self) -> None:
-        self.todo = QPushButton("Test!! TODO!")
-        self.todo.setCursor(Qt.PointingHandCursor)
+        # Navigation
+        self.top_frame = QFrame()
+        self.top_frame.setObjectName("TopBar")
 
-        self.widgets = (self.todo,)
+        self.top_bar = QHBoxLayout()
+        self.top_bar.addStretch()
+
+        self.title = QLabel("Make-It-All")
+        self.title.setObjectName("TitleLabelCenter")
+        self.top_bar.addWidget(self.title)
+        self.top_frame.setLayout(self.top_bar)
+
+    def assemble_widgets(self) -> None:
+        self.layout.addWidget(self.title)
+        self.layout.addWidget(self.top_frame)
+        
+        self.setLayout(self.layout)
