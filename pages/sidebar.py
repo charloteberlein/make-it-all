@@ -17,10 +17,12 @@ class Sidebar(QFrame):
     def define_styling(self) -> None:
         self.setFixedWidth(70)
 
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(10, 15, 10, 15)
-        layout.setSpacing(12)
+    def define_layout(self) -> None:
+        self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(10, 15, 10, 15)
+        self.layout.setSpacing(12)
 
+    def define_widgets(self) -> None:
         # Navigation Buttons with tooltips
         self.dashboard_btn = QPushButton("🏡")
         self.dashboard_btn.setToolTip("Dashboard")
