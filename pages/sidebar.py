@@ -9,6 +9,12 @@ class Sidebar(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName("Sidebar")
+        self.define_styling()
+        self.define_layout()
+        self.define_widgets()
+        self.assemble_widgets()
+
+    def define_styling(self) -> None:
         self.setFixedWidth(70)
 
         layout = QVBoxLayout(self)
