@@ -37,7 +37,6 @@ class Sidebar(QFrame):
             btn.setObjectName("SideNavButton")
             btn.setCursor(Qt.PointingHandCursor)
             btn.setFixedSize(50, 50)
-            layout.addWidget(btn)
 
         # Connect buttons to signals
         self.dashboard_btn.clicked.connect(self.nav_dashboard.emit)
