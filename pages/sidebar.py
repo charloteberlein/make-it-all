@@ -42,5 +42,9 @@ class Sidebar(QFrame):
         self.dashboard_btn.clicked.connect(self.nav_dashboard.emit)
         self.todo_btn.clicked.connect(self.nav_todo.emit)
         self.posts_btn.clicked.connect(self.nav_posts.emit)
-        
-        layout.addStretch()
+
+    def assemble_widgets(self) -> None:
+        self.layout.addWidget(self.dashboard_btn)
+        self.layout.addWidget(self.todo_btn)
+        self.layout.addWidget(self.posts_btn)
+        self.layout.addStretch()
