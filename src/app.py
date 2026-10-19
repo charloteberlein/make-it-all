@@ -1,8 +1,11 @@
 import sys
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QHBoxLayout, QStackedWidget
+    QApplication, QWidget, QHBoxLayout, QStackedWidget, QVBoxLayout, QFrame
 )
+
 # from PySide6.QtCore import Qt
+from pages.page_index import PageIndex
+from pages.header import Header
 from pages.sidebar import Sidebar
 from pages.signin import SignInPage
 from pages.register import RegisterPage
@@ -14,16 +17,20 @@ from pages.forgotpassword import ForgotPasswordPage
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Make-It-All Demo")
+        self.setWindowTitle("Make-It-All Prototype")
         self.setFixedSize(1200, 800)
 
         self.is_dark_mode = False
 
-        # Container
-        main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(0, 0, 0, 0)
+        # Containers
+        header_layout = QVBoxLayout(self)
+        header_layout.setContentsMargins(0, 0, 0, 0)
 
-        # Sidebar
+        main_frame = QFrame()
+        main_layout = QHBoxLayout()
+
+        # Header & Sidebar
+        self.header = Header()
         self.sidebar = Sidebar()
 
         # Pages
@@ -45,13 +52,18 @@ class MainWindow(QWidget):
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
+        main_frame.setLayout(main_layout)
+
+        header_layout.addWidget(self.header)
+        header_layout.addWidget(main_frame)
+
         self.sidebar.hide()
 
         # Navigation events
-        self.signin_page.switch_to_Register.connect(lambda: self.stacked_widget.setCurrentIndex(1))
-        self.register_page.switch_to_SignIn.connect(lambda: self.stacked_widget.setCurrentIndex(0))
-        self.signin_page.switch_to_ForgotPassword.connect(lambda: self.stacked_widget.setCurrentIndex(5))
-        self.forgot_password_page.switch_to_SignIn.connect(lambda: self.stacked_widget.setCurrentIndex(0))
+        self.signin_page.switch_to_Register.connect(lambda: self.change_page(PageIndex.REGISTER))
+        self.register_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
+        self.signin_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
+        self.forgot_password_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
 
         # Colour theme events
         self.signin_page.toggle_btn.clicked.connect(self.toggle_theme)
@@ -59,24 +71,29 @@ class MainWindow(QWidget):
         self.forgot_password_page.toggle_btn.clicked.connect(self.toggle_theme)
 
         # Page events
-        self.signin_page.login_btn.clicked.connect(lambda: self.change_page(2))
-        self.register_page.login_btn.clicked.connect(lambda: self.change_page(2))
-        self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(2))
-        self.dashboard_page.todo.clicked.connect(lambda: self.change_page(3))
-        self.dashboard_page.posts.clicked.connect(lambda: self.change_page(4))
+        self.signin_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.register_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
+        self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
+
+        # Header events
+        #self.header.account.connect()
+        #self.header.settings.connect()
+        self.header.log_out.connect(lambda: self.change_page(PageIndex.SIGN_IN))
 
         # Sidebar events
-        self.sidebar.nav_dashboard.connect(lambda: self.change_page(2))
-        self.sidebar.nav_todo.connect(lambda: self.change_page(3))
-        self.sidebar.nav_posts.connect(lambda: self.change_page(4))
+        self.sidebar.nav_dashboard.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.sidebar.nav_todo.connect(lambda: self.change_page(PageIndex.TODO))
+        self.sidebar.nav_posts.connect(lambda: self.change_page(PageIndex.POSTS))
 
         self.apply_theme()
 
-    def change_page(self, index: int):
-        self.stacked_widget.setCurrentIndex(index)
+    def change_page(self, index: PageIndex):
+        self.stacked_widget.setCurrentIndex(index.value)
         
         # Shows sidebar only when logged in.
-        if index >= 2:
+        if index.value >= 2:
             self.sidebar.show()
         else:
             self.sidebar.hide()
@@ -95,6 +112,7 @@ class MainWindow(QWidget):
         filepath = f"assets/styles/{filename}"
         with open(filepath, "r") as file:
             self.setStyleSheet(file.read())
+
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
