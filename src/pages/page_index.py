@@ -7,3 +7,4 @@ class PageIndex(Enum):
     TODO = 3
     POSTS = 4
     FORGOT_PASSWORD = 5
+    POST_CONTENT = 6
