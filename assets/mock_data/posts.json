@@ -1,0 +1,24 @@
+{
+    "posts": [
+        {
+            "metadata": {
+                "id": 0,
+                "viewed": 1,
+                "date-created": "19-10-2026"
+            },
+            "topic": "Printers",
+            "title": "How to refill printer ink",
+            "content": "This is a tutorial on how to refill printer ink. Lorem ipsum dolor sit amet."
+        },
+        {
+            "metadata": {
+                "id": 1,
+                "viewed": 0,
+                "date-created": "19-10-2026"
+            },
+            "topic": "Printers",
+            "title": "How to insert more paper into printer.",
+            "content": "This is a guide on how to insert more paper into the printer."
+        }
+    ]
+}
