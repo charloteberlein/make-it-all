@@ -92,7 +92,7 @@ class MainWindow(QWidget):
 
     def apply_theme(self):
         filename = "dark.qss" if self.is_dark_mode else "light.qss"
-        filepath = f"styles/{filename}"
+        filepath = f"assets/styles/{filename}"
         with open(filepath, "r") as file:
             self.setStyleSheet(file.read())
         
