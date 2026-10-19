@@ -10,6 +10,7 @@ from pages.sidebar import Sidebar
 from pages.signin import SignInPage
 from pages.register import RegisterPage
 from pages.posts import PostsPage
+from pages.post import PostContentPage
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
 from pages.forgotpassword import ForgotPasswordPage
@@ -39,6 +40,8 @@ class MainWindow(QWidget):
         self.signin_page = SignInPage()
         self.register_page = RegisterPage()
         self.forgot_password_page = ForgotPasswordPage()
+        self.posts_page = PostsPage()
+        self.post_page = PostContentPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
@@ -50,6 +53,8 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.todo_page)
         self.stacked_widget.addWidget(self.posts_page)
 
+        self.stacked_widget.addWidget(self.forgot_password_page)
+        self.stacked_widget.addWidget(self.post_page)
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
@@ -78,6 +83,7 @@ class MainWindow(QWidget):
         self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
+        self.posts_page.open_post.clicked.connect(lambda: self.change_page(PageIndex.POST_CONTENT))
 
         # Header events
         #self.header.account.connect()
