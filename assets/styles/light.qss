@@ -8,6 +8,19 @@ QPushButton#SideNavButton {
     font-size: 30px;
 }
 
+QFrame#Header {
+    background-color: #EAB308;
+    border-bottom: 2px solid #0f172a;
+}
+
+QFrame#HeaderTitle {
+    background: transparent;
+    color: #0f172a;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+}
+
 QFrame#Sidebar {
     background-color: #ffffff;
     border-right: 3px solid #EAB308;
