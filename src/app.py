@@ -97,10 +97,10 @@ class MainWindow(QWidget):
         self.stacked_widget.setCurrentIndex(index.value)
         
         # Shows sidebar only when logged in.
-        if index.value >= 2:
-            self.sidebar.show()
-        else:
+        if index in (PageIndex.SIGN_IN, PageIndex.REGISTER, PageIndex.FORGOT_PASSWORD):
             self.sidebar.hide()
+        else:
+            self.sidebar.show()
 
     def toggle_theme(self):
         self.is_dark_mode = not self.is_dark_mode
