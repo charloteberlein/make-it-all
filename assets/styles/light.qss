@@ -1,5 +1,40 @@
 /* light.qss - Stylesheet used for the light mode.*/
 
+QToolButton {
+    background-color: #f8fafc;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+QToolButton:checked {
+    background-color: #EAB308;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    padding: 11px;
+}
+
+QToolButton#ItalicFormatButton {
+    font-style: italic;
+}
+
+QToolButton#UnderlineFormatButton {
+    text-decoration: underline;
+}
+
+QToolButton#BoldFormatButton {
+    font-weight: bold;
+}
+
+QToolBar {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px;
+}
+
 QPushButton#SideNavButton {
     background-color: transparent;
     color: #ffffff;
@@ -73,7 +108,7 @@ QLabel#SubheadingLabel {
     background: transparent;
 }
 
-QLineEdit {
+QLineEdit, QTextEdit {
     background-color: #f8fafc;
     color: #0f172a;
     border: 1px solid #cbd5e1;
@@ -82,7 +117,7 @@ QLineEdit {
     font-size: 14px;
 }
 
-QLineEdit:focus {
+QLineEdit:focus, QTextEdit:focus {
     border: 2px solid #EAB308;
 }
 
