@@ -3,19 +3,19 @@ from PySide6.QtWidgets import (
     QApplication, QWidget, QHBoxLayout, QStackedWidget
 )
 # from PySide6.QtCore import Qt
-from pages.sidebar import Sidebar
-from pages.signin import SignInPage
-from pages.register import RegisterPage
-from pages.posts import PostsPage
-from pages.dashboard import DashboardPage
-from pages.todo import TodoPage
-from pages.forgotpassword import ForgotPasswordPage
+from src.pages.sidebar import Sidebar
+from src.pages.signin import SignInPage
+from src.pages.register import RegisterPage
+from src.pages.posts import PostsPage
+from src.pages.dashboard import DashboardPage
+from src.pages.todo import TodoPage
+from src.pages.forgotpassword import ForgotPasswordPage
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Make-It-All Demo")
-        self.setFixedSize(1200, 800)
+        self.setFixedSize(900, 650)
 
         self.is_dark_mode = False
 

@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QLabel
 from PySide6.QtCore import Qt, Signal
 
-from pages.base_page import BasePage
+from src.pages.base_page import BasePage
 
 class SignInPage(BasePage):
     switch_to_Register = Signal()
@@ -87,7 +87,8 @@ class SignInPage(BasePage):
         # Layout
         self.layout.addWidget(self.top_frame)
         self.layout.addSpacing(10)
+        self.layout.addStretch(1)
         self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
-        self.layout.addStretch()
+        self.layout.addStretch(1)
 
         self.setLayout(self.layout)

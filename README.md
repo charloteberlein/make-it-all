@@ -4,18 +4,22 @@
 
 ## Repository structure
 ```
+├── app.py                    # Main entry point to application
+│ 
 ├── assets/
-│   ├── styles/
-│   │   ├── light.qss         # Light theme stylesheet
-│   │   └── dark.qss          # Dark theme stylesheet
-│   └── mock_data/
-│       ├── posts.json
-│       ├── tasks.json
-│       ├── topics.json
-│       └── users.json
+│   └── styles/
+│       ├── light.qss         # Light theme stylesheet
+│       └── dark.qss          # Dark theme stylesheet
+│ 
 ├── src/
 │   ├── pages/
-│   └── app.py                # Main entry point
+│   │ 
+│   └── mock_data/
+│        ├── posts.json
+│        ├── tasks.json
+│        ├── topics.json
+│        └── users.json
+│ 
 └── README.md
 ```
 
@@ -45,7 +49,7 @@
    ```
 
 ## Running the Application
-Once the virtual environment is active and the dependencies are installed, launch the application from the `src/` directory using:
+Once the virtual environment is active and the dependencies are installed, launch the application from the terminal using:
 ``` bash
 python app.py
 ```

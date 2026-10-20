@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLineEdit, QPushButton, QLabel, QVBoxLayout
 from PySide6.QtCore import Qt, Signal
 
-from pages.base_page import BasePage
+from src.pages.base_page import BasePage
 
 class ForgotPasswordPage(BasePage):
     switch_to_SignIn = Signal()
@@ -46,6 +46,9 @@ class ForgotPasswordPage(BasePage):
         self.subheading = QLabel("Enter your new password to continue.")
         self.subheading.setObjectName("SubheadingLabel")
 
+        self.email_input = QLineEdit()
+        self.email_input.setPlaceholderText("Enter company email (xxx@make-it-all.co.uk)")
+
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Enter your new password.")
         self.password_input.setEchoMode(QLineEdit.Password)
@@ -69,6 +72,7 @@ class ForgotPasswordPage(BasePage):
         self.main_section.addWidget(self.heading)
         self.main_section.addWidget(self.subheading)
         self.main_section.addSpacing(10)
+        self.main_section.addWidget(self.email_input)
         self.main_section.addWidget(self.password_input)
         self.main_section.addWidget(self.confirm_password_input)
         self.main_section.addSpacing(10)
@@ -80,7 +84,8 @@ class ForgotPasswordPage(BasePage):
         # Layout
         self.layout.addWidget(self.top_frame)
         self.layout.addSpacing(10)
+        self.layout.addStretch(1)
         self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
-        self.layout.addStretch()
+        self.layout.addStretch(1)
 
         self.setLayout(self.layout)

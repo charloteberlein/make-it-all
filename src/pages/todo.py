@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel
-from pages.base_page import BasePage
+
+from src.pages.base_page import BasePage
 
 class TodoPage(BasePage):
     def __init__(self):
