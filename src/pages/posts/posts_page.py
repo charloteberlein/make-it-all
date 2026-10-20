@@ -36,7 +36,6 @@ class PostsPage(BasePage):
         self.top_frame.setLayout(self.top_bar)
 
         self.post_bar.addWidget(self.make_post)
-        self.post_bar.addWidget(self.open_post)
         self.post_frame.setLayout(self.post_bar)
 
         self.layout.addWidget(self.title)

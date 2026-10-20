@@ -46,7 +46,7 @@ class MainWindow(QWidget):
         self.register_page = RegisterPage()
         self.forgot_password_page = ForgotPasswordPage()
         self.posts_page = PostsPage()
-        self.post_page = PostContentPage()
+        self.post_content_page = PostContentPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
@@ -126,9 +126,6 @@ class MainWindow(QWidget):
         else:
             self.sidebar.hide()
             self.header.hide()
-
-        if index == PageIndex.POST_CONTENT:
-            self.post_page.refresh_recent_post()
 
     def toggle_theme(self):
         self.is_dark_mode = not self.is_dark_mode
