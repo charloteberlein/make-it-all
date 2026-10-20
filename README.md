@@ -4,14 +4,18 @@
 
 ## Repository structure
 ```
-├── app.py              # Main application entry point & QStackedWidget navigation controller
-├── styles/
-│   ├── light.qss       # Light theme Qt Style Sheet
-│   └── dark.qss        # Dark theme Qt Style Sheet
-├── pages/
-│   ├── sign_in.py      # SignInPage widget
-│   ├── register.py     # RegisterPage widget
-│   └── main_window.py  # MainWindow controller, sidebar navigation, and theme toggling
+├── assets/
+│   ├── styles/
+│   │   ├── light.qss         # Light theme stylesheet
+│   │   └── dark.qss          # Dark theme stylesheet
+│   └── mock_data/
+│       ├── posts.json
+│       ├── tasks.json
+│       ├── topics.json
+│       └── users.json
+├── src/
+│   ├── pages/
+│   └── app.py                # Main entry point
 └── README.md
 ```
 
@@ -41,7 +45,7 @@
    ```
 
 ## Running the Application
-Once the virtual environment is active and the dependencies are installed, launch the application from the root directory using:
+Once the virtual environment is active and the dependencies are installed, launch the application from the `src/` directory using:
 ``` bash
 python app.py
 ```
