@@ -127,6 +127,9 @@ class MainWindow(QWidget):
             self.sidebar.hide()
             self.header.hide()
 
+        if index == PageIndex.POST_CONTENT:
+            self.post_page.refresh_recent_post()
+
     def toggle_theme(self):
         self.is_dark_mode = not self.is_dark_mode
         theme_text = "☀️ Light Mode" if self.is_dark_mode else "🌑 Dark Mode"

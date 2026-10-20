@@ -22,7 +22,7 @@ class PostContent():
         for post in data:
             posts.append(cls(
                 id=post["metadata"]["id"],
-                viewed=True if post["metadata"]["viewed"] else False,
+                viewed=post["metadata"]["viewed"],
                 date_created=post["metadata"]["date-created"],
                 topic=post["topic"],
                 title=post["title"],
@@ -43,13 +43,14 @@ class PostContentPage(BasePage):
         self.metadata_layout = QHBoxLayout()
 
     def define_widgets(self) -> None:
-        post = PostContent.load_posts("assets/mock_data/posts.json")[0]
-
-        self.title = QLabel(post.title)
+        self.post = PostContent.load_posts("assets/mock_data/posts.json")[-1]
+        
+        self.title = QLabel(self.post.title)
         self.title.setObjectName("PostTitle")
-        self.topic = QLabel(post.topic)
-        self.date = QLabel(post.date_created)
-        self.content = QTextEdit(post.content)
+        self.topic = QLabel(self.post.topic)
+        self.date = QLabel(self.post.date_created)
+        self.content = QTextEdit()
+        self.content.setHtml(self.post.content)
         self.content.setReadOnly(True)
 
     def assemble_widgets(self) -> None:
@@ -64,3 +65,11 @@ class PostContentPage(BasePage):
         self.layout.addWidget(self.content)
         
         self.setLayout(self.layout)
+
+    def refresh_recent_post(self) -> None:
+        self.post = PostContent.load_posts("assets/mock_data/posts.json")[-1]
+
+        self.title.setText(self.post.title)
+        self.topic.setText(self.post.topic)
+        self.date.setText(self.post.date_created)
+        self.content.setHtml(self.post.content)
