@@ -1,0 +1,22 @@
+{
+    "users": [
+        {
+            "id": 0,
+            "name": "Jane Doe",
+            "email": "j.doe@make-it-all.co.uk",
+            "rank": "Manager"
+        },
+        {
+            "id": 1,
+            "name": "John Smith",
+            "email": "j.smith@make-it-all.co.uk",
+            "rank": "Team Lead"
+        },
+        {
+            "id": 2,
+            "name": "Andrew Michaels",
+            "email": "a.michaels@make-it-all.co.uk",
+            "rank": "Employee"
+        }
+    ]
+}

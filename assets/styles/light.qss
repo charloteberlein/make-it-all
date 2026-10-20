@@ -56,6 +56,10 @@ QFrame#HeaderTitle {
     font-size: 24px;
 }
 
+QFrame#Topic {
+    border-bottom: 2px solid #0f172a;
+}
+
 QWidget#PostTitle {
     background: transparent;
     color: #0f172a;
