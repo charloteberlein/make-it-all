@@ -21,6 +21,14 @@ QFrame#HeaderTitle {
     font-size: 24px;
 }
 
+QWidget#PostTitle {
+    background: transparent;
+    color: #EAB308;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+}
+
 QFrame#Sidebar {
     background-color: #121820;
     border-right: 3px solid #EAB308;
