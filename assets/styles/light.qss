@@ -46,14 +46,14 @@ QWidget {
 }
 
 QLabel#TitleLabel {
-    font-size: 26px;
+    font-size: 40px;
     font-weight: bold;
     color: #EAB308;
     background: transparent;
 }
 
 QLabel#TitleLabelCenter {
-    font-size: 26px;
+    font-size: 40px;
     font-weight: bold;
     color: #EAB308;
     background: transparent;
@@ -61,14 +61,14 @@ QLabel#TitleLabelCenter {
 }
 
 QLabel#HeadingLabel {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #000000;
     background: transparent;
 }
 
 QLabel#SubheadingLabel {
-    font-size: 13px;
+    font-size: 14px;
     color: #64748b;
     background: transparent;
 }
