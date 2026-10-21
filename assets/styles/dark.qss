@@ -74,6 +74,10 @@ QFrame#TopBar {
     background: transparent;
 }
 
+QFrame#Topic {
+    border-bottom: 2px solid #e2e8f0;
+}
+
 QWidget {
     background-color: #121820;
     color: #e2e8f0;
