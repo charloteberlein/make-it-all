@@ -13,12 +13,15 @@ from pages.posts import PostsPage
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
 from pages.forgotpassword import ForgotPasswordPage
+from pages.my_account import MyAccountPage
+
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Make-It-All Prototype")
-        self.setFixedSize(1200, 800)
+        self.resize(1200, 800)         # Allows for resizing the window.
+        self.setMinimumSize(900, 600)
 
         self.is_dark_mode = False
 
@@ -42,6 +45,7 @@ class MainWindow(QWidget):
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
+        self.account_page = MyAccountPage()
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
@@ -49,6 +53,7 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.dashboard_page)
         self.stacked_widget.addWidget(self.todo_page)
         self.stacked_widget.addWidget(self.posts_page)
+        self.stacked_widget.addWidget(self.account_page)
 
 
         main_layout.addWidget(self.sidebar)
@@ -66,6 +71,7 @@ class MainWindow(QWidget):
         self.register_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
         self.signin_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
         self.forgot_password_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
+        self.account_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
 
         # Colour theme events
         self.signin_page.toggle_btn.clicked.connect(self.toggle_theme)
@@ -80,10 +86,10 @@ class MainWindow(QWidget):
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
 
         # Header events
-        #self.header.account.connect()
-        #self.header.settings.connect()
+        self.header.account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
+        self.header.toggle_theme.connect(self.toggle_theme)
         self.header.log_out.connect(lambda: self.change_page(PageIndex.SIGN_IN))
-
+        
         # Sidebar events
         self.sidebar.nav_dashboard.connect(lambda: self.change_page(PageIndex.DASHBOARD))
         self.sidebar.nav_todo.connect(lambda: self.change_page(PageIndex.TODO))

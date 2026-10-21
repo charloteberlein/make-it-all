@@ -1,5 +1,32 @@
 /* dark.qss - Stylesheet used for the dark mode.*/
 
+QMenu {
+    color: #0f172a;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 8px;
+}
+
+QMenu::Item {
+    background-color: transparent;
+    padding: 7px 12px;
+    font-size: 16px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    border-radius: 6px;
+    margin: 4px 0px;
+}
+
+QMenu::Item:selected {
+    background-color: #5b5b5b;
+}
+
+QMenu::Separator {
+    height: 1px;
+    background: #5b5b5b;
+    margin: 2px 4px;
+}
+
 QPushButton#SideNavButton {
     background-color: transparent;
     color: #0f172a;
