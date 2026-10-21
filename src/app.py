@@ -38,17 +38,18 @@ class MainWindow(QWidget):
 
         self.signin_page = SignInPage()
         self.register_page = RegisterPage()
-        self.posts_page = PostsPage()
+        self.forgot_password_page = ForgotPasswordPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
-        self.forgot_password_page = ForgotPasswordPage()
+        self.posts_page = PostsPage()
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
+        self.stacked_widget.addWidget(self.forgot_password_page)
         self.stacked_widget.addWidget(self.dashboard_page)
         self.stacked_widget.addWidget(self.todo_page)
         self.stacked_widget.addWidget(self.posts_page)
-        self.stacked_widget.addWidget(self.forgot_password_page)
+
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
@@ -58,6 +59,7 @@ class MainWindow(QWidget):
         header_layout.addWidget(main_frame)
 
         self.sidebar.hide()
+        self.header.hide()
 
         # Navigation events
         self.signin_page.switch_to_Register.connect(lambda: self.change_page(PageIndex.REGISTER))
@@ -95,8 +97,10 @@ class MainWindow(QWidget):
         # Shows sidebar only when logged in.
         if index.value >= 2:
             self.sidebar.show()
+            self.header.show()
         else:
             self.sidebar.hide()
+            self.header.hide()
 
     def toggle_theme(self):
         self.is_dark_mode = not self.is_dark_mode
