@@ -35,7 +35,7 @@ class SignInPage(BasePage):
         self.toggle_btn = QPushButton("🌑 Dark Mode")
         self.toggle_btn.setObjectName("ToggleButton")
         self.toggle_btn.setCursor(Qt.PointingHandCursor)
-        
+
         ## Main section
         # Header (references stylesheet)
         self.title = QLabel("Make-It-All")

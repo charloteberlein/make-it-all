@@ -45,6 +45,8 @@ class MainWindow(QWidget):
         self.signin_page = SignInPage()
         self.register_page = RegisterPage()
         self.forgot_password_page = ForgotPasswordPage()
+        self.posts_page = PostsPage()
+        self.post_page = PostContentPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
