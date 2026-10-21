@@ -53,9 +53,6 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.todo_page)
         self.stacked_widget.addWidget(self.posts_page)
 
-        self.stacked_widget.addWidget(self.forgot_password_page)
-        self.stacked_widget.addWidget(self.post_page)
-
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
         main_frame.setLayout(main_layout)
