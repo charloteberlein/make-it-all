@@ -71,6 +71,7 @@ class RegisterPage(BasePage):
         # Main section
         self.main_section.addWidget(self.title)
         self.main_section.addWidget(self.heading)
+        self.main_section.addSpacing(5)
         self.main_section.addWidget(self.subheading)
         self.main_section.addSpacing(10)
         self.main_section.addWidget(self.email_input)
@@ -85,7 +86,8 @@ class RegisterPage(BasePage):
         # Layout
         self.layout.addWidget(self.top_frame)
         self.layout.addSpacing(10)
+        self.layout.addStretch(1)
         self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
-        self.layout.addStretch()
+        self.layout.addStretch(1)
 
         self.setLayout(self.layout)

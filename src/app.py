@@ -15,7 +15,8 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Make-It-All Demo")
-        self.setFixedSize(1200, 800)
+        self.resize(1100, 800)
+        self.setMinimumSize(800, 550)
 
         self.is_dark_mode = False
 

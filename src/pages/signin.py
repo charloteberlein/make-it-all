@@ -35,7 +35,7 @@ class SignInPage(BasePage):
         self.toggle_btn = QPushButton("🌑 Dark Mode")
         self.toggle_btn.setObjectName("ToggleButton")
         self.toggle_btn.setCursor(Qt.PointingHandCursor)
-
+        
         ## Main section
         # Header (references stylesheet)
         self.title = QLabel("Make-It-All")
@@ -73,12 +73,14 @@ class SignInPage(BasePage):
         # Main section
         self.main_section.addWidget(self.title)
         self.main_section.addWidget(self.heading)
+        self.main_section.addSpacing(5)
         self.main_section.addWidget(self.subheading)
         self.main_section.addSpacing(10)
         self.main_section.addWidget(self.email_input)
         self.main_section.addWidget(self.password_input)
         self.main_section.addSpacing(10)
         self.main_section.addWidget(self.login_btn)
+        self.main_section.addSpacing(3)
         self.main_section.addWidget(self.forgot_btn)
 
         self.main_frame.setLayout(self.main_section)
@@ -87,7 +89,8 @@ class SignInPage(BasePage):
         # Layout
         self.layout.addWidget(self.top_frame)
         self.layout.addSpacing(10)
+        self.layout.addStretch(1)
         self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
-        self.layout.addStretch()
+        self.layout.addStretch(1)
 
         self.setLayout(self.layout)
