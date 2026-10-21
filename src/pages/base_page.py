@@ -24,7 +24,7 @@ class BasePage(QWidget):
 
     def assemble_widgets(self) -> None:
         for widget in self.widgets:
-            if isinstance(widget, QWidget) and widget.sizePolicy().horizontalPolicy() == QSizePolicy.Fixed:
+            if isinstance(widget, QWidget) and widget.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Fixed:
                 widget.setSizePolicy(QSizePolicy.Policy.Expanding, widget.sizePolicy().verticalPolicy())
             self.layout.addWidget(widget)
         self.setLayout(self.layout)
