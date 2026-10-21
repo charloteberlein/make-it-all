@@ -45,9 +45,9 @@
    ```
 
 ## Running the Application
-Once the virtual environment is active and the dependencies are installed, launch the application from the `src/` directory using:
+Once the virtual environment is active and the dependencies are installed, launch the application from the root directory using:
 ``` bash
-python app.py
+python src/app.py
 ```
 
 ## Authors & Acknowledgements

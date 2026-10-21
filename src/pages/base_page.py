@@ -1,9 +1,10 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QSizePolicy
 
 class BasePage(QWidget):
     def __init__(self):
         super().__init__()
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.define_styling()
         self.define_layout()
         self.widgets = tuple()
@@ -23,5 +24,7 @@ class BasePage(QWidget):
 
     def assemble_widgets(self) -> None:
         for widget in self.widgets:
+            if isinstance(widget, QWidget) and widget.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Fixed:
+                widget.setSizePolicy(QSizePolicy.Policy.Expanding, widget.sizePolicy().verticalPolicy())
             self.layout.addWidget(widget)
         self.setLayout(self.layout)
