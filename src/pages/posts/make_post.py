@@ -35,6 +35,7 @@ class MakePostPage(BasePage):
 
         self.topic_label = QLabel("Topic:")
         self.topic_input = QLineEdit()
+        # TODO: Add a drop-down instead of / in addition to the free-text box to prevent typos
 
         self.date = QLabel(f"Date created: {self.date_created}")
 
@@ -72,6 +73,8 @@ class MakePostPage(BasePage):
         self.toolbar.addAction(underline)
         self.toolbar.widgetForAction(underline).setObjectName("UnderlineFormatButton")
 
+        # TODO fix later: formatting is forgotten when the user moves the text cursor manually
+
         self.confirm_btn = QPushButton("Create post")
         self.confirm_btn.setObjectName("LoginButton")
 
@@ -103,6 +106,8 @@ class MakePostPage(BasePage):
         self.setLayout(self.layout)
 
     def save_post_to_json(self) -> None:
+        """Appends a post to the `posts.json` file."""
+        # TODO: Disallow empty titles/topics/content
         data: dict = read_json("assets/mock_data/posts.json")
 
         self.update_date()
@@ -113,7 +118,7 @@ class MakePostPage(BasePage):
                     "viewed": False,
                     "date-created": self.date_created,
                 },
-                "topic": MakePostPage.get_matching_topic(self.topic_input.text()),
+                "topic": self.topic_input.text(),
                 "title": self.title_input.text(),
                 "content": self.content.document().toHtml(),
             }
@@ -124,23 +129,3 @@ class MakePostPage(BasePage):
         self.title_input.clear()
         self.topic_input.clear()
         self.content.clear()
-
-    @staticmethod
-    def get_matching_topic(name: str) -> int:
-        """Fetches or, if one does not exist, creates a given topic."""
-        topics: dict = read_json("assets/mock_data/topics.json")
-
-        for topic in topics["topics"]:
-            if topic["name"] == name:
-                return topic["id"]
-
-        id = topics[-1]["id"] + 1
-        topics["topics"].append(
-            {
-                "id": id,
-                "name": name
-            }
-        )
-
-        write_json("assets/mock_data/topics.json", topics)
-        return id
