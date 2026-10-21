@@ -172,3 +172,7 @@ QPushButton#ToggleButton {
     font-weight: bold;
     border-width: 1px;
 }
+
+QLabel#ErrorLabel {
+    color: #b00020;
+}

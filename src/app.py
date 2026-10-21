@@ -27,6 +27,7 @@ class MainWindow(QWidget):
         self.setFixedSize(1200, 800)
 
         self.is_dark_mode = False
+        self.current_user = None
 
         # Containers
         header_layout = QVBoxLayout(self)
@@ -88,7 +89,7 @@ class MainWindow(QWidget):
         self.forgot_password_page.toggle_btn.clicked.connect(self.toggle_theme)
 
         # Page events
-        self.signin_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.signin_page.login_success.connect(self.log_in)
         self.register_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
         self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
@@ -110,7 +111,7 @@ class MainWindow(QWidget):
         # Header events
         # TODO: self.header.account.connect()
         # TODO: self.header.settings.connect()
-        self.header.log_out.connect(lambda: self.change_page(PageIndex.SIGN_IN))
+        self.header.log_out.connect(self.log_out)
 
         # Sidebar events
         self.sidebar.nav_dashboard.connect(lambda: self.change_page(PageIndex.DASHBOARD))
@@ -160,6 +161,14 @@ class MainWindow(QWidget):
     def view_post(self, post_id):
         self.post_content_page.id = post_id
         self.change_page(PageIndex.POST_CONTENT)
+
+    def log_in(self, user):
+        self.current_user = user
+        self.change_page(PageIndex.DASHBOARD)
+
+    def log_out(self):
+        self.current_user = None
+        self.change_page(PageIndex.SIGN_IN)
 
     def view_topic_posts(self, topic_id):
         self.topic_content_page.topic_id = topic_id
