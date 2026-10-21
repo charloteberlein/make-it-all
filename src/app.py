@@ -95,7 +95,7 @@ class MainWindow(QWidget):
         self.stacked_widget.setCurrentIndex(index.value)
         
         # Shows sidebar only when logged in.
-        if index.value >= 2:
+        if index.value > 2:
             self.sidebar.show()
             self.header.show()
         else:
