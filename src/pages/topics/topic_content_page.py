@@ -52,7 +52,7 @@ class TopicContentPage(BasePage):
         self.back_btn.clicked.connect(self.back.emit)
 
         self.topic_title = QLabel("")
-        self.topic_title.setObjectName("PostTitle")
+        self.topic_title.setObjectName("TopicTitle")
 
         header_layout.addWidget(self.back_btn)
         header_layout.addWidget(self.topic_title)
