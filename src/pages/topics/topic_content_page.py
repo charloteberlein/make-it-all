@@ -1,5 +1,5 @@
 from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QLabel, QHBoxLayout, QFrame, QVBoxLayout
+from PySide6.QtWidgets import QLabel, QHBoxLayout, QFrame, QVBoxLayout, QPushButton
 from PySide6.QtCore import Qt, Signal
 
 from pages.base_page import BasePage
@@ -20,6 +20,7 @@ class TopicFrame(QFrame):
 
 class TopicContentPage(BasePage):
     post_selected = Signal(int)
+    back = Signal()
 
     def __init__(self, topic_id: int = 0):
         self._topic_id = topic_id
@@ -38,13 +39,31 @@ class TopicContentPage(BasePage):
 
         self.define_widgets()
         for index, (widget, _) in enumerate(self.widgets):
-            self.layout.insertWidget(index, widget)
+            self.layout.insertWidget(index + 1, widget)
 
     def define_layout(self) -> None:
         self.layout = QVBoxLayout()
 
+        self.header_frame = QFrame()
+        self.header_frame.setObjectName("TopBar")
+        header_layout = QHBoxLayout()
+
+        self.back_btn = QPushButton("Back to topics")
+        self.back_btn.clicked.connect(self.back.emit)
+
+        self.topic_title = QLabel("")
+        self.topic_title.setObjectName("PostTitle")
+
+        header_layout.addWidget(self.back_btn)
+        header_layout.addWidget(self.topic_title)
+        header_layout.addStretch()
+        self.header_frame.setLayout(header_layout)
+
     def define_widgets(self) -> None:
         self.posts = TopicContent.get_posts_by_topic(self.topic_id)
+
+        topics = TopicContent.load_topics("assets/mock_data/topics.json")
+        self.topic_title.setText(topics[self.topic_id].name)
 
         self.widgets = []
         for post in self.posts:
@@ -63,6 +82,7 @@ class TopicContentPage(BasePage):
             self.widgets.append((layout_frame, post.id))
 
     def assemble_widgets(self) -> None:
+        self.layout.addWidget(self.header_frame)
         for (widget, _) in self.widgets:
             self.layout.addWidget(widget)
         self.layout.addStretch()
