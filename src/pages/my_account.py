@@ -43,7 +43,7 @@ class MyAccountPage(BasePage):
         self.change_btn = QPushButton("Save")
         self.change_btn.setObjectName("LoginButton")
         self.change_btn.setCursor(Qt.PointingHandCursor)
-        self.change_btn.clicked.connect(self.switch_to_ForgotPassword.emit)
+        self.change_btn.clicked.connect(self.switch_to_Dashboard.emit)
 
         self.email_input = QLineEdit()
         self.email_input.setText("john.doe@make-it-all.co.uk")
@@ -84,7 +84,7 @@ class MyAccountPage(BasePage):
         self.main_section.addStretch(1)
 
         self.main_frame.setLayout(self.main_section)
-        self.main_frame.setFixedWidth(500)
+        self.main_frame.setFixedWidth(700)
 
         self.layout.addSpacing(10)
         self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
