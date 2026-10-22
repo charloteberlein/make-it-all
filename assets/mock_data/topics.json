@@ -1,24 +1,24 @@
 {
-    "topics": [
-        {
-            "id": 0,
-            "name": "Printers"
-        },
-        {
-            "id": 1,
-            "name": "IT Support"
-        },
-        {
-            "id": 2,
-            "name": "Health and Safety"
-        },
-        {
-            "id": 3,
-            "name": "HR Policies"
-        },
-        {
-            "id": 4,
-            "name": "Finance"
-        }
-    ]
+  "topics": [
+    {
+      "id": 0,
+      "name": "Printers"
+    },
+    {
+      "id": 1,
+      "name": "IT Support"
+    },
+    {
+      "id": 2,
+      "name": "Health and Safety"
+    },
+    {
+      "id": 3,
+      "name": "HR Policies"
+    },
+    {
+      "id": 4,
+      "name": "Finance"
+    }
+  ]
 }
