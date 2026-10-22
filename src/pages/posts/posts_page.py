@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QPushButton, QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QPushButton, QFrame, QHBoxLayout, QLabel
 
 from pages.base_page import BasePage
 
@@ -22,20 +22,20 @@ class PostsPage(BasePage):
         self.title = QLabel("Posts")
         self.title.setObjectName("TitleLabelCenter")
         
-        self.my_posts = QPushButton("My Posts")
-        self.my_topics = QPushButton("My Topics")
+        self.my_topics = QPushButton("View Topics")
+        self.my_topics.setObjectName("LoginButton")
 
         # Posts view
         self.make_post = QPushButton("Make a new post")
+        self.make_post.setObjectName("LoginButton")
         self.open_post = QPushButton("Open recent post")
 
     def assemble_widgets(self) -> None:
         self.top_bar.addWidget(self.title)
-        self.top_bar.addWidget(self.my_posts)
+        self.top_bar.addWidget(self.my_topics)
         self.top_frame.setLayout(self.top_bar)
 
         self.post_bar.addWidget(self.make_post)
-        self.post_bar.addWidget(self.open_post)
         self.post_frame.setLayout(self.post_bar)
 
         self.layout.addWidget(self.title)

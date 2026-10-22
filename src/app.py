@@ -3,18 +3,22 @@ from PySide6.QtWidgets import (
     QApplication, QWidget, QHBoxLayout, QStackedWidget, QVBoxLayout, QFrame
 )
 
-# from PySide6.QtCore import Qt
 from pages.page_index import PageIndex
 from pages.header import Header
 from pages.sidebar import Sidebar
-from pages.signin import SignInPage
-from pages.register import RegisterPage
-from pages.posts import PostsPage
-from pages.post import PostContentPage
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
-from pages.forgotpassword import ForgotPasswordPage
-from pages.make_post import MakePostPage
+
+from pages.account.signin import SignInPage
+from pages.account.register import RegisterPage
+from pages.account.forgotpassword import ForgotPasswordPage
+
+from pages.posts.posts_page import PostsPage
+from pages.posts.post_content_page import PostContentPage
+from pages.posts.make_post import MakePostPage
+
+from pages.topics.topics_page import TopicsPage
+from pages.topics.topic_content_page import TopicContentPage
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -42,10 +46,14 @@ class MainWindow(QWidget):
         self.register_page = RegisterPage()
         self.forgot_password_page = ForgotPasswordPage()
         self.posts_page = PostsPage()
-        self.post_page = PostContentPage()
+        self.post_content_page = PostContentPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
+        self.posts_page = PostsPage()
+        self.post_content_page = PostContentPage()
         self.make_post_page = MakePostPage()
+        self.topics_page = TopicsPage()
+        self.topic_content_page = TopicContentPage()
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
@@ -53,8 +61,10 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.dashboard_page)
         self.stacked_widget.addWidget(self.todo_page)
         self.stacked_widget.addWidget(self.posts_page)
-        self.stacked_widget.addWidget(self.post_page)
+        self.stacked_widget.addWidget(self.post_content_page)
         self.stacked_widget.addWidget(self.make_post_page)
+        self.stacked_widget.addWidget(self.topics_page)
+        self.stacked_widget.addWidget(self.topic_content_page)
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
@@ -83,13 +93,20 @@ class MainWindow(QWidget):
         self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
-        self.posts_page.open_post.clicked.connect(lambda: self.change_page(PageIndex.POST_CONTENT))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
+        self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
         self.make_post_page.confirm_btn.clicked.connect(lambda: self.save_and_exit_post_maker())
 
+        for (widget, id) in self.topics_page.widgets:
+            widget.clicked.connect(
+                lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+            )
+
+        self.topic_content_page.post_selected.connect(self.view_post)
+
         # Header events
-        #self.header.account.connect()
-        #self.header.settings.connect()
+        # TODO: self.header.account.connect()
+        # TODO: self.header.settings.connect()
         self.header.log_out.connect(lambda: self.change_page(PageIndex.SIGN_IN))
 
         # Sidebar events
@@ -110,9 +127,6 @@ class MainWindow(QWidget):
             self.sidebar.hide()
             self.header.hide()
 
-        if index == PageIndex.POST_CONTENT:
-            self.post_page.refresh_recent_post()
-
     def toggle_theme(self):
         self.is_dark_mode = not self.is_dark_mode
         theme_text = "☀️ Light Mode" if self.is_dark_mode else "🌑 Dark Mode"
@@ -130,8 +144,20 @@ class MainWindow(QWidget):
 
     def save_and_exit_post_maker(self):
         self.make_post_page.save_post_to_json()
+        self.topics_page.refresh_topics()
+        for (widget, id) in self.topics_page.widgets:
+            widget.clicked.connect(
+                lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+            )
         self.change_page(PageIndex.POSTS)
 
+    def view_post(self, post_id):
+        self.post_content_page.id = post_id
+        self.change_page(PageIndex.POST_CONTENT)
+
+    def view_topic_posts(self, topic_id):
+        self.topic_content_page.topic_id = topic_id
+        self.change_page(PageIndex.TOPIC_CONTENT)
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
