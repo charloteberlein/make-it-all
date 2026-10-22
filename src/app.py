@@ -10,11 +10,12 @@ from pages.sidebar import Sidebar
 from pages.signin import SignInPage
 from pages.register import RegisterPage
 from pages.posts import PostsPage
+from pages.post import PostContentPage
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
 from pages.forgotpassword import ForgotPasswordPage
 from pages.my_account import MyAccountPage
-
+from pages.make_post import MakePostPage
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -45,6 +46,8 @@ class MainWindow(QWidget):
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
+        self.post_page = PostContentPage()
+        self.make_post_page = MakePostPage()
         self.account_page = MyAccountPage()
 
         self.stacked_widget.addWidget(self.signin_page)
@@ -53,8 +56,9 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.dashboard_page)
         self.stacked_widget.addWidget(self.todo_page)
         self.stacked_widget.addWidget(self.posts_page)
+        self.stacked_widget.addWidget(self.post_page)
+        self.stacked_widget.addWidget(self.make_post_page)
         self.stacked_widget.addWidget(self.account_page)
-
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
@@ -84,6 +88,9 @@ class MainWindow(QWidget):
         self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
+        self.posts_page.open_post.clicked.connect(lambda: self.change_page(PageIndex.POST_CONTENT))
+        self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
+        self.make_post_page.confirm_btn.clicked.connect(lambda: self.save_and_exit_post_maker())
 
         # Header events
         self.header.account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
@@ -108,6 +115,9 @@ class MainWindow(QWidget):
             self.sidebar.hide()
             self.header.hide()
 
+        if index == PageIndex.POST_CONTENT:
+            self.post_page.refresh_recent_post()
+
     def toggle_theme(self):
         self.is_dark_mode = not self.is_dark_mode
         theme_text = "☀️ Light Mode" if self.is_dark_mode else "🌑 Dark Mode"
@@ -122,6 +132,10 @@ class MainWindow(QWidget):
         filepath = f"assets/styles/{filename}"
         with open(filepath, "r") as file:
             self.setStyleSheet(file.read())
+
+    def save_and_exit_post_maker(self):
+        self.make_post_page.save_post_to_json()
+        self.change_page(PageIndex.POSTS)
 
         
 if __name__ == "__main__":

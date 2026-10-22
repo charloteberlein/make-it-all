@@ -7,4 +7,6 @@ class PageIndex(Enum):
     DASHBOARD = 3
     TODO = 4
     POSTS = 5
-    MY_ACCOUNT = 6
+    POST_CONTENT = 6
+    MAKE_POST = 7
+    MY_ACCOUNT = 8
