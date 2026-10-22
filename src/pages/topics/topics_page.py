@@ -36,3 +36,5 @@ class TopicsPage(BasePage):
             btn = QPushButton(topic.name)
             btn.setObjectName("LoginButton")
             self.widgets.append((btn, topic.id))
+        
+        self.assemble_widgets()

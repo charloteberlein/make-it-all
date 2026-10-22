@@ -144,6 +144,11 @@ class MainWindow(QWidget):
 
     def save_and_exit_post_maker(self):
         self.make_post_page.save_post_to_json()
+        self.topics_page.refresh_topics()
+        for (widget, id) in self.topics_page.widgets:
+            widget.clicked.connect(
+                lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+            )
         self.change_page(PageIndex.POSTS)
 
     def view_post(self, post_id):
