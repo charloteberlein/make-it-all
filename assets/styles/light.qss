@@ -149,7 +149,7 @@ QPushButton#LoginButton:hover {
 
 QPushButton#NavButton {
     background-color: transparent;
-    color: #EAB308
+    color: #EAB308;
     border: 1px solid #EAB308;
     border-radius: 12px;
     padding: 4px 12px;
