@@ -10,10 +10,15 @@ class DashboardPage(BasePage):
     projectNum = 3
     projectName = "testing :)"
     progressValue = 23
+    totalTime = 180
+    timeTaken = 60
+    timePercentage = totalTime/timeTaken
 
     # Constructor
     def __init__(self):
         super().__init__()
+
+# Need to create a widget to show percentage of estimated time completed
 
     # Function to create progress bar for each project.
     def createProgressBar(self, projectName, progressValue):
@@ -25,17 +30,31 @@ class DashboardPage(BasePage):
 
         #creating a progressbar
         progressBar = QProgressBar()
+        progressBar.setObjectName("ProjectProgress")
         progressBar.setRange(0,100)
         progressBar.setValue(progressValue) 
-        progressBar.setMinimumHeight(20) #necessary? 
+        progressBar.setMinimumHeight(20) 
+
+        # Creating time tracking progress bar
+        elapsedTimeBar = QProgressBar()
+        elapsedTimeBar.setObjectName("TimeBar")
+        elapsedTimeBar.setRange(0,100)
+        elapsedTimeBar.setValue(self.timePercentage)
+        elapsedTimeBar.setMinimumHeight(20) 
+
+        #Progress bar layouts
+        progress_stack = QWidget()
+        progress_stack_layout = QVBoxLayout(progress_stack)
+        progress_stack_layout.addWidget(progressBar)
+        progress_stack_layout.addWidget(elapsedTimeBar)
 
         project_container = QWidget()
-        project_container.setContentsMargins(10, 10, 10, 10)
+        #project_container.setContentsMargins(10, 10, 10, 10)
         project_layout = QHBoxLayout(project_container)
         project_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         project_layout.addWidget(project_label)
-        project_layout.addWidget(progressBar, 1)
+        project_layout.addWidget(progress_stack)
 
         return project_container
  
