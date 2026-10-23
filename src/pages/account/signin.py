@@ -2,10 +2,12 @@ from PySide6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLineEdit, QPush
 from PySide6.QtCore import Qt, Signal
 
 from pages.base_page import BasePage
+from pages.account.user import find_user
 
 class SignInPage(BasePage):
     switch_to_Register = Signal()
     switch_to_ForgotPassword = Signal()
+    login_success = Signal(object)
 
     def __init__(self):
         super().__init__()
@@ -54,10 +56,15 @@ class SignInPage(BasePage):
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Enter password")
         self.password_input.setEchoMode(QLineEdit.Password)
+        self.error_label = QLabel("")
+        self.error_label.setObjectName("ErrorLabel")
+        self.error_label.hide()
 
         self.login_btn = QPushButton("Sign In")
         self.login_btn.setObjectName("LoginButton")
         self.login_btn.setCursor(Qt.PointingHandCursor)
+        self.login_btn.clicked.connect(self.attempt_login)
+        self.password_input.returnPressed.connect(self.attempt_login)
 
         self.forgot_btn = QPushButton("Forgotten Password?")
         self.forgot_btn.setObjectName("NavButton")
@@ -78,6 +85,7 @@ class SignInPage(BasePage):
         self.main_section.addSpacing(10)
         self.main_section.addWidget(self.email_input)
         self.main_section.addWidget(self.password_input)
+        self.main_section.addWidget(self.error_label)
         self.main_section.addSpacing(10)
         self.main_section.addWidget(self.login_btn)
         self.main_section.addSpacing(3)
@@ -94,3 +102,16 @@ class SignInPage(BasePage):
         self.layout.addStretch(1)
 
         self.setLayout(self.layout)
+
+    def attempt_login(self) -> None:
+        user = find_user(self.email_input.text(), self.password_input.text())
+
+        if user is None:
+            self.error_label.setText("Incorrect email or password.")
+            self.error_label.show()
+            return
+
+        self.error_label.hide()
+        self.email_input.clear()
+        self.password_input.clear()
+        self.login_success.emit(user)
