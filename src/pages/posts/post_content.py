@@ -1,6 +1,8 @@
 from pathlib import Path
 from dataclasses import dataclass
 
+from datetime import datetime
+
 from helpers import read_json
 
 @dataclass
@@ -39,3 +41,13 @@ class PostContent():
                 return post
 
         return None
+
+    @classmethod
+    def get_recent_posts(cls, count: int = 5) -> list["PostContent"]:
+        posts = cls.load_posts("assets/mock_data/posts.json")
+        newest_first = sorted(
+            posts,
+            key=lambda post: (datetime.strptime(post.date_created, "%d-%m-%Y"), post.id),
+            reverse=True,
+        )
+        return newest_first[:count]

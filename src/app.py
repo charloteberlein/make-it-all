@@ -96,6 +96,7 @@ class MainWindow(QWidget):
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
         self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
         self.make_post_page.confirm_btn.clicked.connect(lambda: self.save_and_exit_post_maker())
+        self.posts_page.post_selected.connect(self.view_post)
 
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
@@ -128,6 +129,9 @@ class MainWindow(QWidget):
         else:
             self.sidebar.hide()
             self.header.hide()
+
+        if index == PageIndex.POSTS:
+            self.posts_page.refresh_recent_posts()
 
     def toggle_theme(self):
         self.is_dark_mode = not self.is_dark_mode
