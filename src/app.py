@@ -19,6 +19,9 @@ from pages.posts.make_post import MakePostPage
 
 from pages.topics.topics_page import TopicsPage
 from pages.topics.topic_content_page import TopicContentPage
+from pages.training import TrainingPage
+from pages.account import AccountPage  
+from pages.notifications import NotificationsPage
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -55,6 +58,9 @@ class MainWindow(QWidget):
         self.make_post_page = MakePostPage()
         self.topics_page = TopicsPage()
         self.topic_content_page = TopicContentPage()
+        self.training_page = TrainingPage()
+        self.account_page = AccountPage()  # Placeholder for the Account page
+        self.notifications_page = NotificationsPage()  # Placeholder for the Notifications page
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
@@ -66,6 +72,9 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.make_post_page)
         self.stacked_widget.addWidget(self.topics_page)
         self.stacked_widget.addWidget(self.topic_content_page)
+        self.stacked_widget.addWidget(self.training_page)
+        self.stacked_widget.addWidget(self.account_page)
+        self.stacked_widget.addWidget(self.notifications_page)
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
@@ -107,6 +116,9 @@ class MainWindow(QWidget):
         self.topic_content_page.post_selected.connect(self.view_post)
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
 
+        self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
+        self.dashboard_page.switch_to_account.connect(lambda: self.change_page(PageIndex.ACCOUNT))
+        self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
 
         # Header events
         # TODO: self.header.account.connect()
