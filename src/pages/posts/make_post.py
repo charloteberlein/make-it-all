@@ -169,10 +169,7 @@ class MakePostPage(BasePage):
                 ) or ( # Valid text input topic
                     len((text := self.topic_input.text())) > 0
                     and text != "Other"
-                    and (
-                        text not in [topic.name for topic in TopicContent.load_topics()]
-                        or text in [topic.name for topic in TopicContent.get_writable_topics()]
-                    )
+                    and text not in [topic.name for topic in TopicContent.load_topics()]
                 )
             )
              # Content not empty
