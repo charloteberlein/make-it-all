@@ -32,10 +32,13 @@ class PostsPage(BasePage):
         
         self.my_topics = QPushButton("View Topics")
         self.my_topics.setObjectName("LoginButton")
+        self.my_topics.setCursor(Qt.CursorShape.PointingHandCursor)
 
         # Posts view
         self.make_post = QPushButton("Make a new post")
         self.make_post.setObjectName("LoginButton")
+        self.make_post.setCursor(Qt.CursorShape.PointingHandCursor)
+
         self.recent_heading = QLabel("Recent posts")
         self.recent_heading.setObjectName("HeadingLabel")
 
@@ -70,6 +73,7 @@ class PostsPage(BasePage):
 
         for post in PostContent.get_recent_posts(5):
             row = TopicFrame(post.id)
+            row.setCursor(Qt.CursorShape.PointingHandCursor)
             row.clicked.connect(self.post_selected)
             row_layout = QHBoxLayout()
 

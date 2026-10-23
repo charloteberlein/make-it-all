@@ -21,9 +21,11 @@ class TopicFrame(QFrame):
 class TopicContentPage(BasePage):
     post_selected = Signal(int)
     back = Signal()
+    topic_writable = Signal()
 
     def __init__(self, topic_id: int = 0):
         self._topic_id = topic_id
+        self.writable = TopicContent.get_topic_writable(self.topic_id)
         super().__init__()
 
     @property
@@ -33,6 +35,8 @@ class TopicContentPage(BasePage):
     @topic_id.setter
     def topic_id(self, id: int):
         self._topic_id = id
+        self.writable = TopicContent.get_topic_writable(id)
+        self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
         for widget, _ in self.widgets:
             self.layout.removeWidget(widget)
             widget.deleteLater()
@@ -48,15 +52,23 @@ class TopicContentPage(BasePage):
         self.header_frame.setObjectName("TopBar")
         header_layout = QHBoxLayout()
 
-        self.back_btn = QPushButton("Back to topics")
+        self.back_btn = QPushButton("←")
         self.back_btn.clicked.connect(self.back.emit)
+        self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
         self.topic_title = QLabel("")
         self.topic_title.setObjectName("TopicTitle")
 
+        self.toggle_btn = QPushButton("")
+        self.toggle_btn.clicked.connect(self.topic_writable.emit)
+        self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
+        self.toggle_btn.setObjectName("ToggleButton")
+        self.toggle_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+
         header_layout.addWidget(self.back_btn)
         header_layout.addWidget(self.topic_title)
         header_layout.addStretch()
+        header_layout.addWidget(self.toggle_btn)
         self.header_frame.setLayout(header_layout)
 
     def define_widgets(self) -> None:
@@ -70,6 +82,7 @@ class TopicContentPage(BasePage):
             layout = QHBoxLayout()
             layout_frame = TopicFrame(post.id)
             layout_frame.clicked.connect(self.post_selected)
+            layout_frame.setCursor(Qt.CursorShape.PointingHandCursor)
 
             title = QLabel(post.title, alignment=Qt.AlignmentFlag.AlignLeft)
             title.setObjectName("PostTitle")
@@ -88,3 +101,8 @@ class TopicContentPage(BasePage):
         self.layout.addStretch()
 
         self.setLayout(self.layout)
+
+    def toggle_topic_writable(self) -> None:
+        self.writable = not self.writable
+        self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
+        TopicContent.set_topic_writable(self.topic_id, self.writable)
