@@ -20,7 +20,7 @@ from pages.posts.make_post import MakePostPage
 from pages.topics.topics_page import TopicsPage
 from pages.topics.topic_content_page import TopicContentPage
 from pages.training import TrainingPage
-from pages.account import AccountPage  
+from pages.accounts import AccountPage  
 from pages.notifications import NotificationsPage
 
 class MainWindow(QWidget):
