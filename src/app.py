@@ -103,6 +103,8 @@ class MainWindow(QWidget):
             )
 
         self.topic_content_page.post_selected.connect(self.view_post)
+        self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
+
 
         # Header events
         # TODO: self.header.account.connect()

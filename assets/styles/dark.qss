@@ -60,8 +60,16 @@ QWidget#PostTitle {
     background: transparent;
     color: #EAB308;
     font-family: "Segoe UI", Arial, sans-serif;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 18px;
+}
+
+QWidget#TopicTitle {
+    background: transparent;
+    color: #EAB308;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 28px;
 }
 
 QFrame#Sidebar {
@@ -72,6 +80,10 @@ QFrame#Sidebar {
 QFrame#TopBar {
     border-bottom: 2px solid #EAB308;
     background: transparent;
+}
+
+QFrame#Topic {
+    border-bottom: 2px solid #e2e8f0;
 }
 
 QWidget {
