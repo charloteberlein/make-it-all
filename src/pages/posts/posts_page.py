@@ -5,6 +5,7 @@ from pages.base_page import BasePage
 from pages.posts.post_content import PostContent
 from pages.topics.topic_content import TopicContent
 from pages.topics.topic_content_page import TopicFrame
+from pages.account.user import get_user_by_id
 
 class PostsPage(BasePage):
     post_selected = Signal(int)
@@ -74,8 +75,10 @@ class PostsPage(BasePage):
 
             title = QLabel(post.title, alignment=Qt.AlignmentFlag.AlignLeft)
             title.setObjectName("PostTitle") 
+            author = get_user_by_id(post.created_by)
+            author_name = author.name if author else "Unknown"
             details = QLabel(
-                f"{topics[post.topic].name}  .  {post.date_created}",
+                f"{author_name}  .  {topics[post.topic].name}  .  {post.date_created}",
                 alignment=Qt.AlignmentFlag.AlignRight,
             )
 

@@ -19,3 +19,12 @@ def find_user(email: str, password: str) -> User  |  None:
             return User(**entry)
 
     return None
+
+def get_user_by_id(user_id: int | None) -> User  |  None:
+    if user_id is None:
+        return None
+    for entry in read_json("assets/mock_data/users.json")["users"]:
+        if entry["id"] == user_id:
+            return User(**entry)
+
+    return None

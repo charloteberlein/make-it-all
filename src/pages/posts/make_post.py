@@ -106,7 +106,7 @@ class MakePostPage(BasePage):
         
         self.setLayout(self.layout)
 
-    def save_post_to_json(self) -> None:
+    def save_post_to_json(self, created_by: int | None = None) -> None:
         """Appends a post to the `posts.json` file."""
         # TODO: Disallow empty titles/topics/content
         data: dict = read_json("assets/mock_data/posts.json")
@@ -120,6 +120,7 @@ class MakePostPage(BasePage):
                     "date-created": self.date_created,
                 },
                 "topic": TopicContent.get_matching_topic(self.topic_input.text()),
+                "created_by": created_by,
                 "title": self.title_input.text(),
                 "content": self.content.document().toHtml(),
             }

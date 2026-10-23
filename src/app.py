@@ -150,7 +150,8 @@ class MainWindow(QWidget):
             self.setStyleSheet(file.read())
 
     def save_and_exit_post_maker(self):
-        self.make_post_page.save_post_to_json()
+        user_id = self.current_user.id if self.current_user else None
+        self.make_post_page.save_post_to_json(created_by=user_id)
         self.topics_page.refresh_topics()
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
