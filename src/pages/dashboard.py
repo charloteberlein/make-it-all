@@ -1,17 +1,172 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QPushButton
+from PySide6.QtWidgets import (QPushButton, QProgressBar, QLabel, 
+                               QWidget, QHBoxLayout, QVBoxLayout,
+                               QFrame)
+from PySide6 import QtQuick
 
 from pages.base_page import BasePage
 
 class DashboardPage(BasePage):
+    projectNum = 0
+    projectName = "testing :)"
+    progressValue = 23
+
+    # Constructor
     def __init__(self):
         super().__init__()
 
+    # Function to create progress bar for each project.
+    def createProgressBar(self, projectName, progressValue):
+        #creating a project label
+        project_label = QLabel(projectName)
+        project_label.setObjectName("projectLabel")
+        project_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        project_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+
+        #creating a progressbar
+        progressBar = QProgressBar()
+        progressBar.setRange(0,100)
+        progressBar.setValue(progressValue) 
+        progressBar.setMinimumHeight(20) #necessary? 
+
+        project_container = QWidget()
+        project_container.setContentsMargins(10, 10, 10, 10)
+        project_layout = QHBoxLayout(project_container)
+        project_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        project_layout.addWidget(project_label)
+        project_layout.addWidget(progressBar, 1)
+
+        return project_container
+ 
+              
     def define_widgets(self) -> None:
+        # Navbar buttons
         self.posts = QPushButton("View posts")
         self.todo = QPushButton("View To-do")
+        self.projects = QPushButton("View Projects")
+        self.account = QPushButton("Account")
 
-        self.posts.setCursor(Qt.PointingHandCursor)
-        self.todo.setCursor(Qt.PointingHandCursor)
+        # Apply the same cursor to every button
+        for button in (
+            self.posts, self.todo,
+            self.projects, self.account):
+            button.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        self.widgets = (self.posts, self.todo)
+        #Progress tracker layout
+        self.prog_frame = QFrame()
+        self.prog_frame.setObjectName("ProgressFrame")
+        self.prog_frame.setFrameShape(QFrame.Shape.Box)
+        self.prog_frame_layout = QVBoxLayout()
+        self.prog_frame.setLayout(self.prog_frame_layout)
+
+        #Default layout - no projects
+        self.progressTrackerHeader = QLabel("Progress Tracker")
+        self.progressTrackerHeader.setObjectName("ProgressTrackerHeader")
+        self.progressTrackerHeader.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.progressTrackerHeader.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+
+        self.noProjectLabel = QLabel("No projects currently being tracked.")
+        self.noProjectLabel.setObjectName("noProjectLabel")
+        self.noProjectLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # temp horizontal navigation bar - should be replaced by EC code later
+        self.navbar_container = QWidget()
+
+        navbar_layout = QHBoxLayout(self.navbar_container)
+        navbar_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        navbar_layout.setContentsMargins(0, 0, 0, 0)
+        navbar_layout.addWidget(self.posts)
+        navbar_layout.addWidget(self.todo)
+        navbar_layout.addWidget(self.projects)
+        navbar_layout.addWidget(self.account)
+
+        # Progress bar widget layout
+        self.progress_container = QWidget()
+        self.progress_container.setContentsMargins(10, 10, 10, 10)
+
+        progress_layout = QVBoxLayout(self.progress_container)
+        progress_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        progress_layout.addWidget(self.prog_frame)
+        progress_layout.addWidget(self.progressTrackerHeader)
+        progress_layout.addSpacing(10)
+
+        if (self.projectNum == 0):
+            self.prog_frame_layout.addWidget(self.progressTrackerHeader)
+            self.prog_frame_layout.addWidget(self.noProjectLabel)
+        elif (self.projectNum >= 1):
+            for i in range (self.projectNum):
+                self.prog_frame_layout.addWidget(self.progressTrackerHeader)
+                self.prog_frame_layout.addWidget(
+                     self.createProgressBar(self.projectName, 
+                        self.progressValue))
+        else:
+             print("Error. Unexpected scenario in dashboard.py")
+
+        # ADD IN TOP OF STYLESHEET
+        self.progress_container.setStyleSheet("""
+        QProgressBar {
+            border: 2px solid #000000;
+            border-radius: 8px;
+            background-color: transparent;
+            color: #2c3e50;
+            text-align: center;
+    }
+
+        QProgressBar::chunk {
+            background-color: #EAB308;
+            border-radius: 6px;
+    }
+
+        QFrame#ProgressFrame {
+            background-color: #f1f5f9;
+            border: 2px solid #8f8a8a;
+            border-radius: 8px;
+    }
+        QLabel#noProjectLabel {
+            font-size: 16px;
+            color: #000000;
+            background: transparent;
+        }
+
+        QLabel#projectLabel {
+            font-size: 12px;
+            font-weight: bold;
+            color: #000000;
+            background: transparent;
+        
+        }
+        QLabel#ProgressTrackerHeader {
+            background: transparent;
+            color: #0f172a;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+""")
+        # Assemble widgets
+        # There's a big gap between navbar and progress widget that I don't know how to fix.
+        self.widgets = (
+            self.navbar_container,
+            self.progress_container
+        )
+
+        #Determine number of progress bars needed. 
+    def progBarNumber():
+            #Take information from To-Do pages to determine number of projects. getter method?
+            pass
+
+        #Displays correct amount of progress bars. 
+    def displayProgressBars():
+            pass
+
+        #function to determine layout
+    # def progLayout(projectNum):
+    #     if projectNum >= 1:
+    #         for i in range (projectNum):
+    #              createProgressBar()
+
