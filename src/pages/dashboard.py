@@ -7,7 +7,7 @@ from PySide6 import QtQuick
 from pages.base_page import BasePage
 
 class DashboardPage(BasePage):
-    projectNum = 0
+    projectNum = 3
     projectName = "testing :)"
     progressValue = 23
 
@@ -106,48 +106,6 @@ class DashboardPage(BasePage):
         else:
              print("Error. Unexpected scenario in dashboard.py")
 
-        # ADD IN TOP OF STYLESHEET
-        self.progress_container.setStyleSheet("""
-        QProgressBar {
-            border: 2px solid #000000;
-            border-radius: 8px;
-            background-color: transparent;
-            color: #2c3e50;
-            text-align: center;
-    }
-
-        QProgressBar::chunk {
-            background-color: #EAB308;
-            border-radius: 6px;
-    }
-
-        QFrame#ProgressFrame {
-            background-color: #f1f5f9;
-            border: 2px solid #8f8a8a;
-            border-radius: 8px;
-    }
-        QLabel#noProjectLabel {
-            font-size: 16px;
-            color: #000000;
-            background: transparent;
-        }
-
-        QLabel#projectLabel {
-            font-size: 12px;
-            font-weight: bold;
-            color: #000000;
-            background: transparent;
-        
-        }
-        QLabel#ProgressTrackerHeader {
-            background: transparent;
-            color: #0f172a;
-            font-family: "Segoe UI", Arial, sans-serif;
-            font-weight: bold;
-            font-size: 24px;
-        }
-        
-""")
         # Assemble widgets
         # There's a big gap between navbar and progress widget that I don't know how to fix.
         self.widgets = (

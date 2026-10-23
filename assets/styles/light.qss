@@ -1,5 +1,35 @@
 /* light.qss - Stylesheet used for the light mode.*/
 
+QLabel#ProgressTrackerHeader {
+    background: transparent;
+    color: #0f172a;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+}
+QLabel#noProjectLabel {
+    font-size: 16px;
+    color: #000000;
+    background: transparent;
+}
+QFrame#ProgressFrame {
+    background-color: #f1f5f9;
+    border: 2px solid #8f8a8a;
+    border-radius: 8px;
+}
+
+ QProgressBar::chunk {
+    background-color: #EAB308;
+    border-radius: 6px;
+}
+QProgressBar {
+    border: 2px solid #000000;
+    border-radius: 8px;
+    background-color: transparent;
+    color: #2c3e50;
+    text-align: center;
+}
+
 QToolButton {
     background-color: #f8fafc;
     color: #0f172a;
