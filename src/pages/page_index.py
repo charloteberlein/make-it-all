@@ -11,3 +11,4 @@ class PageIndex(Enum):
     MAKE_POST = 7
     TOPICS = 8
     TOPIC_CONTENT = 9
+    MY_ACCOUNT = 10

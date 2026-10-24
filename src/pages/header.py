@@ -1,9 +1,9 @@
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QLabel
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QLabel, QMenu
 
 class Header(QFrame):
     account = Signal()
-    settings = Signal()
+    toggle_theme = Signal()
     log_out = Signal()
 
     def __init__(self):
@@ -27,31 +27,34 @@ class Header(QFrame):
         self.title = QLabel("Make-It-All", alignment=Qt.AlignHCenter)
         self.title.setObjectName("HeaderTitle")
 
-        # Navigation Buttons with tooltips
-        self.account_btn = QPushButton("👤")
-        self.account_btn.setToolTip("Account")
-
+        # Settings dropdown menu icon
         self.settings_btn = QPushButton("⚙️")
-        self.settings_btn.setToolTip("Settings")
+        self.settings_btn.setToolTip("Settings Menu")
+        self.settings_btn.setObjectName("SideNavButton")
+        self.settings_btn.setCursor(Qt.PointingHandCursor)
+        self.settings_btn.setFixedSize(35, 35)
 
-        self.log_out_btn = QPushButton("↪️")
-        self.log_out_btn.setToolTip("Log out")
+        self.menu = QMenu(self)
 
-        for btn in (self.account_btn, self.settings_btn, self.log_out_btn):
-            btn.setObjectName("SideNavButton")
-            btn.setCursor(Qt.PointingHandCursor)
-            btn.setFixedSize(40, 40)
+        # Dropdown Items
+        self.account_action = self.menu.addAction("👤 Account Details")
+        self.theme_action = self.menu.addAction("🌓 Toggle Light/Dark Mode")
+        self.menu.addSeparator()
+        self.logout_action = self.menu.addAction("↪️ Log Out")
 
-        # Connect buttons to signals
-        self.account_btn.clicked.connect(self.account.emit)
-        self.settings_btn.clicked.connect(self.settings.emit)
-        self.log_out_btn.clicked.connect(self.log_out.emit)
+        self.account_action.triggered.connect(self.account.emit)
+        self.theme_action.triggered.connect(self.toggle_theme.emit)
+        self.logout_action.triggered.connect(self.log_out.emit)
+
+        self.settings_btn.clicked.connect(self.show_settings_menu)
+
+    def show_settings_menu(self):    # Aligns right edge of icon with dropdown
+        point = self.settings_btn.mapToGlobal(self.settings_btn.rect().bottomRight())
+        menu_width = self.menu.sizeHint().width()
+        point.setX(point.x() - menu_width)
+        self.menu.exec(point)
 
     def assemble_widgets(self) -> None:
         self.layout.addWidget(self.title)
         self.layout.addStretch()
-        self.layout.addWidget(self.log_out_btn)
-        self.layout.addSpacing(10)
         self.layout.addWidget(self.settings_btn)
-        self.layout.addSpacing(10)
-        self.layout.addWidget(self.account_btn)
