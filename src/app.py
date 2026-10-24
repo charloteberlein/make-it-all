@@ -9,6 +9,10 @@ from pages.sidebar import Sidebar
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
 
+from pages.forgotpassword import ForgotPasswordPage
+from pages.my_account import MyAccountPage
+from pages.make_post import MakePostPage
+
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage
 from pages.account.forgotpassword import ForgotPasswordPage
@@ -23,11 +27,14 @@ from pages.topics.topics_page import TopicsPage
 from pages.topics.topic_content import TopicContent
 from pages.topics.topic_content_page import TopicContentPage
 
+from pages.my_account import MyAccountPage
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Make-It-All Prototype")
-        self.setFixedSize(1200, 800)
+        self.resize(1200, 800)         # Allows for resizing the window.
+        self.setMinimumSize(900, 600)
 
         self.is_dark_mode = False
         self.current_user = None
@@ -49,16 +56,15 @@ class MainWindow(QWidget):
         self.signin_page = SignInPage()
         self.register_page = RegisterPage()
         self.forgot_password_page = ForgotPasswordPage()
-        self.posts_page = PostsPage()
-        self.post_content_page = PostContentPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
-        self.post_content_page = PostContentPage()
+        self.post_page = PostContentPage()
         self.make_post_page = MakePostPage()
         self.edit_post_page = EditPostPage()
         self.topics_page = TopicsPage()
         self.topic_content_page = TopicContentPage()
+        self.account_page = MyAccountPage()
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
@@ -71,6 +77,8 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.edit_post_page)
         self.stacked_widget.addWidget(self.topics_page)
         self.stacked_widget.addWidget(self.topic_content_page)
+        self.stacked_widget.addWidget(self.account_page)
+
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
@@ -87,6 +95,7 @@ class MainWindow(QWidget):
         self.register_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
         self.signin_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
         self.forgot_password_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
+        self.account_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
 
         # Colour theme events
         self.signin_page.toggle_btn.clicked.connect(self.toggle_theme)
@@ -95,8 +104,8 @@ class MainWindow(QWidget):
 
         # Page events
         self.signin_page.login_success.connect(self.log_in)
-        self.register_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
-        self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.register_page.login_success.connect(self.log_in)
+        self.forgot_password_page.login_success.connect(self.log_in)
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
@@ -118,8 +127,8 @@ class MainWindow(QWidget):
         self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
 
         # Header events
-        # TODO: self.header.account.connect()
-        # TODO: self.header.settings.connect()
+        self.header.account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
+        self.header.toggle_theme.connect(self.toggle_theme)
         self.header.log_out.connect(self.log_out)
 
         # Sidebar events

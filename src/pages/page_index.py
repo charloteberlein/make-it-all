@@ -12,3 +12,4 @@ class PageIndex(Enum):
     EDIT_POST = 8
     TOPICS = 9
     TOPIC_CONTENT = 10
+    MY_ACCOUNT = 11
