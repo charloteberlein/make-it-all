@@ -1,5 +1,32 @@
 /* light.qss - Stylesheet used for the light mode.*/
 
+QMenu {
+    color: #FFFFFF;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 8px;
+}
+
+QMenu::Item {
+    background-color: transparent;
+    padding: 7px 12px;
+    font-size: 16px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    border-radius: 6px;
+    margin: 4px 0px;
+}
+
+QMenu::Item:selected {
+    background-color: #c5c5c5;
+}
+
+QMenu::Separator {
+    height: 1px;
+    background: #c5c5c5;
+    margin: 2px 4px;
+}
+
 QToolButton {
     background-color: #f8fafc;
     color: #0f172a;
