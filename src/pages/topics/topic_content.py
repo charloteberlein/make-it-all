@@ -68,6 +68,12 @@ class TopicContent():
         return id
 
     @staticmethod
+    def get_topic_name(topic_id: int) -> str:
+        topics = TopicContent.load_topics()
+        result = [topic.name for topic in topics if topic.id == topic_id]
+        return result[0] if result else ""
+
+    @staticmethod
     def get_topic_writable(topic_id: int) -> bool:
         topics = TopicContent.load_topics()
         return any(topic.id == topic_id and topic.writable for topic in topics)

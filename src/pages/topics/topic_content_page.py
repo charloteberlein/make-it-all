@@ -55,6 +55,7 @@ class TopicContentPage(BasePage):
         self.back_btn = QPushButton("←")
         self.back_btn.clicked.connect(self.back.emit)
         self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.back_btn.setToolTip("Back to topics")
 
         self.topic_title = QLabel("")
         self.topic_title.setObjectName("TopicTitle")

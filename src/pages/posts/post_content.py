@@ -8,15 +8,19 @@ from helpers import read_json
 @dataclass
 class PostContent():
     def __init__(
-        self, id: int, viewed: bool, date_created: str, topic: int, title: str, content: str, created_by: int | None = None,
+        self, id: int, viewed: bool, date_created: str, archived: bool, topic: int, title: str,
+        content: str, created_by: int | None = None
     ):
+        # Metadata
         self.id = id
         self.viewed = viewed                # TODO: Add notifications for posts not yet viewed.
         self.date_created = date_created
+        self.created_by = created_by
+        self.archived = archived
+        # Content
         self.topic = topic
         self.title = title
         self.content = content
-        self.created_by = created_by
 
     @classmethod
     def load_posts(cls, filepath: Path | str) -> list["PostContent"]:
@@ -27,10 +31,11 @@ class PostContent():
                 id=post["metadata"]["id"],
                 viewed=post["metadata"]["viewed"],
                 date_created=post["metadata"]["date-created"],
+                created_by=post["metadata"].get("created_by"),
+                archived=post["metadata"]["archived"],
                 topic=post["topic"],
                 title=post["title"],
-                content=post["content"],
-                created_by=post.get("created_by"),
+                content=post["content"]
             ))
         return posts
 
