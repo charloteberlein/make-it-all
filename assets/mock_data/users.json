@@ -1,25 +1,32 @@
 {
-    "users": [
-        {
-            "id": 0,
-            "name": "Jane Doe",
-            "email": "j.doe@make-it-all.co.uk",
-            "password": "manager123",
-            "rank": "Manager"
-        },
-        {
-            "id": 1,
-            "name": "John Smith",
-            "email": "j.smith@make-it-all.co.uk",
-            "password": "teamlead123",
-            "rank": "Team Lead"
-        },
-        {
-            "id": 2,
-            "name": "Andrew Michaels",
-            "email": "a.michaels@make-it-all.co.uk",
-            "password": "employee123",
-            "rank": "Employee"
-        }
-    ]
+  "users": [
+    {
+      "id": 0,
+      "name": "Jane Doe",
+      "email": "j.doe@make-it-all.co.uk",
+      "password": "Manager123#",
+      "rank": "Manager"
+    },
+    {
+      "id": 1,
+      "name": "John Smith",
+      "email": "j.smith@make-it-all.co.uk",
+      "password": "Teamlead123#",
+      "rank": "Team Lead"
+    },
+    {
+      "id": 2,
+      "name": "Andrew Michaels",
+      "email": "a.michaels@make-it-all.co.uk",
+      "password": "Employee123#",
+      "rank": "Employee"
+    },
+    {
+      "id": 3,
+      "name": "",
+      "email": "a.morris@make-it-all.co.uk",
+      "password": "",
+      "rank": "Employee"
+    }
+  ]
 }

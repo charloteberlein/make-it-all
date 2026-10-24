@@ -82,7 +82,6 @@ class MainWindow(QWidget):
         self.register_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
         self.signin_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
         self.forgot_password_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
-
         # Colour theme events
         self.signin_page.toggle_btn.clicked.connect(self.toggle_theme)
         self.register_page.toggle_btn.clicked.connect(self.toggle_theme)
@@ -90,8 +89,8 @@ class MainWindow(QWidget):
 
         # Page events
         self.signin_page.login_success.connect(self.log_in)
-        self.register_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
-        self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.register_page.login_success.connect(self.log_in)
+        self.forgot_password_page.login_success.connect(self.log_in)
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
