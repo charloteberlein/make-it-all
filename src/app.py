@@ -8,10 +8,7 @@ from pages.header import Header
 from pages.sidebar import Sidebar
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
-
-from pages.forgotpassword import ForgotPasswordPage
 from pages.my_account import MyAccountPage
-from pages.make_post import MakePostPage
 
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage
@@ -59,7 +56,7 @@ class MainWindow(QWidget):
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
-        self.post_page = PostContentPage()
+        self.post_content_page = PostContentPage()
         self.make_post_page = MakePostPage()
         self.edit_post_page = EditPostPage()
         self.topics_page = TopicsPage()
