@@ -22,9 +22,9 @@ class TopicsPage(BasePage):
 
     def assemble_widgets(self) -> None:
         self.layout.addWidget(self.title)
-
         for (widget, _) in self.widgets:
             self.layout.addWidget(widget)
+        self.layout.addStretch()
 
         self.setLayout(self.layout)
 

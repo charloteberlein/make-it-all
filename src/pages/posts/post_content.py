@@ -3,12 +3,12 @@ from dataclasses import dataclass
 
 from datetime import datetime
 
-from helpers import read_json
+from helpers import read_json, write_json
 
 @dataclass
 class PostContent():
     def __init__(
-        self, id: int, viewed: bool, date_created: str, archived: bool, topic: int, title: str,
+        self, id: str, viewed: bool, date_created: str, archived: bool, topic: str, title: str,
         content: str, created_by: int | None = None
     ):
         # Metadata
@@ -18,17 +18,33 @@ class PostContent():
         self.created_by = created_by
         self.archived = archived
         # Content
-        self.topic = topic
         self.title = title
+        self.topic = topic
         self.content = content
+
+    def serialise(self) -> dict:
+        """Serialises a `PostContent` object to a dictionary for it to be saved to a JSON."""
+        return {
+            "metadata": {
+                "id": self.id,
+                "viewed": self.viewed,
+                "date-created": self.date_created,
+                "created_by": self.created_by,
+                "archived": self.archived
+            },
+            "title": self.title,
+            "topic": self.topic,
+            "content": self.content
+        }
 
     @classmethod
     def load_posts(cls, filepath: Path | str) -> list["PostContent"]:
+        """Deserialises the JSON object into a list of `PostContent` objects."""
         data: list[dict] = read_json(filepath)["posts"]
         posts = []
         for post in data:
             posts.append(cls(
-                id=post["metadata"]["id"],
+            id=post["metadata"]["id"],
                 viewed=post["metadata"]["viewed"],
                 date_created=post["metadata"]["date-created"],
                 created_by=post["metadata"].get("created_by"),
@@ -40,13 +56,11 @@ class PostContent():
         return posts
 
     @classmethod
-    def get_post_by_id(cls, id: int) -> "PostContent | None":
+    def get_post_by_id(cls, id: str) -> "PostContent | None":
         posts = cls.load_posts("assets/mock_data/posts.json")
-
         for post in posts:
             if post.id == id:
                 return post
-
         return None
 
     @classmethod
@@ -58,3 +72,20 @@ class PostContent():
             reverse=True,
         )
         return newest_first[:count]
+
+    @classmethod
+    def archive_post(cls, post_id: str, archive: bool) -> None:
+        posts = cls.load_posts("assets/mock_data/posts.json")
+        post = next(post for post in posts if post.id == post_id)
+        post.archived = archive
+        write_json("assets/mock_data/posts.json", {"posts": [post.serialise() for post in posts]})
+
+    @classmethod
+    def delete_post(cls, post_id: str) -> str:
+        posts = cls.load_posts("assets/mock_data/posts.json")
+        deleted_post = next(post for post in posts if post.id == post_id)
+        write_json(
+            "assets/mock_data/posts.json",
+            {"posts": [post.serialise() for post in [post for post in posts if post.id != post_id]]}
+        )
+        return deleted_post.topic

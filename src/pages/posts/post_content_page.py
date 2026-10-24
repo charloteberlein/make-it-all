@@ -1,35 +1,57 @@
-from PySide6.QtWidgets import QLabel, QTextEdit, QFrame, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import (
+    QLabel, QTextEdit, QFrame, QHBoxLayout, QPushButton, QStackedWidget, QSizePolicy
+)
 from PySide6.QtCore import Qt, Signal
 
 from pages.base_page import BasePage
-from pages.topics.topics_page import TopicContent
+from pages.topics.topic_content import TopicContent
 from pages.posts.post_content import PostContent
 
 class PostContentPage(BasePage):
     back = Signal()
+    edit = Signal(str)
+    delete = Signal(str)
 
-    def __init__(self, id: int = 0):
+    def __init__(self, id: str = ""):
         self._id = id
-        self.post = PostContent.get_post_by_id(id) or PostContent(0, False, "", False, 0, "", "")
+        self.post = PostContent.get_post_by_id(id) or PostContent("", False, "", False, "", "", "")
+        self.locked = (
+            True if self.post.archived
+            or not TopicContent.get_topic_writable(self.post.topic)
+            else False
+        )
         super().__init__()
 
     @property
-    def id(self):
+    def id(self) -> str:
         return self._id
 
     @id.setter
-    def id(self, new_id):
+    def id(self, new_id: str):
         self._id = new_id
-        self.post = PostContent.get_post_by_id(new_id) or PostContent(0, False, "", False, 0, "", "")
-        topics = TopicContent.load_topics("assets/mock_data/topics.json")
+        self.post = PostContent.get_post_by_id(new_id) or PostContent("", False, "", False, "", "", "")
         
         self.title.setText(self.post.title)
         self.back_btn.setToolTip(
             f"Back to {TopicContent.get_topic_name(self.post.topic) or "topic"}"
         )
-        self.topic.setText(topics[self.post.topic].name)
+        self.topic.setText(TopicContent.get_topic_name(self.post.topic))
         self.date.setText(self.post.date_created)
         self.content.setHtml(self.post.content)
+
+        self.locked = (
+            True if self.post.archived
+            or not TopicContent.get_topic_writable(self.post.topic)
+            else False
+        )
+
+        self.edit_stack.setCurrentIndex(int(self.locked))
+
+        self.archive_btn.setText("Unarchive post" if self.post.archived else "Archive post")
+        if TopicContent.get_topic_writable(self.post.topic):
+            self.archive_btn.show()
+        else:
+            self.archive_btn.hide()
 
     def define_layout(self) -> None:
         super().define_layout()
@@ -37,13 +59,16 @@ class PostContentPage(BasePage):
         self.title_frame = QFrame()
         self.title_layout = QHBoxLayout()
 
+        self.edit_frame = QFrame()
+        self.edit_layout = QHBoxLayout()
+        self.edit_stack = QStackedWidget()
+        self.edit_stack.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+
         self.metadata_frame = QFrame()
         self.metadata_frame.setObjectName("TopBar")
         self.metadata_layout = QHBoxLayout()
 
     def define_widgets(self) -> None:
-        topics = TopicContent.load_topics("assets/mock_data/topics.json")
-
         self.back_btn = QPushButton("←")
         self.back_btn.clicked.connect(self.back.emit)
         self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -54,7 +79,25 @@ class PostContentPage(BasePage):
         self.title = QLabel(self.post.title)
         self.title.setObjectName("PostTitle")
 
-        self.topic = QLabel(topics[self.post.topic].name)
+        self.edit_btn = QPushButton("✏️")
+        self.edit_btn.clicked.connect(lambda: self.edit.emit(self.post.id))
+        self.edit_btn.setToolTip("Edit post")
+
+        self.delete_btn = QPushButton("🗑️")
+        self.delete_btn.clicked.connect(lambda: self.delete.emit(self.post.id))
+        self.delete_btn.setToolTip("Delete post")
+
+        self.archive_btn = QPushButton("Unarchive post" if self.post.archived else "Archive post")
+        self.archive_btn.clicked.connect(self.toggle_archive_post)
+        self.archive_btn.setObjectName("ToggleButton")
+        if TopicContent.get_topic_writable(self.post.topic):
+            self.archive_btn.show()
+        else:
+            self.archive_btn.hide()
+
+        self.locked_label = QLabel("Locked", alignment=Qt.AlignmentFlag.AlignRight)
+
+        self.topic = QLabel(TopicContent.get_topic_name(self.post.topic))
         self.date = QLabel(self.post.date_created)
 
         self.content = QTextEdit()
@@ -63,15 +106,27 @@ class PostContentPage(BasePage):
 
     def assemble_widgets(self) -> None:
         # Title
+        self.edit_layout.addStretch()
+        self.edit_layout.addWidget(self.edit_btn)
+        self.edit_layout.addWidget(self.delete_btn)
+        self.edit_frame.setLayout(self.edit_layout)
+
+        self.edit_stack.addWidget(self.edit_frame)
+        self.edit_stack.addWidget(self.locked_label)
+
+        self.edit_stack.setCurrentIndex(int(self.locked))
+
         self.title_layout.addWidget(self.back_btn)
         self.title_layout.addWidget(self.title)
         self.title_layout.addStretch()
+        self.title_layout.addWidget(self.edit_stack)
         self.title_frame.setLayout(self.title_layout)
 
         # Metadata
         self.metadata_layout.addWidget(self.topic)
         self.metadata_layout.addWidget(self.date)
         self.metadata_layout.addStretch()
+        self.metadata_layout.addWidget(self.archive_btn)
         self.metadata_frame.setLayout(self.metadata_layout)
 
         self.layout.addWidget(self.title_frame)
@@ -79,4 +134,11 @@ class PostContentPage(BasePage):
         self.layout.addWidget(self.content)
         
         self.setLayout(self.layout)
-        
+
+    def toggle_archive_post(self):
+        self.post.archived = not self.post.archived
+        self.archive_btn.setText("Unarchive post" if self.post.archived else "Archive post")
+        PostContent.archive_post(self.post.id, self.post.archived)
+
+        self.locked = not self.locked
+        self.edit_stack.setCurrentIndex(int(self.locked))
