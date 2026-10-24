@@ -9,4 +9,6 @@ class PageIndex(Enum):
     POSTS = 5
     POST_CONTENT = 6
     MAKE_POST = 7
-    MY_ACCOUNT = 8
+    TOPICS = 8
+    TOPIC_CONTENT = 9
+    MY_ACCOUNT = 10

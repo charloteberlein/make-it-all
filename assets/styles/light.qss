@@ -83,12 +83,24 @@ QFrame#HeaderTitle {
     font-size: 24px;
 }
 
+QFrame#Topic {
+    border-bottom: 2px solid #0f172a;
+}
+
 QWidget#PostTitle {
     background: transparent;
     color: #0f172a;
     font-family: "Segoe UI", Arial, sans-serif;
-    font-weight: bold;
+    font-weight: normal;
     font-size: 18px;
+}
+
+QWidget#TopicTitle {
+    background: transparent;
+    color: #0f172a;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 28px;
 }
 
 QFrame#Sidebar {
@@ -164,7 +176,7 @@ QPushButton#LoginButton:hover {
 
 QPushButton#NavButton {
     background-color: transparent;
-    color: #EAB308
+    color: #EAB308;
     border: 1px solid #EAB308;
     border-radius: 12px;
     padding: 4px 12px;
@@ -186,4 +198,8 @@ QPushButton#ToggleButton {
     font-size: 11px;
     font-weight: bold;
     border-width: 1px;
+}
+
+QLabel#ErrorLabel {
+    color: #b00020;
 }

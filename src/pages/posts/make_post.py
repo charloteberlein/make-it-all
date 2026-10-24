@@ -2,8 +2,9 @@ from PySide6.QtGui import QAction, QFont
 from PySide6.QtWidgets import QLabel, QTextEdit, QFrame, QHBoxLayout, QLineEdit, QPushButton, QToolBar
 from datetime import datetime as dt
 
-from pages.base_page import BasePage
 from helpers import read_json, write_json
+from pages.base_page import BasePage
+from pages.topics.topic_content import TopicContent
 
 class MakePostPage(BasePage):
     def __init__(self):
@@ -105,7 +106,7 @@ class MakePostPage(BasePage):
         
         self.setLayout(self.layout)
 
-    def save_post_to_json(self) -> None:
+    def save_post_to_json(self, created_by: int | None = None) -> None:
         """Appends a post to the `posts.json` file."""
         # TODO: Disallow empty titles/topics/content
         data: dict = read_json("assets/mock_data/posts.json")
@@ -118,7 +119,8 @@ class MakePostPage(BasePage):
                     "viewed": False,
                     "date-created": self.date_created,
                 },
-                "topic": self.topic_input.text(),
+                "topic": TopicContent.get_matching_topic(self.topic_input.text()),
+                "created_by": created_by,
                 "title": self.title_input.text(),
                 "content": self.content.document().toHtml(),
             }
