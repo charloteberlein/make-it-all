@@ -99,8 +99,8 @@ class MainWindow(QWidget):
 
         # Page events
         self.signin_page.login_success.connect(self.log_in)
-        self.register_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
-        self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.register_page.login_success.connect(self.log_in)
+        self.forgot_password_page.login_success.connect(self.log_in)
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
