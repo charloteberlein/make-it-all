@@ -2,23 +2,28 @@
   "topics": [
     {
       "id": 0,
-      "name": "Printers"
+      "name": "Printers",
+      "writable": true
     },
     {
       "id": 1,
-      "name": "IT Support"
+      "name": "IT Support",
+      "writable": true
     },
     {
       "id": 2,
-      "name": "Health and Safety"
+      "name": "Health and Safety",
+      "writable": true
     },
     {
       "id": 3,
-      "name": "HR Policies"
+      "name": "HR Policies",
+      "writable": false
     },
     {
       "id": 4,
-      "name": "Finance"
+      "name": "Finance",
+      "writable": true
     }
   ]
 }

@@ -8,10 +8,7 @@ from pages.header import Header
 from pages.sidebar import Sidebar
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
-
-from pages.forgotpassword import ForgotPasswordPage
 from pages.my_account import MyAccountPage
-from pages.make_post import MakePostPage
 
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage
@@ -56,7 +53,7 @@ class MainWindow(QWidget):
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
-        self.post_page = PostContentPage()
+        self.post_content_page = PostContentPage()
         self.make_post_page = MakePostPage()
         self.topics_page = TopicsPage()
         self.topic_content_page = TopicContentPage()
@@ -115,7 +112,7 @@ class MainWindow(QWidget):
 
         self.topic_content_page.post_selected.connect(self.view_post)
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
-
+        self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
 
         # Header events
         self.header.account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
@@ -159,14 +156,15 @@ class MainWindow(QWidget):
             self.setStyleSheet(file.read())
 
     def save_and_exit_post_maker(self):
-        user_id = self.current_user.id if self.current_user else None
-        self.make_post_page.save_post_to_json(created_by=user_id)
-        self.topics_page.refresh_topics()
-        for (widget, id) in self.topics_page.widgets:
-            widget.clicked.connect(
-                lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
-            )
-        self.change_page(PageIndex.POSTS)
+        if self.make_post_page.check_post_valid:
+            user_id = self.current_user.id if self.current_user else None
+            self.make_post_page.save_post_to_json(created_by=user_id)
+            self.topics_page.refresh_topics()
+            for (widget, id) in self.topics_page.widgets:
+                widget.clicked.connect(
+                    lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+                )
+            self.change_page(PageIndex.POSTS)
 
     def view_post(self, post_id):
         self.post_content_page.id = post_id
@@ -183,6 +181,10 @@ class MainWindow(QWidget):
     def view_topic_posts(self, topic_id):
         self.topic_content_page.topic_id = topic_id
         self.change_page(PageIndex.TOPIC_CONTENT)
+
+    def toggle_topic_writable(self):
+        self.topic_content_page.toggle_topic_writable()
+        self.make_post_page.refresh_topic_options()
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)

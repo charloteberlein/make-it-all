@@ -1,3 +1,4 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QPushButton, QLabel
 
 from pages.base_page import BasePage
@@ -16,6 +17,7 @@ class TopicsPage(BasePage):
         for topic in self.topics:
             btn = QPushButton(topic.name)
             btn.setObjectName("LoginButton")
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
             self.widgets.append((btn, topic.id))
 
     def assemble_widgets(self) -> None:
