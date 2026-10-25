@@ -6,9 +6,9 @@ from pages.base_page import BasePage
 from pages.topics.topic_content import TopicContent
 
 class TopicFrame(QFrame):
-    clicked = Signal(int)
+    clicked = Signal(str)
 
-    def __init__(self, post_id: int):
+    def __init__(self, post_id: str):
         super().__init__()
         self.post_id = post_id
         self.setObjectName("Topic")
@@ -19,23 +19,23 @@ class TopicFrame(QFrame):
 
 
 class TopicContentPage(BasePage):
-    post_selected = Signal(int)
+    post_selected = Signal(str)
     back = Signal()
     topic_writable = Signal()
 
-    def __init__(self, topic_id: int = 0):
+    def __init__(self, topic_id: str = ""):
         self._topic_id = topic_id
         self.writable = TopicContent.get_topic_writable(self.topic_id)
         super().__init__()
 
     @property
-    def topic_id(self):
+    def topic_id(self) -> str:
         return self._topic_id
 
     @topic_id.setter
-    def topic_id(self, id: int):
-        self._topic_id = id
-        self.writable = TopicContent.get_topic_writable(id)
+    def topic_id(self, topic_id: str):
+        self._topic_id = topic_id
+        self.writable = TopicContent.get_topic_writable(topic_id)
         self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
         for widget, _ in self.widgets:
             self.layout.removeWidget(widget)
@@ -55,6 +55,7 @@ class TopicContentPage(BasePage):
         self.back_btn = QPushButton("←")
         self.back_btn.clicked.connect(self.back.emit)
         self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.back_btn.setToolTip("Back to topics")
 
         self.topic_title = QLabel("")
         self.topic_title.setObjectName("TopicTitle")
@@ -74,8 +75,7 @@ class TopicContentPage(BasePage):
     def define_widgets(self) -> None:
         self.posts = TopicContent.get_posts_by_topic(self.topic_id)
 
-        topics = TopicContent.load_topics("assets/mock_data/topics.json")
-        self.topic_title.setText(topics[self.topic_id].name)
+        self.topic_title.setText(TopicContent.get_topic_name(self.topic_id))
 
         self.widgets = []
         for post in self.posts:

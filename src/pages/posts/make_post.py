@@ -5,8 +5,9 @@ from PySide6.QtWidgets import (
 )
 from datetime import datetime as dt
 
-from helpers import read_json, write_json
+from helpers import generate_id, write_json
 from pages.base_page import BasePage
+from pages.posts.post_content import PostContent
 from pages.topics.topic_content import TopicContent
 
 class MakePostPage(BasePage):
@@ -123,25 +124,28 @@ class MakePostPage(BasePage):
 
     def save_post_to_json(self, created_by: int | None = None) -> None:
         """Appends a post to the `posts.json` file."""
-        # TODO: Disallow empty titles/topics/content
-        data: dict = read_json("assets/mock_data/posts.json")
+        posts = PostContent.load_posts("assets/mock_data/posts.json")
 
         self.update_date()
-        data["posts"].append(
-            {
-                "metadata": {
-                    "id": data["posts"][-1]["metadata"]["id"] + 1,
-                    "viewed": False,
-                    "date-created": self.date_created,
-                },
-                "topic": TopicContent.get_matching_topic(self.topic_input.text()),
-                "created_by": created_by,
-                "title": self.title_input.text(),
-                "content": self.content.document().toHtml(),
-            }
+        posts.append(
+            PostContent(
+                id=generate_id(),
+                viewed=False,
+                date_created=self.date_created,
+                archived=False,
+                topic=TopicContent.get_matching_topic(
+                    self.topic_input.text() or self.topic_options.currentText()
+                ),
+                title=self.title_input.text(),
+                content=self.content.document().toHtml(),
+                created_by=created_by
+            )
         )
 
-        write_json("assets/mock_data/posts.json", data)
+        write_json(
+            "assets/mock_data/posts.json",
+            {"posts": [post.serialise() for post in posts]},
+        )
 
         self.title_input.clear()
         self.topic_input.clear()
@@ -172,7 +176,7 @@ class MakePostPage(BasePage):
                     and text not in [topic.name for topic in TopicContent.load_topics()]
                 )
             )
-             # Content not empty
+            # Content not empty
             and len(self.content.toPlainText()) > 0
         )
 
