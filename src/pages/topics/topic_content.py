@@ -26,7 +26,7 @@ class TopicContent():
         return topics
 
     @staticmethod
-    def save_topics(filepath: Path | str, topics: list[TopicContent]) -> None:
+    def save_topics(filepath: Path | str, topics: list["TopicContent"]) -> None:
         data = []
         for topic in topics:
             data.append({
