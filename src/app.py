@@ -8,26 +8,33 @@ from pages.header import Header
 from pages.sidebar import Sidebar
 from pages.dashboard import DashboardPage
 from pages.todo import TodoPage
+from pages.my_account import MyAccountPage
 
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage
 from pages.account.forgotpassword import ForgotPasswordPage
 
 from pages.posts.posts_page import PostsPage
+from pages.posts.post_content import PostContent
 from pages.posts.post_content_page import PostContentPage
 from pages.posts.make_post import MakePostPage
+from pages.posts.edit_post import EditPostPage
 
 from pages.topics.topics_page import TopicsPage
+from pages.topics.topic_content import TopicContent
 from pages.topics.topic_content_page import TopicContentPage
 from pages.training import TrainingPage
 from pages.account import AccountPage  
 from pages.notifications import NotificationsPage
 
+from pages.my_account import MyAccountPage
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Make-It-All Prototype")
-        self.setFixedSize(1200, 800)
+        self.resize(1200, 800)         # Allows for resizing the window.
+        self.setMinimumSize(900, 600)
 
         self.is_dark_mode = False
         self.current_user = None
@@ -49,18 +56,21 @@ class MainWindow(QWidget):
         self.signin_page = SignInPage()
         self.register_page = RegisterPage()
         self.forgot_password_page = ForgotPasswordPage()
-        self.posts_page = PostsPage()
-        self.post_content_page = PostContentPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
         self.posts_page = PostsPage()
         self.post_content_page = PostContentPage()
         self.make_post_page = MakePostPage()
+        self.edit_post_page = EditPostPage()
         self.topics_page = TopicsPage()
         self.topic_content_page = TopicContentPage()
+<<<<<<< HEAD
         self.training_page = TrainingPage()
         self.account_page = AccountPage()  # Placeholder for the Account page
         self.notifications_page = NotificationsPage()  # Placeholder for the Notifications page
+=======
+        self.account_page = MyAccountPage()
+>>>>>>> ea0c04f69b8546f9cb666e4aec6988f44f13e154
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
@@ -70,11 +80,17 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.posts_page)
         self.stacked_widget.addWidget(self.post_content_page)
         self.stacked_widget.addWidget(self.make_post_page)
+        self.stacked_widget.addWidget(self.edit_post_page)
         self.stacked_widget.addWidget(self.topics_page)
         self.stacked_widget.addWidget(self.topic_content_page)
+<<<<<<< HEAD
         self.stacked_widget.addWidget(self.training_page)
         self.stacked_widget.addWidget(self.account_page)
         self.stacked_widget.addWidget(self.notifications_page)
+=======
+        self.stacked_widget.addWidget(self.account_page)
+
+>>>>>>> ea0c04f69b8546f9cb666e4aec6988f44f13e154
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
@@ -91,6 +107,7 @@ class MainWindow(QWidget):
         self.register_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
         self.signin_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
         self.forgot_password_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
+        self.account_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
 
         # Colour theme events
         self.signin_page.toggle_btn.clicked.connect(self.toggle_theme)
@@ -99,13 +116,17 @@ class MainWindow(QWidget):
 
         # Page events
         self.signin_page.login_success.connect(self.log_in)
-        self.register_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
-        self.forgot_password_page.login_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.register_page.login_success.connect(self.log_in)
+        self.forgot_password_page.login_success.connect(self.log_in)
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
         self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
-        self.make_post_page.confirm_btn.clicked.connect(lambda: self.save_and_exit_post_maker())
+        self.make_post_page.confirm_btn.clicked.connect(self.save_and_exit_post_maker)
+        self.edit_post_page.edit.connect(self.save_and_exit_post_editor)
+        self.post_content_page.back.connect(lambda: self.view_topic_posts(self.post_content_page.post.topic))
+        self.post_content_page.edit.connect(self.edit_post)
+        self.post_content_page.delete.connect(self.delete_post)
         self.posts_page.post_selected.connect(self.view_post)
 
         for (widget, id) in self.topics_page.widgets:
@@ -115,14 +136,18 @@ class MainWindow(QWidget):
 
         self.topic_content_page.post_selected.connect(self.view_post)
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
+<<<<<<< HEAD
 
         self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
         self.dashboard_page.switch_to_account.connect(lambda: self.change_page(PageIndex.ACCOUNT))
         self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
+=======
+        self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
+>>>>>>> ea0c04f69b8546f9cb666e4aec6988f44f13e154
 
         # Header events
-        # TODO: self.header.account.connect()
-        # TODO: self.header.settings.connect()
+        self.header.account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
+        self.header.toggle_theme.connect(self.toggle_theme)
         self.header.log_out.connect(self.log_out)
 
         # Sidebar events
@@ -162,7 +187,37 @@ class MainWindow(QWidget):
             self.setStyleSheet(file.read())
 
     def save_and_exit_post_maker(self):
-        self.make_post_page.save_post_to_json()
+        if self.make_post_page.check_post_valid():
+            user_id = self.current_user.id if self.current_user else None
+            self.make_post_page.save_post_to_json(created_by=user_id)
+            self.topics_page.refresh_topics()
+            for (widget, id) in self.topics_page.widgets:
+                widget.clicked.connect(
+                    lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+                )
+            self.change_page(PageIndex.POSTS)
+
+    def save_and_exit_post_editor(self, post_id: str):
+        if self.edit_post_page.check_post_valid():
+            self.edit_post_page.save_post_to_json()
+            self.topics_page.refresh_topics()
+            for (widget, id) in self.topics_page.widgets:
+                widget.clicked.connect(
+                    lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+                )
+        self.view_post(post_id)
+
+    def view_post(self, post_id: str):
+        self.post_content_page.id = post_id
+        self.change_page(PageIndex.POST_CONTENT)
+
+    def edit_post(self, post_id: str):
+        self.edit_post_page.id = post_id
+        self.change_page(PageIndex.EDIT_POST)
+
+    def delete_post(self, post_id: str):
+        topic_id = PostContent.delete_post(post_id)
+        TopicContent.remove_topic_if_empty(topic_id)
         self.topics_page.refresh_topics()
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
@@ -170,21 +225,25 @@ class MainWindow(QWidget):
             )
         self.change_page(PageIndex.POSTS)
 
-    def view_post(self, post_id):
-        self.post_content_page.id = post_id
-        self.change_page(PageIndex.POST_CONTENT)
-
     def log_in(self, user):
         self.current_user = user
+        self.posts_page.set_user(user.id)
+        self.topic_content_page.set_can_toggle(user.rank == "Manager")
         self.change_page(PageIndex.DASHBOARD)
 
     def log_out(self):
         self.current_user = None
+        self.posts_page.set_user(None)
+        self.topic_content_page.set_can_toggle(False)
         self.change_page(PageIndex.SIGN_IN)
 
-    def view_topic_posts(self, topic_id):
+    def view_topic_posts(self, topic_id: str):
         self.topic_content_page.topic_id = topic_id
         self.change_page(PageIndex.TOPIC_CONTENT)
+
+    def toggle_topic_writable(self):
+        self.topic_content_page.toggle_topic_writable()
+        self.make_post_page.refresh_topic_options()
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)

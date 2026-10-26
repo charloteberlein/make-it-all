@@ -1,5 +1,39 @@
 /* dark.qss - Stylesheet used for the dark mode.*/
 
+QWidget {
+    background-color: #121820;
+    color: #e2e8f0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    border: none;
+}
+
+QMenu {
+    color: #0f172a;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 8px;
+}
+
+QMenu::Item {
+    background-color: transparent;
+    padding: 7px 12px;
+    font-size: 16px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    border-radius: 6px;
+    margin: 4px 0px;
+}
+
+QMenu::Item:selected {
+    background-color: #5b5b5b;
+}
+
+QMenu::Separator {
+    height: 1px;
+    background: #5b5b5b;
+    margin: 2px 4px;
+}
+
 QToolButton {
     background-color: #1e293b;
     color: #e2e8f0;
@@ -86,12 +120,6 @@ QFrame#Topic {
     border-bottom: 2px solid #e2e8f0;
 }
 
-QWidget {
-    background-color: #121820;
-    color: #e2e8f0;
-    font-family: "Segoe UI", Arial, sans-serif;
-}
-
 QLabel#TitleLabel {
     font-size: 40px;
     font-weight: bold;
@@ -120,7 +148,7 @@ QLabel#SubheadingLabel {
     background: transparent;
 }
 
-QLineEdit, QTextEdit {
+QLineEdit, QTextEdit, QComboBox {
     background-color: #1e293b;
     color: #ffffff;
     border: 1px solid #334155;
@@ -129,7 +157,7 @@ QLineEdit, QTextEdit {
     font-size: 14px;
 }
 
-QLineEdit:focus, QTextEdit:focus {
+QLineEdit:focus, QTextEdit:focus, QComboBox:on {
     border: 2px solid #EAB308;
 }
 
@@ -145,6 +173,10 @@ QPushButton#LoginButton {
 
 QPushButton#LoginButton:hover {
     background-color: #CA8A04;
+}
+
+QPushButton#LoginButton:disabled {
+    background-color: #334155;
 }
 
 QPushButton#NavButton {

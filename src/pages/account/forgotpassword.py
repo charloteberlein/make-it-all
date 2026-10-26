@@ -2,9 +2,11 @@ from PySide6.QtWidgets import QFrame, QHBoxLayout, QLineEdit, QPushButton, QLabe
 from PySide6.QtCore import Qt, Signal
 
 from pages.base_page import BasePage
+from pages.account.user import *
 
 class ForgotPasswordPage(BasePage):
     switch_to_SignIn = Signal()
+    login_success = Signal(object)
 
     def __init__(self):
         super().__init__()
@@ -42,8 +44,11 @@ class ForgotPasswordPage(BasePage):
         
         self.heading = QLabel("Forgot Password?")
         self.heading.setObjectName("HeadingLabel")
+
+        self.email_input = QLineEdit()
+        self.email_input.setPlaceholderText("Enter company email (xxx@make-it-all.co.uk)")
         
-        self.subheading = QLabel("Enter your new password to continue.")
+        self.subheading = QLabel("Enter your company email and new password.")
         self.subheading.setObjectName("SubheadingLabel")
 
         self.password_input = QLineEdit()
@@ -57,6 +62,7 @@ class ForgotPasswordPage(BasePage):
         self.login_btn = QPushButton("Reset Password && Sign In")
         self.login_btn.setObjectName("LoginButton")
         self.login_btn.setCursor(Qt.PointingHandCursor)
+        self.login_btn.clicked.connect(self.password_reset)
 
     def assemble_widgets(self) -> None:
         # Header
@@ -70,6 +76,7 @@ class ForgotPasswordPage(BasePage):
         self.main_section.addSpacing(5)
         self.main_section.addWidget(self.subheading)
         self.main_section.addSpacing(10)
+        self.main_section.addWidget(self.email_input)
         self.main_section.addWidget(self.password_input)
         self.main_section.addWidget(self.confirm_password_input)
         self.main_section.addSpacing(10)
@@ -86,3 +93,34 @@ class ForgotPasswordPage(BasePage):
         self.layout.addStretch(1)
 
         self.setLayout(self.layout)
+
+    def password_reset(self) -> None:
+        email = self.email_input.text().strip().lower()
+        password = self.password_input.text()
+        confirm_password = self.confirm_password_input.text()
+
+        error_message = validate_reset_password(email, password, confirm_password)
+        if error_message:
+            self.show_message(error_message)
+            return
+        
+        # Saves new password to users.JSON.
+        success_update = add_user_password(email, password)
+        if success_update:
+            user = find_user(email, password)
+            if user:
+                self.subheading.setText("")
+                self.email_input.clear()
+                self.password_input.clear()
+                self.confirm_password_input.clear()
+                self.login_success.emit(user)
+            else:
+                self.show_message("❌ Error logging in after reset.")
+        else:
+            self.show_message("❌ Failed to update password. Please try again.")
+
+    def show_message(self, message: str) -> None:
+        """ Updates the subheading text directly to show errors or success. """
+        self.subheading.setStyleSheet("color: #e74c3c; font-size: 14px;")
+        self.subheading.setText("")
+        self.subheading.setText(message)

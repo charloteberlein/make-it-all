@@ -6,9 +6,9 @@ from pages.base_page import BasePage
 from pages.topics.topic_content import TopicContent
 
 class TopicFrame(QFrame):
-    clicked = Signal(int)
+    clicked = Signal(str)
 
-    def __init__(self, post_id: int):
+    def __init__(self, post_id: str):
         super().__init__()
         self.post_id = post_id
         self.setObjectName("Topic")
@@ -19,20 +19,24 @@ class TopicFrame(QFrame):
 
 
 class TopicContentPage(BasePage):
-    post_selected = Signal(int)
+    post_selected = Signal(str)
     back = Signal()
+    topic_writable = Signal()
 
-    def __init__(self, topic_id: int = 0):
+    def __init__(self, topic_id: str = ""):
         self._topic_id = topic_id
+        self.writable = TopicContent.get_topic_writable(self.topic_id)
         super().__init__()
 
     @property
-    def topic_id(self):
+    def topic_id(self) -> str:
         return self._topic_id
 
     @topic_id.setter
-    def topic_id(self, id: int):
-        self._topic_id = id
+    def topic_id(self, topic_id: str):
+        self._topic_id = topic_id
+        self.writable = TopicContent.get_topic_writable(topic_id)
+        self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
         for widget, _ in self.widgets:
             self.layout.removeWidget(widget)
             widget.deleteLater()
@@ -48,28 +52,38 @@ class TopicContentPage(BasePage):
         self.header_frame.setObjectName("TopBar")
         header_layout = QHBoxLayout()
 
-        self.back_btn = QPushButton("Back to topics")
+        self.back_btn = QPushButton("←")
         self.back_btn.clicked.connect(self.back.emit)
+        self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.back_btn.setToolTip("Back to topics")
 
         self.topic_title = QLabel("")
         self.topic_title.setObjectName("TopicTitle")
 
+        self.toggle_btn = QPushButton("")
+        self.toggle_btn.clicked.connect(self.topic_writable.emit)
+        self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
+        self.toggle_btn.setObjectName("ToggleButton")
+        self.toggle_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.toggle_btn.setVisible(False)
+
         header_layout.addWidget(self.back_btn)
         header_layout.addWidget(self.topic_title)
         header_layout.addStretch()
+        header_layout.addWidget(self.toggle_btn)
         self.header_frame.setLayout(header_layout)
 
     def define_widgets(self) -> None:
         self.posts = TopicContent.get_posts_by_topic(self.topic_id)
 
-        topics = TopicContent.load_topics("assets/mock_data/topics.json")
-        self.topic_title.setText(topics[self.topic_id].name)
+        self.topic_title.setText(TopicContent.get_topic_name(self.topic_id))
 
         self.widgets = []
         for post in self.posts:
             layout = QHBoxLayout()
             layout_frame = TopicFrame(post.id)
             layout_frame.clicked.connect(self.post_selected)
+            layout_frame.setCursor(Qt.CursorShape.PointingHandCursor)
 
             title = QLabel(post.title, alignment=Qt.AlignmentFlag.AlignLeft)
             title.setObjectName("PostTitle")
@@ -88,3 +102,11 @@ class TopicContentPage(BasePage):
         self.layout.addStretch()
 
         self.setLayout(self.layout)
+
+    def toggle_topic_writable(self) -> None:
+        self.writable = not self.writable
+        self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
+        TopicContent.set_topic_writable(self.topic_id, self.writable)
+
+    def set_can_toggle(self, allowed: bool) -> None:
+        self.toggle_btn.setVisible(allowed)

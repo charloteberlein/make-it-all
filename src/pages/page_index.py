@@ -14,3 +14,7 @@ class PageIndex(Enum):
     TRAINING = 10
     ACCOUNT = 11
     NOTIFICATIONS = 12
+    EDIT_POST = 13
+    TOPICS = 14
+    TOPIC_CONTENT = 15
+    MY_ACCOUNT = 16
