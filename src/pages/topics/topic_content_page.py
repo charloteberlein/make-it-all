@@ -65,6 +65,7 @@ class TopicContentPage(BasePage):
         self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
         self.toggle_btn.setObjectName("ToggleButton")
         self.toggle_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.toggle_btn.setVisible(False)
 
         header_layout.addWidget(self.back_btn)
         header_layout.addWidget(self.topic_title)
@@ -106,3 +107,6 @@ class TopicContentPage(BasePage):
         self.writable = not self.writable
         self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
         TopicContent.set_topic_writable(self.topic_id, self.writable)
+
+    def set_can_toggle(self, allowed: bool) -> None:
+        self.toggle_btn.setVisible(allowed)
