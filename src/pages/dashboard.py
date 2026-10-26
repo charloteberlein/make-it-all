@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QPushButton, QProgressBar, QLabel, 
     QWidget, QHBoxLayout, QVBoxLayout,
-    QFrame)
+    QFrame, QScrollArea)
 
 from pages.base_page import BasePage
 
@@ -12,7 +12,7 @@ class DashboardPage(BasePage):
     progressValue = 23
     totalTime = 180
     timeTaken = 60
-    timePercentage = totalTime/timeTaken
+    timePercentage = (timeTaken/totalTime) * 100
 
     def __init__(self):
         super().__init__()
@@ -28,14 +28,12 @@ class DashboardPage(BasePage):
         progressBar.setObjectName("ProjectProgress")
         progressBar.setRange(0,100)
         progressBar.setValue(progressValue) 
-        #progressBar.setMinimumHeight(20) 
 
         # Creating time tracking progress bar
         elapsedTimeBar = QProgressBar()
         elapsedTimeBar.setObjectName("TimeBar")
         elapsedTimeBar.setRange(0,100)
-        elapsedTimeBar.setValue(timePercentage)
-        #elapsedTimeBar.setMinimumHeight(20) 
+        elapsedTimeBar.setValue(int(timePercentage))
 
         #Progress bar layouts
         progress_stack = QWidget()
@@ -53,7 +51,7 @@ class DashboardPage(BasePage):
  
               
     def define_widgets(self) -> None:
-        # Navbar buttons
+        # Navbar buttons - TEMPORARY 
         self.posts = QPushButton("View posts")
         self.todo = QPushButton("View To-do")
         self.projects = QPushButton("View Projects")
@@ -73,15 +71,25 @@ class DashboardPage(BasePage):
         self.prog_frame_layout = QVBoxLayout()
         self.prog_frame.setLayout(self.prog_frame_layout)
 
-        #Default layout - no projects
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        )
+    
         self.progressTrackerHeader = QLabel("Progress Tracker")
         self.progressTrackerHeader.setObjectName("ProgressTrackerHeader")
         self.progressTrackerHeader.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-
+        #Default layout - no projects
         self.noProjectLabel = QLabel("No projects currently being tracked.")
         self.noProjectLabel.setObjectName("noProjectLabel")
         self.noProjectLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Dashboard scrollbar widget
+        self.dashboard_content = QWidget()
+        dashboard_content_layout = QVBoxLayout(self.dashboard_content)
+
 
         # temp horizontal navigation bar - should be replaced by EC code later
         self.navbar_container = QWidget()
@@ -104,7 +112,6 @@ class DashboardPage(BasePage):
         progress_layout.addWidget(self.progressTrackerHeader)
         progress_layout.addSpacing(10)
         progress_layout.addWidget(self.prog_frame)
-        
 
         if (self.projectNum == 0):
             self.prog_frame_layout.addWidget(self.noProjectLabel)
@@ -116,10 +123,12 @@ class DashboardPage(BasePage):
         else:
              print("Error. Unexpected scenario in dashboard.py")
 
-
+        scroll_area.setWidget(self.dashboard_content)
+        dashboard_content_layout.addWidget(self.navbar_container)
+        dashboard_content_layout.addWidget(self.progress_container)
+        
         # Assemble widgets
         self.widgets = (
-            self.navbar_container,
-            self.progress_container
+            scroll_area, 
         )
 

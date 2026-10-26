@@ -9,6 +9,7 @@ QScrollBar:vertical {
     width: 12px;
     border: none;
     margin: 0px;
+    border-radius: 6px;
 }
 
 QScrollBar::handle:vertical {
