@@ -8,7 +8,9 @@ from pages.topics.topic_content_page import TopicFrame
 from pages.account.user import get_user_by_id
 
 class PostsPage(BasePage):
-    post_selected = Signal(int)
+    post_selected = Signal(str)
+    user_id: int | None = None
+    showing_mine = False
 
     def __init__(self):
         super().__init__()
@@ -21,8 +23,8 @@ class PostsPage(BasePage):
         self.top_bar = QHBoxLayout()
 
         self.post_frame = QFrame()
-        self.post_frame.setObjectName("TopBar")
         self.post_bar = QHBoxLayout()
+
         self.recent_layout = QVBoxLayout()
 
     def define_widgets(self) -> None:
@@ -32,19 +34,28 @@ class PostsPage(BasePage):
         
         self.my_topics = QPushButton("View Topics")
         self.my_topics.setObjectName("LoginButton")
+        self.my_topics.setCursor(Qt.CursorShape.PointingHandCursor)
 
         # Posts view
         self.make_post = QPushButton("Make a new post")
         self.make_post.setObjectName("LoginButton")
+        self.make_post.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        self.my_posts_button = QPushButton("My posts")
+        self.my_posts_button.setObjectName("LoginButton")
+        self.my_posts_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.my_posts_button.clicked.connect(self.toggle_posts)
+        
         self.recent_heading = QLabel("Recent posts")
         self.recent_heading.setObjectName("HeadingLabel")
 
     def assemble_widgets(self) -> None:
         self.top_bar.addWidget(self.title)
-        self.top_bar.addWidget(self.my_topics)
         self.top_frame.setLayout(self.top_bar)
 
+        self.post_bar.addWidget(self.my_topics)
         self.post_bar.addWidget(self.make_post)
+        self.post_bar.addWidget(self.my_posts_button)
         self.post_frame.setLayout(self.post_bar)
 
         self.layout.addWidget(self.title)
@@ -64,12 +75,31 @@ class PostsPage(BasePage):
             if item.widget():
                 item.widget().deleteLater()
 
+    def set_user(self, user_id: int | None) -> None:
+        self.user_id = user_id
+        self.showing_mine = False
+        self.refresh_recent_posts()
+
+    def toggle_posts(self) -> None:
+        self.showing_mine = not self.showing_mine
+        self.refresh_recent_posts()
+
     def refresh_recent_posts(self) -> None:
         self.clear_recent_posts()
-        topics = TopicContent.load_topics("assets/mock_data/topics.json")
+        if self.showing_mine:
+            posts = PostContent.get_posts_by_user(self.user_id)
+            self.recent_heading.setText("My Posts")
+            self.my_posts_button.setText("Recent posts")
+            if not posts:
+                self.recent_layout.addWidget(QLabel("You haven't made any posts yet."))
+        else:
+            posts = PostContent.get_recent_posts(5)
+            self.recent_heading.setText("Recent posts")
+            self.my_posts_button.setText("My posts")
 
-        for post in PostContent.get_recent_posts(5):
+        for post in posts:
             row = TopicFrame(post.id)
+            row.setCursor(Qt.CursorShape.PointingHandCursor)
             row.clicked.connect(self.post_selected)
             row_layout = QHBoxLayout()
 
@@ -78,7 +108,7 @@ class PostsPage(BasePage):
             author = get_user_by_id(post.created_by)
             author_name = author.name if author else "Unknown"
             details = QLabel(
-                f"{author_name}  .  {topics[post.topic].name}  .  {post.date_created}",
+                f"{author_name}  .  {TopicContent.get_topic_name(post.topic)}  .  {post.date_created}",
                 alignment=Qt.AlignmentFlag.AlignRight,
             )
 

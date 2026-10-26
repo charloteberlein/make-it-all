@@ -1,12 +1,18 @@
+from PySide6.QtCore import Signal
 from PySide6.QtGui import QAction, QFont
-from PySide6.QtWidgets import QLabel, QTextEdit, QFrame, QHBoxLayout, QLineEdit, QPushButton, QToolBar
+from PySide6.QtWidgets import (
+    QLabel, QComboBox, QTextEdit, QFrame, QHBoxLayout, QLineEdit, QPushButton, QToolBar
+)
 from datetime import datetime as dt
 
-from helpers import read_json, write_json
+from helpers import generate_id, write_json
 from pages.base_page import BasePage
+from pages.posts.post_content import PostContent
 from pages.topics.topic_content import TopicContent
 
 class MakePostPage(BasePage):
+    key_pressed = Signal()
+
     def __init__(self):
         self.update_date()
         super().__init__()
@@ -33,16 +39,24 @@ class MakePostPage(BasePage):
         self.title_label = QLabel("Title:")
         self.title_label.setObjectName("PostTitle")
         self.title_input = QLineEdit()
+        self.title_input.textChanged.connect(self.toggle_confirm_btn)
 
         self.topic_label = QLabel("Topic:")
+        self.topic_options = QComboBox()
+        self.refresh_topic_options()
+        self.topic_options.activated.connect(
+            lambda _: self.toggle_textbox(self.topic_options.currentText())
+        )
         self.topic_input = QLineEdit()
-        # TODO: Add a drop-down instead of / in addition to the free-text box to prevent typos
+        self.topic_input.hide()
+        self.topic_input.textChanged.connect(self.toggle_confirm_btn)
 
         self.date = QLabel(f"Date created: {self.date_created}")
 
         # Post text editor
         self.toolbar = QToolBar()
         self.content = QTextEdit()
+        self.content.textChanged.connect(self.toggle_confirm_btn)
 
         bold = QAction("B", self)
         bold.setCheckable(True)
@@ -78,6 +92,7 @@ class MakePostPage(BasePage):
 
         self.confirm_btn = QPushButton("Create post")
         self.confirm_btn.setObjectName("LoginButton")
+        self.confirm_btn.setEnabled(False)
 
     def assemble_widgets(self) -> None:
         # Title
@@ -87,6 +102,7 @@ class MakePostPage(BasePage):
 
         # Metadata (under title)
         self.metadata_layout.addWidget(self.topic_label)
+        self.metadata_layout.addWidget(self.topic_options)
         self.metadata_layout.addWidget(self.topic_input)
         self.metadata_layout.addWidget(self.date)
         self.metadata_layout.addStretch()
@@ -108,26 +124,69 @@ class MakePostPage(BasePage):
 
     def save_post_to_json(self, created_by: int | None = None) -> None:
         """Appends a post to the `posts.json` file."""
-        # TODO: Disallow empty titles/topics/content
-        data: dict = read_json("assets/mock_data/posts.json")
+        posts = PostContent.load_posts("assets/mock_data/posts.json")
 
         self.update_date()
-        data["posts"].append(
-            {
-                "metadata": {
-                    "id": data["posts"][-1]["metadata"]["id"] + 1,
-                    "viewed": False,
-                    "date-created": self.date_created,
-                },
-                "topic": TopicContent.get_matching_topic(self.topic_input.text()),
-                "created_by": created_by,
-                "title": self.title_input.text(),
-                "content": self.content.document().toHtml(),
-            }
+        posts.append(
+            PostContent(
+                id=generate_id(),
+                viewed=False,
+                date_created=self.date_created,
+                archived=False,
+                topic=TopicContent.get_matching_topic(
+                    self.topic_input.text() or self.topic_options.currentText()
+                ),
+                title=self.title_input.text(),
+                content=self.content.document().toHtml(),
+                created_by=created_by
+            )
         )
 
-        write_json("assets/mock_data/posts.json", data)
+        write_json(
+            "assets/mock_data/posts.json",
+            {"posts": [post.serialise() for post in posts]},
+        )
 
         self.title_input.clear()
         self.topic_input.clear()
         self.content.clear()
+
+    def toggle_textbox(self, option: str):
+        self.toggle_confirm_btn()
+        if option == "Other":
+            self.topic_input.show()
+        else:
+            self.topic_input.hide()
+            self.topic_input.clear()
+
+    def check_post_valid(self) -> bool:
+        return (
+            # Title not empty
+            len(self.title_input.text()) > 0
+            # Topic valid and not empty
+            and (
+                ( # Valid drop-down topic
+                    self.topic_options.currentText() != "Other"
+                    and TopicContent.get_topic_writable(
+                        TopicContent.get_matching_topic(self.topic_options.currentText())
+                    )
+                ) or ( # Valid text input topic
+                    len((text := self.topic_input.text())) > 0
+                    and text != "Other"
+                    and text not in [topic.name for topic in TopicContent.load_topics()]
+                )
+            )
+            # Content not empty
+            and len(self.content.toPlainText()) > 0
+        )
+
+    def toggle_confirm_btn(self) -> None:
+        if self.check_post_valid():
+            self.confirm_btn.setEnabled(True)
+        else:
+            self.confirm_btn.setEnabled(False)
+
+    def refresh_topic_options(self) -> None:
+        self.topic_options.clear()
+        self.topic_options.addItems([topic.name for topic in TopicContent.get_writable_topics()])
+        self.topic_options.addItem("Other")

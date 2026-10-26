@@ -17,10 +17,13 @@ from pages.todos.personal_todo_page import PersonalTodoPage
 from pages.todos.project_todo_page import ProjectTodoPage
 
 from pages.posts.posts_page import PostsPage
+from pages.posts.post_content import PostContent
 from pages.posts.post_content_page import PostContentPage
 from pages.posts.make_post import MakePostPage
+from pages.posts.edit_post import EditPostPage
 
 from pages.topics.topics_page import TopicsPage
+from pages.topics.topic_content import TopicContent
 from pages.topics.topic_content_page import TopicContentPage
 
 from pages.account.my_account import MyAccountPage
@@ -59,6 +62,7 @@ class MainWindow(QWidget):
         self.posts_page = PostsPage()
         self.post_content_page = PostContentPage()
         self.make_post_page = MakePostPage()
+        self.edit_post_page = EditPostPage()
         self.topics_page = TopicsPage()
         self.topic_content_page = TopicContentPage()
         self.account_page = MyAccountPage()
@@ -73,6 +77,7 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.posts_page)
         self.stacked_widget.addWidget(self.post_content_page)
         self.stacked_widget.addWidget(self.make_post_page)
+        self.stacked_widget.addWidget(self.edit_post_page)
         self.stacked_widget.addWidget(self.topics_page)
         self.stacked_widget.addWidget(self.topic_content_page)
         self.stacked_widget.addWidget(self.account_page)
@@ -112,7 +117,11 @@ class MainWindow(QWidget):
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
         self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
-        self.make_post_page.confirm_btn.clicked.connect(lambda: self.save_and_exit_post_maker())
+        self.make_post_page.confirm_btn.clicked.connect(self.save_and_exit_post_maker)
+        self.edit_post_page.edit.connect(self.save_and_exit_post_editor)
+        self.post_content_page.back.connect(lambda: self.view_topic_posts(self.post_content_page.post.topic))
+        self.post_content_page.edit.connect(self.edit_post)
+        self.post_content_page.delete.connect(self.delete_post)
         self.posts_page.post_selected.connect(self.view_post)
 
         for (widget, id) in self.topics_page.widgets:
@@ -122,7 +131,7 @@ class MainWindow(QWidget):
 
         self.topic_content_page.post_selected.connect(self.view_post)
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
-
+        self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
 
         # Header events
         self.header.account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
@@ -166,8 +175,37 @@ class MainWindow(QWidget):
             self.setStyleSheet(file.read())
 
     def save_and_exit_post_maker(self):
-        user_id = self.current_user.id if self.current_user else None
-        self.make_post_page.save_post_to_json(created_by=user_id)
+        if self.make_post_page.check_post_valid():
+            user_id = self.current_user.id if self.current_user else None
+            self.make_post_page.save_post_to_json(created_by=user_id)
+            self.topics_page.refresh_topics()
+            for (widget, id) in self.topics_page.widgets:
+                widget.clicked.connect(
+                    lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+                )
+            self.change_page(PageIndex.POSTS)
+
+    def save_and_exit_post_editor(self, post_id: str):
+        if self.edit_post_page.check_post_valid():
+            self.edit_post_page.save_post_to_json()
+            self.topics_page.refresh_topics()
+            for (widget, id) in self.topics_page.widgets:
+                widget.clicked.connect(
+                    lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
+                )
+        self.view_post(post_id)
+
+    def view_post(self, post_id: str):
+        self.post_content_page.id = post_id
+        self.change_page(PageIndex.POST_CONTENT)
+
+    def edit_post(self, post_id: str):
+        self.edit_post_page.id = post_id
+        self.change_page(PageIndex.EDIT_POST)
+
+    def delete_post(self, post_id: str):
+        topic_id = PostContent.delete_post(post_id)
+        TopicContent.remove_topic_if_empty(topic_id)
         self.topics_page.refresh_topics()
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
@@ -175,21 +213,25 @@ class MainWindow(QWidget):
             )
         self.change_page(PageIndex.POSTS)
 
-    def view_post(self, post_id):
-        self.post_content_page.id = post_id
-        self.change_page(PageIndex.POST_CONTENT)
-
     def log_in(self, user):
         self.current_user = user
+        self.posts_page.set_user(user.id)
+        self.topic_content_page.set_can_toggle(user.rank == "Manager")
         self.change_page(PageIndex.DASHBOARD)
 
     def log_out(self):
         self.current_user = None
+        self.posts_page.set_user(None)
+        self.topic_content_page.set_can_toggle(False)
         self.change_page(PageIndex.SIGN_IN)
 
-    def view_topic_posts(self, topic_id):
+    def view_topic_posts(self, topic_id: str):
         self.topic_content_page.topic_id = topic_id
         self.change_page(PageIndex.TOPIC_CONTENT)
+
+    def toggle_topic_writable(self):
+        self.topic_content_page.toggle_topic_writable()
+        self.make_post_page.refresh_topic_options()
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)

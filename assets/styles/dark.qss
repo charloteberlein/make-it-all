@@ -27,6 +27,13 @@ QHeaderView::section {
     padding: 1px;
     border: 1px solid #b3b3b3;
 }
+   
+QWidget {
+    background-color: #121820;
+    color: #e2e8f0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    border: none;
+}
 
 QMenu {
     color: #0f172a;
@@ -141,12 +148,6 @@ QFrame#Topic {
     border-bottom: 2px solid #e2e8f0;
 }
 
-QWidget {
-    background-color: #121820;
-    color: #e2e8f0;
-    font-family: "Segoe UI", Arial, sans-serif;
-}
-
 QLabel#TitleLabel {
     font-size: 40px;
     font-weight: bold;
@@ -175,7 +176,7 @@ QLabel#SubheadingLabel {
     background: transparent;
 }
 
-QLineEdit, QTextEdit {
+QLineEdit, QTextEdit, QComboBox {
     background-color: #1e293b;
     color: #ffffff;
     border: 1px solid #334155;
@@ -184,7 +185,7 @@ QLineEdit, QTextEdit {
     font-size: 14px;
 }
 
-QLineEdit:focus, QTextEdit:focus {
+QLineEdit:focus, QTextEdit:focus, QComboBox:on {
     border: 2px solid #EAB308;
 }
 
@@ -200,6 +201,10 @@ QPushButton#LoginButton {
 
 QPushButton#LoginButton:hover {
     background-color: #CA8A04;
+}
+
+QPushButton#LoginButton:disabled {
+    background-color: #334155;
 }
 
 QPushButton#NavButton {
