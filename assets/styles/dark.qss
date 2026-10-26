@@ -2,7 +2,7 @@
 
 QLabel#ProgressTrackerHeader {
     background: transparent;
-    color: #0f172a;
+    color: #ffffff;
     font-family: "Segoe UI", Arial, sans-serif;
     font-weight: bold;
     font-size: 24px;
@@ -10,24 +10,24 @@ QLabel#ProgressTrackerHeader {
 
 QLabel#noProjectLabel {
     font-size: 16px;
-    color: #000000;
+    color: #ffffff;
     font-style: italic;
     background: transparent;
 }
 
 QFrame#ProgressFrame {
-    background-color: #f1f5f9;
+    background-color: transparent;
     border-radius: 8px;
 }
 
 
  QProgressBar::chunk {
     background-color: #EAB308;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 QProgressBar {
-    border: 2px solid #000000;
+    border: 2px solid #ffffff;
     border-radius: 8px;
     background-color: transparent;
     color: #2c3e50;

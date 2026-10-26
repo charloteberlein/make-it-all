@@ -1,5 +1,38 @@
 /* light.qss - Stylesheet used for the light mode.*/
 
+QScrollArea {
+    border: none;
+}
+
+QScrollBar:vertical {
+    background: #e2e8f0;
+    width: 12px;
+    border: none;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #94a3b8;
+    min-height: 30px;
+    border-radius: 6px;
+}
+
+ScrollBar::handle:vertical:hover {
+    background: #64748b;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+    border: none;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+
 QLabel#ProgressTrackerHeader {
     background: transparent;
     color: #0f172a;
@@ -23,14 +56,14 @@ QLabel#noProjectLabel {
 }
 
 QFrame#ProgressFrame {
-    border: 2px solid #cbd5e1;
+    background-color: transparent;
     border-radius: 8px;
 }
 
 
  QProgressBar::chunk {
     background-color: #EAB308;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 QProgressBar {
