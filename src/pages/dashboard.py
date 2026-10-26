@@ -8,7 +8,7 @@ from pages.base_page import BasePage
 
 class DashboardPage(BasePage):
     projectNum = 3
-    projectName = "testing :)"
+    projectName = "project name"
     progressValue = 23
     totalTime = 180
     timeTaken = 60
@@ -29,17 +29,34 @@ class DashboardPage(BasePage):
         progressBar.setRange(0,100)
         progressBar.setValue(progressValue) 
 
+        progress_bar_label = QLabel("Project progress:")
+        progress_bar_label.setObjectName("ProgressBarLabel")
+
+
         # Creating time tracking progress bar
         elapsedTimeBar = QProgressBar()
         elapsedTimeBar.setObjectName("TimeBar")
         elapsedTimeBar.setRange(0,100)
         elapsedTimeBar.setValue(int(timePercentage))
 
-        #Progress bar layouts
+        time_bar_label = QLabel("Time elapsed:")
+        time_bar_label.setObjectName("ProgressBarLabel")
+
+        #Progress bar layouts:
+        prog_bar_widget = QWidget()
+        prog_bar_layout = QVBoxLayout(prog_bar_widget)
+        prog_bar_layout.addWidget(progress_bar_label)
+        prog_bar_layout.addWidget(progressBar)
+
+        time_bar_widget = QWidget()
+        time_bar_layout = QVBoxLayout(time_bar_widget)
+        time_bar_layout.addWidget(time_bar_label)
+        time_bar_layout.addWidget(elapsedTimeBar)
+
         progress_stack = QWidget()
         progress_stack_layout = QVBoxLayout(progress_stack)
-        progress_stack_layout.addWidget(progressBar)
-        progress_stack_layout.addWidget(elapsedTimeBar)
+        progress_stack_layout.addWidget(prog_bar_widget)
+        progress_stack_layout.addWidget(time_bar_widget)
 
         project_container = QWidget()
         project_layout = QHBoxLayout(project_container)

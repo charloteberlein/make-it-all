@@ -1,5 +1,13 @@
 /* light.qss - Stylesheet used for the light mode.*/
 
+QLabel#ProgressBarLabel {
+    font-size: 12px;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #4e4c4c;
+    font-weight: italic;
+    background: transparent;
+}
+
 QScrollArea {
     border: none;
 }
@@ -33,7 +41,6 @@ QScrollBar::sub-page:vertical {
     background: transparent;
 }
 
-
 QLabel#ProgressTrackerHeader {
     background: transparent;
     color: #0f172a;
@@ -43,7 +50,7 @@ QLabel#ProgressTrackerHeader {
 }
 
 QLabel#projectLabel {
-    font-size: 12px;
+    font-size: 14px;
     font-family: "Segoe UI", Arial, sans-serif;
     color: #000000;
     background: transparent;
