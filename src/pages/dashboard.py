@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QFrame, QScrollArea)
 
 from pages.base_page import BasePage
+from pages.projects.project_metrics import projectMetrics
 
 class DashboardPage(BasePage):
     projectNum = 3
@@ -65,8 +66,38 @@ class DashboardPage(BasePage):
         project_layout.addWidget(progress_stack)
 
         return project_container
- 
-              
+
+    def define_layout(self):
+        self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(35, 30, 35, 30)
+        self.layout.setSpacing(14)
+
+        # Dashboard scrollbar widget
+        self.dashboard_content = QWidget()
+        self.dashboard_content_layout = QVBoxLayout(self.dashboard_content)
+
+        # temp horizontal navigation bar - should be replaced by EC code later
+        self.navbar_container = QWidget()
+        self.navbar_layout = QHBoxLayout(self.navbar_container)
+        #navbar_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        # Progress bar widget layout
+        self.progress_container = QWidget()
+        self.progress_layout = QVBoxLayout(self.progress_container)
+
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        )
+
+        self.scroll_area.setWidget(self.dashboard_content)
+        self.dashboard_content_layout.addWidget(self.navbar_container)
+        self.dashboard_content_layout.addWidget(self.progress_container)
+
+
+
+
     def define_widgets(self) -> None:
         # Navbar buttons - TEMPORARY 
         self.posts = QPushButton("View posts")
@@ -80,6 +111,7 @@ class DashboardPage(BasePage):
             self.projects, self.account):
             button.setCursor(Qt.CursorShape.PointingHandCursor)
 
+
         #Progress tracker layout
         self.prog_frame = QFrame()
         self.prog_frame.setObjectName("ProgressFrame")
@@ -87,12 +119,6 @@ class DashboardPage(BasePage):
 
         self.prog_frame_layout = QVBoxLayout()
         self.prog_frame.setLayout(self.prog_frame_layout)
-
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setVerticalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAsNeeded
-        )
     
         self.progressTrackerHeader = QLabel("Progress Tracker")
         self.progressTrackerHeader.setObjectName("ProgressTrackerHeader")
@@ -103,49 +129,32 @@ class DashboardPage(BasePage):
         self.noProjectLabel.setObjectName("noProjectLabel")
         self.noProjectLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Dashboard scrollbar widget
-        self.dashboard_content = QWidget()
-        dashboard_content_layout = QVBoxLayout(self.dashboard_content)
+        self.navbar_layout.addWidget(self.posts)
+        self.navbar_layout.addWidget(self.todo)
+        self.navbar_layout.addWidget(self.projects)
+        self.navbar_layout.addWidget(self.account)
 
 
-        # temp horizontal navigation bar - should be replaced by EC code later
-        self.navbar_container = QWidget()
-
-        navbar_layout = QHBoxLayout(self.navbar_container)
-        #navbar_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-
-        #navbar_layout.setContentsMargins(0, 0, 0, 0)
-        navbar_layout.addWidget(self.posts)
-        navbar_layout.addWidget(self.todo)
-        navbar_layout.addWidget(self.projects)
-        navbar_layout.addWidget(self.account)
-
-        # Progress bar widget layout
-        self.progress_container = QWidget()
-
-        progress_layout = QVBoxLayout(self.progress_container)
         #progress_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         
-        progress_layout.addWidget(self.progressTrackerHeader)
-        progress_layout.addSpacing(10)
-        progress_layout.addWidget(self.prog_frame)
+        self.progress_layout.addWidget(self.progressTrackerHeader)
+        self.progress_layout.addSpacing(5)
+        self.progress_layout.addWidget(self.prog_frame)
 
         if (self.projectNum == 0):
             self.prog_frame_layout.addWidget(self.noProjectLabel)
         elif (self.projectNum >= 1):
             for i in range (self.projectNum):
                 self.prog_frame_layout.addWidget(
-                     self.createProgressBar(self.projectName, 
-                        self.progressValue, self.timePercentage))
+                    self.createProgressBar(self.projectName, 
+                    self.progressValue, self.timePercentage)
+                    )
         else:
-             print("Error. Unexpected scenario in dashboard.py")
+            print("Error. Unexpected scenario in dashboard.py")
 
-        scroll_area.setWidget(self.dashboard_content)
-        dashboard_content_layout.addWidget(self.navbar_container)
-        dashboard_content_layout.addWidget(self.progress_container)
         
         # Assemble widgets
         self.widgets = (
-            scroll_area, 
+            self.scroll_area, 
         )
 
