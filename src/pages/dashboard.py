@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QPushButton, QProgressBar, QLabel, 
     QWidget, QHBoxLayout, QVBoxLayout,
@@ -9,21 +9,22 @@ from pages.projects.projects import Project
 
 class DashboardPage(BasePage):
 
-    # project attributes
+    # project attributes:
     # project_id : int, name: str, progress: int, total_time: int, time_taken: int
-    projectList = [Project(1, "Project 1: Team Project",56, 120, 54)]
+    projectList = [
+        Project(1, "Project 1: Team Project", 56, 6, 2), 
+        Project(2, "Plant Room Refurbishment", 78, 70, 34)]
 
-    # switch_to_signin= Signal()
-    # switch_to_training = Signal()
-    # switch_to_account = Signal()
-    # switch_to_notifications = Signal()
-    # switch_to_employee = Signal()
-    # switch_to_manager = Signal()
+    switch_to_signin= Signal()
+    switch_to_training = Signal()
+    switch_to_account = Signal()
+    switch_to_notifications = Signal()
+    switch_to_employee = Signal()
+    switch_to_manager = Signal()
+
 
     def __init__(self):
         super().__init__()
-
-
 
     def createProgressBar(self, projectName, progressValue, timePercentage):
         #creating a project label
@@ -165,4 +166,3 @@ class DashboardPage(BasePage):
         self.widgets = (
             self.scroll_area, 
         )
-
