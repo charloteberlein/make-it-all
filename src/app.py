@@ -205,10 +205,12 @@ class MainWindow(QWidget):
 
     def log_in(self, user):
         self.current_user = user
+        self.posts_page.set_user(user.id)
         self.change_page(PageIndex.DASHBOARD)
 
     def log_out(self):
         self.current_user = None
+        self.posts_page.set_user(None)
         self.change_page(PageIndex.SIGN_IN)
 
     def view_topic_posts(self, topic_id: str):

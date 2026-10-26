@@ -74,6 +74,19 @@ class PostContent():
         return newest_first[:count]
 
     @classmethod
+    def get_posts_by_user(cls, user_id: int | None) -> list["PostContent"]:
+        if user_id is None:
+            return []
+
+        posts = cls.load_posts("assets/mock_data/posts.json")
+        mine = [post for post in posts if post.created_by == user_id]
+        return sorted(
+            reversed(mine),
+            key=lambda post: datetime.strptime(post.date_created, "%d-%m-%Y"),
+            reverse=True,
+        )
+
+    @classmethod
     def archive_post(cls, post_id: str, archive: bool) -> None:
         posts = cls.load_posts("assets/mock_data/posts.json")
         post = next(post for post in posts if post.id == post_id)

@@ -9,6 +9,8 @@ from pages.account.user import get_user_by_id
 
 class PostsPage(BasePage):
     post_selected = Signal(str)
+    user_id: int | None = None
+    showing_mine = False
 
     def __init__(self):
         super().__init__()
@@ -39,6 +41,11 @@ class PostsPage(BasePage):
         self.make_post.setObjectName("LoginButton")
         self.make_post.setCursor(Qt.CursorShape.PointingHandCursor)
 
+        self.my_posts_button = QPushButton("My posts")
+        self.my_posts_button.setObjectName("LoginButton")
+        self.my_posts_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.my_posts_button.clicked.connect(self.toggle_posts)
+        
         self.recent_heading = QLabel("Recent posts")
         self.recent_heading.setObjectName("HeadingLabel")
 
@@ -48,6 +55,7 @@ class PostsPage(BasePage):
 
         self.post_bar.addWidget(self.my_topics)
         self.post_bar.addWidget(self.make_post)
+        self.post_bar.addWidget(self.my_posts_button)
         self.post_frame.setLayout(self.post_bar)
 
         self.layout.addWidget(self.title)
@@ -67,9 +75,29 @@ class PostsPage(BasePage):
             if item.widget():
                 item.widget().deleteLater()
 
+    def set_user(self, user_id: int | None) -> None:
+        self.user_id = user_id
+        self.showing_mine = False
+        self.refresh_recent_posts()
+
+    def toggle_posts(self) -> None:
+        self.showing_mine = not self.showing_mine
+        self.refresh_recent_posts()
+
     def refresh_recent_posts(self) -> None:
         self.clear_recent_posts()
-        for post in PostContent.get_recent_posts(5):
+        if self.showing_mine:
+            posts = PostContent.get_posts_by_user(self.user_id)
+            self.recent_heading.setText("My Posts")
+            self.my_posts_button.setText("Recent posts")
+            if not posts:
+                self.recent_layout.addWidget(QLabel("You haven't made any posts yet."))
+        else:
+            posts = PostContent.get_recent_posts(5)
+            self.recent_heading.setText("Recent posts")
+            self.my_posts_button.setText("My posts")
+
+        for post in posts:
             row = TopicFrame(post.id)
             row.setCursor(Qt.CursorShape.PointingHandCursor)
             row.clicked.connect(self.post_selected)
