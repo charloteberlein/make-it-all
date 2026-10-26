@@ -1,5 +1,33 @@
 /* light.qss - Stylesheet used for the light mode.*/
 
+QPushButton#ToDoButton {
+    background-color: #EAB308;
+    color: #000000;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    padding: 14px;
+}
+
+QPushButton#ToDoButton:hover {
+    background-color: #CA8A04;
+}
+
+QTableWidget {
+    font-size: 8pt;
+    border: 2px solid #dcdde1;
+    gridline-color: #f1f2f6;
+}
+
+QHeaderView::section {
+    font-size: 10pt;
+    font-weight: bold;
+    background-color: #fbe080;
+    padding: 1px;
+    border: 1px solid #b3b3b3;
+}
+
 QMenu {
     color: #FFFFFF;
     border-radius: 4px;

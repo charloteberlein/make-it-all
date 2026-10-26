@@ -6,9 +6,11 @@ class PageIndex(Enum):
     FORGOT_PASSWORD = 2
     DASHBOARD = 3
     TODO = 4
-    POSTS = 5
-    POST_CONTENT = 6
-    MAKE_POST = 7
-    TOPICS = 8
-    TOPIC_CONTENT = 9
-    MY_ACCOUNT = 10
+    PERSONAL_TODO = 5
+    PROJECT_TODO = 6
+    POSTS = 7
+    POST_CONTENT = 8
+    MAKE_POST = 9
+    TOPICS = 10
+    TOPIC_CONTENT = 11
+    MY_ACCOUNT = 12

@@ -1,0 +1,48 @@
+[
+  {
+    "task_name": "Draft Q3 Engineering Objectives & Key Results",
+    "status": "⏳ In Progress",
+    "assigned_date": "2026-10-30",
+    "due_date": "2026-11-30",
+    "details": "<p>Outline team deliverables, review quarterly key metrics, and format KPI tracking appendices.</p>",
+    "type": "personal",
+    "owner": "Jane Doe"
+  },
+  {
+    "task_name": "Refine Weekly Code Review Queue",
+    "status": "✅ Complete",
+    "assigned_date": "2026-10-01",
+    "due_date": "2026-11-15",
+    "details": "<p>Prioritise stale pull requests and organise backlog items for the upcoming release cycle.</p>",
+    "type": "personal",
+    "owner": "Andrew Michaels"
+  },
+  {
+    "task_name": "Implement Responsive Navigation Sidebar Layout",
+    "project_name": "Client Portal",
+    "assigner": "John Smith",
+    "assignees": "Andrew Michaels",
+    "status": "⏳ In Progress",
+    "assigned_date": "2026-10-01",
+    "due_date": "2026-10-27",
+    "estimated_time": "12.5",
+    "actual_time": "0.0",
+    "details": "<h3>Objective</h3><p>Refactor QSS stylesheets, implement collapsible menu states, and ensure dark mode toggle triggers cleanly across client views.</p>",
+    "type": "project",
+    "completion_date": ""
+  },
+  {
+    "task_name": "Evaluate PostgreSQL Connection Pool Latency",
+    "project_name": "Core Data Pipeline Migration",
+    "assigner": "Jane Doe",
+    "assignees": "John Smith",
+    "status": "⏳ In Progress",
+    "assigned_date": "2026-10-05",
+    "due_date": "2026-10-29",
+    "estimated_time": "8.0",
+    "actual_time": "0.0",
+    "details": "### Review\n\nAnalyse query execution times under heavy load and verify that local JSON fallback data persistence complies with recovery constraints.\n\n",
+    "type": "project",
+    "completion_date": ""
+  }
+]
