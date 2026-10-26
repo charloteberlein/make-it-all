@@ -7,12 +7,14 @@ from pages.page_index import PageIndex
 from pages.header import Header
 from pages.sidebar import Sidebar
 from pages.dashboard import DashboardPage
-from pages.todo import TodoPage
-from pages.my_account import MyAccountPage
 
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage
 from pages.account.forgotpassword import ForgotPasswordPage
+
+from pages.todos.todo import TodoPage
+from pages.todos.personal_todo_page import PersonalTodoPage
+from pages.todos.project_todo_page import ProjectTodoPage
 
 from pages.posts.posts_page import PostsPage
 from pages.posts.post_content import PostContent
@@ -24,7 +26,7 @@ from pages.topics.topics_page import TopicsPage
 from pages.topics.topic_content import TopicContent
 from pages.topics.topic_content_page import TopicContentPage
 
-from pages.my_account import MyAccountPage
+from pages.account.my_account import MyAccountPage
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -55,6 +57,8 @@ class MainWindow(QWidget):
         self.forgot_password_page = ForgotPasswordPage()
         self.dashboard_page = DashboardPage()
         self.todo_page = TodoPage()
+        self.personal_todo_page = PersonalTodoPage(self.current_user)
+        self.project_todo_page = ProjectTodoPage()
         self.posts_page = PostsPage()
         self.post_content_page = PostContentPage()
         self.make_post_page = MakePostPage()
@@ -68,6 +72,8 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.forgot_password_page)
         self.stacked_widget.addWidget(self.dashboard_page)
         self.stacked_widget.addWidget(self.todo_page)
+        self.stacked_widget.addWidget(self.personal_todo_page)
+        self.stacked_widget.addWidget(self.project_todo_page)
         self.stacked_widget.addWidget(self.posts_page)
         self.stacked_widget.addWidget(self.post_content_page)
         self.stacked_widget.addWidget(self.make_post_page)
@@ -104,6 +110,10 @@ class MainWindow(QWidget):
         self.register_page.login_success.connect(self.log_in)
         self.forgot_password_page.login_success.connect(self.log_in)
         self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
+        self.todo_page.to_Personal_Todo.connect(lambda: self.change_page(PageIndex.PERSONAL_TODO))
+        self.todo_page.to_Project_Todo.connect(lambda: self.change_page(PageIndex.PROJECT_TODO))
+        self.personal_todo_page.to_Todo.connect(lambda: self.change_page(PageIndex.TODO))
+        self.project_todo_page.to_Todo.connect(lambda: self.change_page(PageIndex.TODO))
         self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
         self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))

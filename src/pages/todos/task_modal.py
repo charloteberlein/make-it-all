@@ -1,0 +1,140 @@
+from PySide6.QtWidgets import QDoubleSpinBox, QDialog, QFormLayout, QLineEdit, QTextEdit, QDialogButtonBox, QPushButton, QHBoxLayout, QFileDialog, QDateEdit
+from PySide6.QtCore import QDate
+from datetime import date
+
+class TaskModal(QDialog):
+    # A clean popup modal for viewing/editing task details.
+    def __init__(self, task_dict: dict, parent = None):
+        super().__init__(parent)
+        self.task_dict = task_dict
+        self.action_result = None
+        
+        task_name = task_dict.get("task_name")
+        self.setWindowTitle(f"Task Details: {task_name}")
+        self.resize(650, 500)
+        
+        self.form_layout = QFormLayout(self)
+        self.form_layout.setContentsMargins(40, 40, 40, 40)
+
+        self.name_input = QLineEdit(task_name)
+        self.status_input = QLineEdit(task_dict.get("status", ""))
+        # Sets default task creation status.
+        if not task_name:
+            self.status_input.setText("⏳ In Progress")
+            self.status_input.setReadOnly(True)
+        
+        self.is_project = task_dict.get("type") == "project"
+        if self.is_project:
+            self.project_input = QLineEdit(task_dict.get("project_name", ""))
+            self.assigner_input = QLineEdit(task_dict.get("assigner", ""))
+            self.assignees_input = QLineEdit(task_dict.get("assignees", ""))
+
+            self.estimated_input = QDoubleSpinBox()
+            self.estimated_input.setRange(0.0, 9999.0)
+            self.estimated_input.setSingleStep(0.5)
+            try:
+                self.estimated_input.setValue(float(task_dict.get("estimated_time", 0.0)))
+            except (ValueError, TypeError):
+                self.estimated_input.setValue(0.0)
+
+        # Adds calander for date select.
+        self.due_input = QDateEdit()
+        self.due_input.setCalendarPopup(True)
+        due_str = task_dict.get("due_date", "")
+        if due_str:
+            date_val = QDate.fromString(due_str, "yyyy-MM-dd")
+            if date_val.isValid():
+                self.due_input.setDate(date_val)
+            else:
+                self.due_input.setDate(QDate.currentDate())
+        else:
+            self.due_input.setDate(QDate.currentDate())
+        
+        self.details_editor = QTextEdit()
+        self.details_editor.setMarkdown(task_dict.get("details", ""))
+        self.details_editor.setPlaceholderText("Type notes, insert code snippets, links, or images here...")
+
+        self.form_layout.addRow("Task Name:", self.name_input)
+        
+        if self.is_project:
+            self.form_layout.addRow("Project Name:", self.project_input)
+            self.form_layout.addRow("Assigner:", self.assigner_input)
+            self.form_layout.addRow("Assignees:", self.assignees_input)
+            self.form_layout.addRow("Estimated Time (Hours):", self.estimated_input)
+        self.form_layout.addRow("Status:", self.status_input)
+        self.form_layout.addRow("Due Date:", self.due_input)
+        self.form_layout.addRow("Rich Notes/Code:", self.details_editor)
+
+        # Rich formatting options.
+        actions_layout = QHBoxLayout()
+        bold_btn = QPushButton("Bold")
+        bold_btn.clicked.connect(lambda: self.details_editor.textCursor().insertHtml("<b>Bold Text</b>"))
+        
+        code_btn = QPushButton("💻 Code Block")
+        code_btn.clicked.connect(lambda: self.details_editor.textCursor().insertHtml("<pre><code>// Insert code here</code></pre>"))
+        
+        link_btn = QPushButton("🔗 Link")
+        link_btn.clicked.connect(self.insert_link)
+        
+        image_btn = QPushButton("🖼️ Image")
+        image_btn.clicked.connect(self.insert_image)
+        
+        actions_layout.addWidget(bold_btn)
+        actions_layout.addWidget(code_btn)
+        actions_layout.addWidget(link_btn)
+        actions_layout.addWidget(image_btn)
+        actions_layout.addStretch()
+        self.form_layout.addRow("", actions_layout)
+
+        bottom_layout = QHBoxLayout()
+        
+        self.delete_btn = QPushButton("Delete Task")
+        self.delete_btn.setObjectName("NavButton")
+        self.delete_btn.clicked.connect(self.on_delete)
+        bottom_layout.addWidget(self.delete_btn)
+        
+        bottom_layout.addStretch()
+        
+        self.change_buttons = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        self.change_buttons.setObjectName("NavButton")
+        self.change_buttons.accepted.connect(self.accept_edits)
+        self.change_buttons.rejected.connect(self.reject)
+        bottom_layout.addWidget(self.change_buttons)
+        
+        self.form_layout.addRow(bottom_layout)
+
+    def insert_link(self):
+        self.details_editor.textCursor().insertHtml('<a href = "https://doc.qt.io/qt-6/qtwidgets-index.html" target = "_blank">Link Text</a>')
+
+    def insert_image(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Images (*.png *.jpg *.jpeg *.bmp)")
+        if file_path:
+            img_tag = f'<img src = "{file_path}" width = "300" style = "max-width:100%;"/>'
+            self.details_editor.textCursor().insertHtml(img_tag)
+
+    # Create task structure.
+    def accept_edits(self):
+        self.task_dict["task_name"] = self.name_input.text()
+        new_status = self.status_input.text()
+        self.task_dict["status"] = new_status
+        if self.is_project:
+            self.task_dict["project_name"] = self.project_input.text()
+            self.task_dict["assigner"] = self.assigner_input.text()
+            self.task_dict["assignees"] = self.assignees_input.text()
+            
+            if "complete" in new_status.lower():
+                if not self.task_dict.get("completion_date"):
+                    self.task_dict["completion_date"] = date.today().isoformat()
+            else:
+                self.task_dict["completion_date"] = ""  
+
+        if self.is_project:
+            self.task_dict["estimated_time"] = str(self.estimated_input.value())
+        self.task_dict["due_date"] = self.due_input.date().toString("yyyy-MM-dd")
+        self.task_dict["details"] = self.details_editor.toMarkdown()
+        self.action_result = "save"
+        self.accept()
+
+    def on_delete(self):
+        self.action_result = "delete"
+        self.reject()
