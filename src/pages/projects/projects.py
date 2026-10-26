@@ -1,22 +1,21 @@
 from pathlib import Path
 from dataclasses import dataclass
 
-from datetime import datetime
 
 from helpers import read_json
 
 @dataclass
-class ProjectMetrics():
+class Project():
     def __init__(
-            int, project_id: str, name: int, progress: int, total_time: int, time_taken
+            self, project_id : int, name: str, progress: int, total_time: int, time_taken: int
     ): 
         self.project_id = project_id
-        self.name = name                # TODO: Add notifications for posts not yet viewed.
+        self.name = name                
         self.progress = progress
-        self.total_time = total_time
-        self.time_taken = time_taken
+        self.total_time = total_time # in minutes
+        self.time_taken = time_taken # in minutes
 
-    @classmethod
+    @property
     def timePercentage(self):
         if self.total_time <= 0:
             return 0

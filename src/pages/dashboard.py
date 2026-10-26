@@ -5,18 +5,25 @@ from PySide6.QtWidgets import (
     QFrame, QScrollArea)
 
 from pages.base_page import BasePage
-from pages.projects.project_metrics import projectMetrics
+from pages.projects.projects import Project
 
 class DashboardPage(BasePage):
-    projectNum = 3
-    projectName = "project name"
-    progressValue = 23
-    totalTime = 180
-    timeTaken = 60
-    timePercentage = (timeTaken/totalTime) * 100
+
+    # project attributes
+    # project_id : int, name: str, progress: int, total_time: int, time_taken: int
+    projectList = [Project(1, "Project 1: Team Project",56, 120, 54)]
+
+    # switch_to_signin= Signal()
+    # switch_to_training = Signal()
+    # switch_to_account = Signal()
+    # switch_to_notifications = Signal()
+    # switch_to_employee = Signal()
+    # switch_to_manager = Signal()
 
     def __init__(self):
         super().__init__()
+
+
 
     def createProgressBar(self, projectName, progressValue, timePercentage):
         #creating a project label
@@ -141,16 +148,17 @@ class DashboardPage(BasePage):
         self.progress_layout.addSpacing(5)
         self.progress_layout.addWidget(self.prog_frame)
 
-        if (self.projectNum == 0):
+        if (len(self.projectList) < 0):
             self.prog_frame_layout.addWidget(self.noProjectLabel)
-        elif (self.projectNum >= 1):
-            for i in range (self.projectNum):
-                self.prog_frame_layout.addWidget(
-                    self.createProgressBar(self.projectName, 
-                    self.progressValue, self.timePercentage)
-                    )
-        else:
-            print("Error. Unexpected scenario in dashboard.py")
+
+        for project in self.projectList:
+            self.prog_frame_layout.addWidget(
+                self.createProgressBar(
+                    project.name,
+                    project.progress,
+                    project.timePercentage
+                )
+            )
 
         
         # Assemble widgets
