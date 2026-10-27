@@ -11,7 +11,6 @@ from pages.account.user import User
 class DashboardPage(BasePage):
     switch_to_signin = Signal()
     switch_to_training = Signal()
-    switch_to_account = Signal()
     switch_to_notifications = Signal()
 
     #Variables for testing - will be taken from to-do in future
@@ -103,11 +102,6 @@ class DashboardPage(BasePage):
         self.training.setObjectName("LoginButton")
         self.training.clicked.connect(self.switch_to_training.emit)
 
-        self.account = QPushButton("Account")
-        self.account.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.account.setObjectName("LoginButton")
-        self.account.clicked.connect(self.switch_to_account.emit)
-
         self.notifications = QPushButton("Notifications")
         self.notifications.setCursor(Qt.CursorShape.PointingHandCursor)
         self.notifications.setObjectName("LoginButton")
@@ -118,7 +112,7 @@ class DashboardPage(BasePage):
         self.view_employee_dashboard.setObjectName("LoginButton")
 
         # Default layout - no projects
-        self.progress_tracker_header = QLabel("Progress Tracker")
+        self.progress_tracker_header = QLabel("Progress Overview")
         self.progress_tracker_header.setObjectName("TitleLabelCenter")
         self.progress_tracker_header.setAlignment(Qt.AlignmentFlag.AlignTop)
 
@@ -131,7 +125,6 @@ class DashboardPage(BasePage):
     def assemble_widgets(self) -> None:
         # Nav bar
         self.navbar_layout.addWidget(self.training)
-        self.navbar_layout.addWidget(self.account)
         self.navbar_layout.addWidget(self.notifications)
         self.navbar_layout.addWidget(self.view_employee_dashboard)
         self.navbar_frame.setLayout(self.navbar_layout)

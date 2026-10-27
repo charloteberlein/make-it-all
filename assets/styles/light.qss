@@ -37,6 +37,17 @@ QTableWidget {
     gridline-color: #f1f2f6;
 }
 
+QLabel#TaskTable {
+    border: 1px solid #cbd5e1;
+    padding: 5px;
+}
+
+QLabel#TaskTableHeader {
+    border: 1px solid #cbd5e1;
+    padding: 5px;
+    font-weight: bold;
+}
+
 QHeaderView::section {
     font-size: 10pt;
     font-weight: bold;

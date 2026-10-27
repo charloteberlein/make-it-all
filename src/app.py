@@ -131,6 +131,7 @@ class MainWindow(QWidget):
         self.post_content_page.delete.connect(self.delete_post)
         self.posts_page.post_selected.connect(self.view_post)
         self.dashboard_page.view_employee_dashboard.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD_VIEW))
+        self.dashboard_view.back_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
 
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
@@ -141,7 +142,6 @@ class MainWindow(QWidget):
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
 
         self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
-        self.dashboard_page.switch_to_account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
         self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
         self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
 
