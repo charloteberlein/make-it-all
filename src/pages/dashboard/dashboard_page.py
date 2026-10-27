@@ -9,6 +9,13 @@ from PySide6.QtWidgets import *#(QPushButton, QProgressBar, QLabel,
 from pages.base_page import BasePage
 
 class DashboardPage(BasePage):
+    switch_to_signin = Signal()
+    switch_to_training = Signal()
+    switch_to_account = Signal()
+    switch_to_notifications = Signal()
+    switch_to_employee = Signal()
+    switch_to_manager = Signal()
+
     #Variables for testing - will be taken from to-do in future
     projectNum = 3
     projectName = "testing :)"
@@ -17,21 +24,12 @@ class DashboardPage(BasePage):
     timeTaken = 60
     timePercentage = int((timeTaken/totalTime) * 100)
 
-
-    switch_to_signin= Signal()
-    switch_to_training = Signal()
-    switch_to_account = Signal()
-    switch_to_notifications = Signal()
-    switch_to_employee = Signal()
-    switch_to_manager = Signal()
-
     def __init__(self):
         self.current_user = None
         super().__init__()
 
         #need to create a widget to show estimated percentage of time completed
     
-    #function to create progress bar for each project
     def create_progress_bar(self, project_name, progress_value, time_percentage):
 
         # Create project label

@@ -8,13 +8,14 @@ class PageIndex(Enum):
     TODO = 4
     PERSONAL_TODO = 5
     PROJECT_TODO = 6
-    
+    POSTS = 7
+    POST_CONTENT = 8
     MAKE_POST = 9
-    EDIT_POST = 15
-    TOPICS = 16
-    TOPIC_CONTENT = 11
-    TRAINING = 12
+    EDIT_POST = 10
+    TOPICS = 11
+    TOPIC_CONTENT = 12
+    TRAINING = 13
     NOTIFICATIONS = 14
-    MY_ACCOUNT = 16
-    EMPLOYEE = 17
-    MANAGER = 18
+    MY_ACCOUNT = 15
+    EMPLOYEE = 16
+    MANAGER = 17

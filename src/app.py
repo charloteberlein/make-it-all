@@ -70,11 +70,11 @@ class MainWindow(QWidget):
         self.edit_post_page = EditPostPage()
         self.topics_page = TopicsPage()
         self.topic_content_page = TopicContentPage()
-        self.training_page = TrainingPage()  # Placeholder for the Account page
-        self.notifications_page = NotificationsPage()  # Placeholder for the Notifications page
-        self.account_page = MyAccountPage()  # Placeholder for the Account page
-        self.employee_page = EmployeePage()  # Placeholder for the Employee page
-        self.manager_page = ManagerPage()  # Placeholder for the Manager page
+        self.training_page = TrainingPage()                 # Placeholder
+        self.notifications_page = NotificationsPage()       # Placeholder
+        self.account_page = MyAccountPage()                 # Placeholder
+        self.employee_page = EmployeePage()                 # Placeholder
+        self.manager_page = ManagerPage()                   # Placeholder
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
@@ -83,10 +83,10 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.todo_page)
         self.stacked_widget.addWidget(self.personal_todo_page)
         self.stacked_widget.addWidget(self.project_todo_page)
-        self.stacked_widget.addWidget(self.make_post_page)
-        self.stacked_widget.addWidget(self.edit_post_page)
         self.stacked_widget.addWidget(self.posts_page)
         self.stacked_widget.addWidget(self.post_content_page)
+        self.stacked_widget.addWidget(self.make_post_page)
+        self.stacked_widget.addWidget(self.edit_post_page)
         self.stacked_widget.addWidget(self.topics_page)
         self.stacked_widget.addWidget(self.topic_content_page)
         self.stacked_widget.addWidget(self.training_page)
@@ -145,9 +145,9 @@ class MainWindow(QWidget):
         self.topic_content_page.post_selected.connect(self.view_post)
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
 
-        #self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
-        #self.dashboard_page.switch_to_account.connect(lambda: self.change_page(PageIndex.ACCOUNT))
-        #self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
+        self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
+        self.dashboard_page.switch_to_account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
+        self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
         self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
 
         # Header events
