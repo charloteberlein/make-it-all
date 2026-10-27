@@ -13,8 +13,7 @@ from pages.account.forgotpassword import ForgotPasswordPage
 from pages.account.my_account import MyAccountPage
 
 from pages.dashboard.dashboard_page import DashboardPage
-from pages.dashboard.employeeView import EmployeePage
-from pages.dashboard.managerView import ManagerPage
+from pages.dashboard.dashboard_view import DashboardView
 
 from pages.todos.todo import TodoPage
 from pages.todos.personal_todo_page import PersonalTodoPage
@@ -72,9 +71,8 @@ class MainWindow(QWidget):
         self.topic_content_page = TopicContentPage()
         self.training_page = TrainingPage()                 # Placeholder
         self.notifications_page = NotificationsPage()       # Placeholder
-        self.account_page = MyAccountPage()                 # Placeholder
-        self.employee_page = EmployeePage()                 # Placeholder
-        self.manager_page = ManagerPage()                   # Placeholder
+        self.account_page = MyAccountPage()                 # Placeholder              # Placeholder
+        self.dashboard_view = DashboardView()               # Placeholder
 
         self.stacked_widget.addWidget(self.signin_page)
         self.stacked_widget.addWidget(self.register_page)
@@ -92,9 +90,7 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.training_page)
         self.stacked_widget.addWidget(self.notifications_page)
         self.stacked_widget.addWidget(self.account_page)
-        self.stacked_widget.addWidget(self.employee_page)
-        self.stacked_widget.addWidget(self.manager_page)
-       
+        self.stacked_widget.addWidget(self.dashboard_view)
 
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)

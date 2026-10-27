@@ -4,8 +4,8 @@ from collections import defaultdict
 
 TASKS_FILE = "assets/mock_data/tasks.json"
 
-def calc_project_completion_percentages(TASKS_FILE):
-    # Calculates percentage progress for each project depending on number of 'completed' tasks.
+def calc_project_completion_percentages():
+    """Calculates percentage progress for each project depending on number of 'completed' tasks."""
     tasks = read_json(TASKS_FILE)
     project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
     project_stats = defaultdict(lambda: {"total": 0, "completed": 0}) # Initialise
@@ -29,8 +29,8 @@ def calc_project_completion_percentages(TASKS_FILE):
         percentages[project] = {"percentage": round(percent, 1), "completed": completed, "total": total}
     return percentages
 
-def get_emp_tasks(TASKS_FILE):
-    # Gathers all the current tasks each employee is working on.
+def get_emp_tasks():
+    """Gathers all the current tasks each employee is working on."""
     tasks = read_json(TASKS_FILE)
     project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
     emp_data = defaultdict(lambda: {"completed": [], "active": []})
@@ -55,7 +55,7 @@ def get_emp_tasks(TASKS_FILE):
     return emp_data
 
 def calc_task_completion_times(task):
-    # Calculates how many tasks an employee has finished on time and if they are late.
+    """Calculates how many tasks an employee has finished on time and if they are late."""
     due_str = task.get("due_date", "")
     comp_str = task.get("completion_date", "")
     status = task.get("status", "").lower()
@@ -84,7 +84,7 @@ def calc_task_completion_times(task):
         
     return None
 
-def calc_project_hours(TASKS_FILE):
+def calc_project_hours():
     tasks = read_json(TASKS_FILE)
     project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
     project_hours = defaultdict(lambda: {"total_estimated": 0.0, "total_actual": 0.0})
@@ -144,7 +144,7 @@ def calc_project_hours(TASKS_FILE):
     }
 
 
-def calc_emp_hours_summary(TASKS_FILE):
+def calc_emp_hours_summary():
     tasks = read_json(TASKS_FILE)
     project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
     emp_hours = defaultdict(lambda: {"total_estimated": 0.0, "total_actual": 0.0})

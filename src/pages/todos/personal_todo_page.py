@@ -1,5 +1,8 @@
 import json
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QTextEdit, QComboBox, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox
+from PySide6.QtWidgets import (
+    QDialog, QVBoxLayout, QTextEdit, QComboBox, QLabel, QPushButton, QTableWidget, QTableWidgetItem,
+    QHeaderView, QMessageBox
+)
 from datetime import date
 from PySide6.QtCore import Qt, Signal
 from pages.base_page import BasePage

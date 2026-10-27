@@ -1,5 +1,21 @@
 /* light.qss - Stylesheet used for the light mode.*/
 
+QFrame#TaskFrame {
+    border: 2px solid #EAB308;
+    border-radius: 5px;
+}
+
+QProgressBar {
+    background-color: #D6D4D4;
+    border: 5px solid #EAB308;
+    border-radius: 5px;
+}
+
+QProgressBar::chunk {
+    background-color: #EAB308;
+    border: 5px solid #EAB308;
+    border-radius: 5px;
+}
 
 QPushButton#ToDoButton {
     background-color: #EAB308;
