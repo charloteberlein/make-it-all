@@ -13,8 +13,6 @@ class DashboardPage(BasePage):
     switch_to_training = Signal()
     switch_to_account = Signal()
     switch_to_notifications = Signal()
-    switch_to_employee = Signal()
-    switch_to_manager = Signal()
 
     #Variables for testing - will be taken from to-do in future
     projectNum = 3
@@ -25,7 +23,7 @@ class DashboardPage(BasePage):
     timePercentage = int((timeTaken/totalTime) * 100)
 
     def __init__(self):
-        self.current_user = None
+        self._current_user = None
         super().__init__()
 
     def showEvent(self, event):
@@ -34,65 +32,27 @@ class DashboardPage(BasePage):
         main_window = self.window()
         if hasattr(main_window, "current_user"):
             self.current_user = main_window.current_user
-    
-    def create_progress_bar(self, project_name, progress_value, time_percentage):
-        # Sub-layouts
-        project_layout = QHBoxLayout()
-        project_layout.setContentsMargins(10, 5, 10, 5)
-        project_layout.setSpacing(10)
-        project_frame = QFrame()
 
-        progress_stack_layout = QVBoxLayout()
-        progress_stack_layout.setContentsMargins(0, 0, 0, 0)
-        progress_stack_layout.setSpacing(5)
-        progress_stack_frame = QFrame()
+    @property
+    def current_user(self):
+        return self._current_user
 
-        percentage_stack_layout = QVBoxLayout()
-        percentage_stack_layout.setContentsMargins(0, 0, 0, 0)
-        percentage_stack_layout.setSpacing(5)
-        percentage_stack_frame = QFrame()
+    @current_user.setter
+    def current_user(self, user: User | None):
+        self._current_user = user
 
-        # Project widgets
-        project_label = QLabel(project_name)
-        project_label.setObjectName("projectLabel")
-        project_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
-        project_label.setFixedWidth(100)
-
-        progressBar = QProgressBar()
-        progressBar.setRange(0, 100)
-        progressBar.setValue(progress_value)
-        progressBar.setFixedHeight(15)
-        progressBar.setTextVisible(False)
-
-        elapsedTimeBar = QProgressBar()
-        elapsedTimeBar.setObjectName("TimeBar")
-        elapsedTimeBar.setRange(0, 100)
-        elapsedTimeBar.setValue(time_percentage)
-        elapsedTimeBar.setFixedHeight(15)
-        elapsedTimeBar.setTextVisible(False)
-
-        # Percentage labels
-        percentageLabel = QLabel(f"{progress_value}%")
-        percentageLabel.setFixedWidth(40)
-
-        timePercentageLabel = QLabel(f"{time_percentage}%")
-        timePercentageLabel.setFixedWidth(40)
-
-        # Assemble widgets
-        progress_stack_layout.addWidget(progressBar)
-        progress_stack_layout.addWidget(elapsedTimeBar)
-        progress_stack_frame.setLayout(progress_stack_layout)
-
-        percentage_stack_layout.addWidget(percentageLabel)
-        percentage_stack_layout.addWidget(timePercentageLabel)
-        percentage_stack_frame.setLayout(percentage_stack_layout)
-
-        # Add the project name, bars, and percentages
-        project_layout.addWidget(project_label)
-        project_layout.addWidget(progress_stack_frame, 1)
-        project_layout.addWidget(percentage_stack_frame)
-        project_frame.setLayout(project_layout)
-        return project_frame
+        if self.current_user is not None:
+            match self.current_user.rank:
+                case "Manager":
+                    self.view_employee_dashboard.setText("Manager Dashboard")
+                    self.view_employee_dashboard.show()
+                case "Team Lead":
+                    self.view_employee_dashboard.setText("Employee Dashboard")
+                    self.view_employee_dashboard.show()
+                case _:
+                    self.view_employee_dashboard.hide()
+        else:
+            self.view_employee_dashboard.hide()
 
     def define_layout(self) -> None:
         # Buttons
@@ -156,18 +116,6 @@ class DashboardPage(BasePage):
         self.view_employee_dashboard = QPushButton("Employee Dashboard")
         self.view_employee_dashboard.setCursor(Qt.CursorShape.PointingHandCursor)
         self.view_employee_dashboard.setObjectName("LoginButton")
-        self.view_employee_dashboard.clicked.connect(self.open_staff_dashboard)
-
-        if self.current_user is not None:
-            match self.current_user.rank:
-                case "Manager":
-                    self.view_employee_dashboard.setText("Manager Dashboard")
-                    self.view_employee_dashboard.setVisible(True)
-                case "Team Lead":
-                    self.view_employee_dashboard.setText("Employee Dashboard")
-                    self.view_employee_dashboard.setVisible(True)
-                case _:
-                    self.view_employee_dashboard.setVisible(False)
 
         # Default layout - no projects
         self.progress_tracker_header = QLabel("Progress Tracker")
@@ -223,11 +171,62 @@ class DashboardPage(BasePage):
         self.layout.addLayout(self.task_layout)
         self.setLayout(self.layout)
 
-    def open_staff_dashboard(self):
-        if self.current_user is None:
-            return
-        match self.current_user.rank:
-            case "Manager":
-                self.switch_to_manager.emit()
-            case _:
-                self.switch_to_employee.emit()
+    def create_progress_bar(self, project_name, progress_value, time_percentage):
+        # Sub-layouts
+        project_layout = QHBoxLayout()
+        project_layout.setContentsMargins(10, 5, 10, 5)
+        project_layout.setSpacing(10)
+        project_frame = QFrame()
+
+        progress_stack_layout = QVBoxLayout()
+        progress_stack_layout.setContentsMargins(0, 0, 0, 0)
+        progress_stack_layout.setSpacing(5)
+        progress_stack_frame = QFrame()
+
+        percentage_stack_layout = QVBoxLayout()
+        percentage_stack_layout.setContentsMargins(0, 0, 0, 0)
+        percentage_stack_layout.setSpacing(5)
+        percentage_stack_frame = QFrame()
+
+        # Project widgets
+        project_label = QLabel(project_name)
+        project_label.setObjectName("projectLabel")
+        project_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        project_label.setFixedWidth(100)
+
+        progressBar = QProgressBar()
+        progressBar.setRange(0, 100)
+        progressBar.setValue(progress_value)
+        progressBar.setFixedHeight(15)
+        progressBar.setTextVisible(False)
+
+        elapsedTimeBar = QProgressBar()
+        elapsedTimeBar.setObjectName("TimeBar")
+        elapsedTimeBar.setRange(0, 100)
+        elapsedTimeBar.setValue(time_percentage)
+        elapsedTimeBar.setFixedHeight(15)
+        elapsedTimeBar.setTextVisible(False)
+
+        # Percentage labels
+        percentageLabel = QLabel(f"{progress_value}%")
+        percentageLabel.setFixedWidth(40)
+
+        timePercentageLabel = QLabel(f"{time_percentage}%")
+        timePercentageLabel.setFixedWidth(40)
+
+        # Assemble widgets
+        progress_stack_layout.addWidget(progressBar)
+        progress_stack_layout.addWidget(elapsedTimeBar)
+        progress_stack_frame.setLayout(progress_stack_layout)
+
+        percentage_stack_layout.addWidget(percentageLabel)
+        percentage_stack_layout.addWidget(timePercentageLabel)
+        percentage_stack_frame.setLayout(percentage_stack_layout)
+
+        # Add the project name, bars, and percentages
+        project_layout.addWidget(project_label)
+        project_layout.addWidget(progress_stack_frame, 1)
+        project_layout.addWidget(percentage_stack_frame)
+        project_frame.setLayout(project_layout)
+        return project_frame
+

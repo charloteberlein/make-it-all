@@ -17,5 +17,4 @@ class PageIndex(Enum):
     TRAINING = 13
     NOTIFICATIONS = 14
     MY_ACCOUNT = 15
-    EMPLOYEE = 16
-    MANAGER = 17
+    DASHBOARD_VIEW = 16

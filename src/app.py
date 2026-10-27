@@ -118,12 +118,10 @@ class MainWindow(QWidget):
         self.signin_page.login_success.connect(self.log_in)
         self.register_page.login_success.connect(self.log_in)
         self.forgot_password_page.login_success.connect(self.log_in)
-        #self.dashboard_page.todo.clicked.connect(lambda: self.change_page(PageIndex.TODO))
         self.todo_page.to_Personal_Todo.connect(lambda: self.change_page(PageIndex.PERSONAL_TODO))
         self.todo_page.to_Project_Todo.connect(lambda: self.change_page(PageIndex.PROJECT_TODO))
         self.personal_todo_page.to_Todo.connect(lambda: self.change_page(PageIndex.TODO))
         self.project_todo_page.to_Todo.connect(lambda: self.change_page(PageIndex.TODO))
-        #self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
         self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
         self.make_post_page.confirm_btn.clicked.connect(self.save_and_exit_post_maker)
@@ -132,6 +130,7 @@ class MainWindow(QWidget):
         self.post_content_page.edit.connect(self.edit_post)
         self.post_content_page.delete.connect(self.delete_post)
         self.posts_page.post_selected.connect(self.view_post)
+        self.dashboard_page.view_employee_dashboard.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD_VIEW))
 
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
