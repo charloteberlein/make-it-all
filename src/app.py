@@ -6,23 +6,32 @@ from PySide6.QtWidgets import (
 from pages.page_index import PageIndex
 from pages.header import Header
 from pages.sidebar import Sidebar
+
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage
 from pages.account.forgotpassword import ForgotPasswordPage
-from pages.dashboard.dashboard import DashboardPage
+from pages.account.my_account import MyAccountPage
+
+from pages.dashboard.dashboard_page import DashboardPage
+from pages.dashboard.employeeView import EmployeePage
+from pages.dashboard.managerView import ManagerPage
+
 from pages.todos.todo import TodoPage
 from pages.todos.personal_todo_page import PersonalTodoPage
 from pages.todos.project_todo_page import ProjectTodoPage
+
+from pages.posts.posts_page import PostsPage
+from pages.posts.post_content import PostContent
+from pages.posts.post_content_page import PostContentPage
 from pages.posts.make_post import MakePostPage
 from pages.posts.edit_post import EditPostPage
+
 from pages.topics.topics_page import TopicsPage
 from pages.topics.topic_content import TopicContent
 from pages.topics.topic_content_page import TopicContentPage
+
 from pages.training import TrainingPage  
 from pages.notifications import NotificationsPage
-from pages.account.my_account import MyAccountPage
-from pages.dashboard.employeeView import EmployeePage
-from pages.dashboard.managerView import ManagerPage
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -55,6 +64,8 @@ class MainWindow(QWidget):
         self.todo_page = TodoPage()
         self.personal_todo_page = PersonalTodoPage(self.current_user)
         self.project_todo_page = ProjectTodoPage()
+        self.posts_page = PostsPage()
+        self.post_content_page = PostContentPage()
         self.make_post_page = MakePostPage()
         self.edit_post_page = EditPostPage()
         self.topics_page = TopicsPage()
@@ -74,6 +85,8 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.project_todo_page)
         self.stacked_widget.addWidget(self.make_post_page)
         self.stacked_widget.addWidget(self.edit_post_page)
+        self.stacked_widget.addWidget(self.posts_page)
+        self.stacked_widget.addWidget(self.post_content_page)
         self.stacked_widget.addWidget(self.topics_page)
         self.stacked_widget.addWidget(self.topic_content_page)
         self.stacked_widget.addWidget(self.training_page)
@@ -115,14 +128,14 @@ class MainWindow(QWidget):
         self.personal_todo_page.to_Todo.connect(lambda: self.change_page(PageIndex.TODO))
         self.project_todo_page.to_Todo.connect(lambda: self.change_page(PageIndex.TODO))
         #self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
-        #self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
-        #self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
+        self.posts_page.make_post.clicked.connect(lambda: self.change_page(PageIndex.MAKE_POST))
+        self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
         self.make_post_page.confirm_btn.clicked.connect(self.save_and_exit_post_maker)
         self.edit_post_page.edit.connect(self.save_and_exit_post_editor)
-        #self.post_content_page.back.connect(lambda: self.view_topic_posts(self.post_content_page.post.topic))
-        #self.post_content_page.edit.connect(self.edit_post)
-        #self.post_content_page.delete.connect(self.delete_post)
-        #self.posts_page.post_selected.connect(self.view_post)
+        self.post_content_page.back.connect(lambda: self.view_topic_posts(self.post_content_page.post.topic))
+        self.post_content_page.edit.connect(self.edit_post)
+        self.post_content_page.delete.connect(self.delete_post)
+        self.posts_page.post_selected.connect(self.view_post)
 
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
@@ -132,9 +145,9 @@ class MainWindow(QWidget):
         self.topic_content_page.post_selected.connect(self.view_post)
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
 
-        self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
-        self.dashboard_page.switch_to_account.connect(lambda: self.change_page(PageIndex.ACCOUNT))
-        self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
+        #self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
+        #self.dashboard_page.switch_to_account.connect(lambda: self.change_page(PageIndex.ACCOUNT))
+        #self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
         self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
 
         # Header events
