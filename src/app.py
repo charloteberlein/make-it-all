@@ -132,6 +132,8 @@ class MainWindow(QWidget):
         self.posts_page.post_selected.connect(self.view_post)
         self.dashboard_page.view_employee_dashboard.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD_VIEW))
         self.dashboard_view.back_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
+        self.dashboard_page.notifications.clicked.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
+        self.dashboard_page.training.clicked.connect(lambda: self.change_page(PageIndex.TRAINING))
 
         for (widget, id) in self.topics_page.widgets:
             widget.clicked.connect(
@@ -140,9 +142,6 @@ class MainWindow(QWidget):
 
         self.topic_content_page.post_selected.connect(self.view_post)
         self.topic_content_page.back.connect(lambda: self.change_page(PageIndex.TOPICS))
-
-        self.dashboard_page.switch_to_training.connect(lambda: self.change_page(PageIndex.TRAINING))
-        self.dashboard_page.switch_to_notifications.connect(lambda: self.change_page(PageIndex.NOTIFICATIONS))
         self.topic_content_page.topic_writable.connect(self.toggle_topic_writable)
 
         # Header events

@@ -9,18 +9,6 @@ from pages.account.user import User
 # TODO: Create a widget to show estimated percentage of time completed
 
 class DashboardPage(BasePage):
-    switch_to_signin = Signal()
-    switch_to_training = Signal()
-    switch_to_notifications = Signal()
-
-    #Variables for testing - will be taken from to-do in future
-    projectNum = 3
-    projectName = "testing :)"
-    progressValue = 23
-    totalTime = 180
-    timeTaken = 60
-    timePercentage = int((timeTaken/totalTime) * 100)
-
     def __init__(self):
         self._current_user = None
         super().__init__()
@@ -100,12 +88,10 @@ class DashboardPage(BasePage):
         self.training = QPushButton("Training")
         self.training.setCursor(Qt.CursorShape.PointingHandCursor)
         self.training.setObjectName("LoginButton")
-        self.training.clicked.connect(self.switch_to_training.emit)
 
         self.notifications = QPushButton("Notifications")
         self.notifications.setCursor(Qt.CursorShape.PointingHandCursor)
         self.notifications.setObjectName("LoginButton")
-        self.notifications.clicked.connect(self.switch_to_notifications.emit)
 
         self.view_employee_dashboard = QPushButton("Employee Dashboard")
         self.view_employee_dashboard.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -133,24 +119,31 @@ class DashboardPage(BasePage):
         self.progress_frame_layout.addWidget(self.progress_tracker_header)
         self.progress_frame.setLayout(self.progress_frame_layout)
 
-        if self.projectNum <= 0:
-            self.progress_frame_layout.addWidget(self.no_projects_label)
-        else:
-            for _ in range(self.projectNum):
-                self.progress_frame_layout.addWidget(
-                    self.create_progress_bar(
-                        self.projectName, self.progressValue, self.timePercentage
-                    )
-                )
+        #self.progress_frame_layout.addWidget(self.no_projects_label)
+        self.progress_frame_layout.addWidget(self.create_progress_bar(
+            "Financial audit", 75, 84
+        ))
+        self.progress_frame_layout.addWidget(self.create_progress_bar(
+            "Rewrite codebase in Rust", 32, 65
+        ))
+        self.progress_frame_layout.addWidget(self.create_progress_bar(
+            "Quarterly employee survey", 98, 46
+        ))
 
         # Tasks and progress
-        # TODO: Add widgets
+        self.overdue_layout.addWidget(QLabel("Liaison with investors"))
+        self.overdue_layout.addWidget(QLabel("Discussion about 2027 strategy"))
         self.overdue_frame.setLayout(self.overdue_layout)
 
-        # TODO: Add widgets
+        self.upcoming_layout.addWidget(QLabel("Formal review of methodologies"))
+        self.upcoming_layout.addWidget(QLabel("Survey of manufacturing facility (UK)"))
+        self.upcoming_layout.addWidget(QLabel("Survey of manufacturing facility (Rep. Ireland)"))
+        self.upcoming_layout.addWidget(QLabel("Supply chain annual review"))
         self.upcoming_frame.setLayout(self.upcoming_layout)
 
-        # TODO: Add widgets
+        self.completed_layout.addWidget(QLabel("Shareholders annual meeting"))
+        self.completed_layout.addWidget(QLabel("Cybersecurity audit"))
+        self.completed_layout.addWidget(QLabel("2027 Budget Proposal"))
         self.completed_frame.setLayout(self.completed_layout)
 
         self.task_layout.addWidget(self.overdue_frame)
@@ -159,12 +152,13 @@ class DashboardPage(BasePage):
 
         # Main layout
         self.layout.addWidget(self.navbar_frame)
+        self.layout.addStretch()
         self.layout.addWidget(self.progress_frame)
         self.layout.addStretch()
         self.layout.addLayout(self.task_layout)
         self.setLayout(self.layout)
 
-    def create_progress_bar(self, project_name, progress_value, time_percentage):
+    def create_progress_bar(self, project_name: str, progress_value: int, time_percentage: int):
         # Sub-layouts
         project_layout = QHBoxLayout()
         project_layout.setContentsMargins(10, 5, 10, 5)
@@ -183,8 +177,9 @@ class DashboardPage(BasePage):
 
         # Project widgets
         project_label = QLabel(project_name)
+        project_label.setWordWrap(True)
         project_label.setObjectName("projectLabel")
-        project_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        project_label.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         project_label.setFixedWidth(100)
 
         progressBar = QProgressBar()
