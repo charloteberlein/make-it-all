@@ -211,7 +211,7 @@ QPushButton#NavButton {
     background-color: transparent;
     color: #EAB308;
     border: 1px solid #EAB308;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 4px 12px;
     font-size: 11px;
     font-weight: bold;
@@ -226,11 +226,10 @@ QPushButton#ToggleButton {
     background-color: #f1f5f9;
     color: #334155;
     border: 2px solid #9a9a9a;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 4px 10px;
     font-size: 11px;
     font-weight: bold;
-    border-width: 1px;
 }
 
 QLabel#ErrorLabel {

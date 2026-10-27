@@ -211,7 +211,7 @@ QPushButton#NavButton {
     background-color: transparent;
     color: #EAB308;
     border: 1px solid #EAB308;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 4px 12px;
     font-size: 11px;
     font-weight: bold;
@@ -226,7 +226,7 @@ QPushButton#ToggleButton {
     background-color: #1e293b;
     color: #e2e8f0;
     border: 2px solid #334155;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 4px 10px;
     font-size: 11px;
     font-weight: bold;
