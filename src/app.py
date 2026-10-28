@@ -216,12 +216,14 @@ class MainWindow(QWidget):
         self.current_user = user
         self.posts_page.set_user(user.id)
         self.account_page.set_user(user)
+        self.header.set_user(user)
         self.topic_content_page.set_can_toggle(user.rank == "Manager")
         self.change_page(PageIndex.DASHBOARD)
 
     def log_out(self):
         self.current_user = None
         self.posts_page.set_user(None)
+        self.header.set_user(None)
         self.topic_content_page.set_can_toggle(False)
         self.change_page(PageIndex.SIGN_IN)
 

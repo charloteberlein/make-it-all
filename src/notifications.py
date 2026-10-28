@@ -39,7 +39,10 @@ def get_notifications(user: User) -> list[Notification]:
             continue
 
         notification_id = f"{kind}:{task['task_name']}:{task['due_date']}"
-        message = f"{text}: {task['task_name']} (due on {task['due_date']})"
+        name = task["task_name"]
+        if len(name) > 35:
+            name = name[:32] + "..."
+        message = f"{text}: {name} (due {task['due_date']})"
         notifications.append(Notification(notification_id, message, notification_id in user_read_ids))
 
     return notifications
