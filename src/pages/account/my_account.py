@@ -66,6 +66,7 @@ class MyAccountPage(BasePage):
         self.nickname_layout.addWidget(self.change_btn)
 
         self.form_layout = QFormLayout()
+        self.form_layout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
         self.form_layout.setSpacing(10)
         self.form_layout.addRow("First Name:", self.firstname_input)
         self.form_layout.addRow("Last Name:", self.lastname_input)
@@ -84,7 +85,7 @@ class MyAccountPage(BasePage):
         self.main_section.addStretch(1)
 
         self.main_frame.setLayout(self.main_section)
-        self.main_frame.setFixedWidth(700)
+        self.main_frame.setFixedWidth(540)
 
         self.layout.addSpacing(10)
         self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
