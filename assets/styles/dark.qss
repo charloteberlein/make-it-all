@@ -16,8 +16,8 @@ QPushButton#ToDoButton:hover {
 
 QTableWidget {
     font-size: 8pt;
-    border: 2px solid #dcdde1;
-    gridline-color: #f1f2f6;
+    border: 2px solid #c7c7c7;
+    gridline-color: #c7c7c7;
 }
 
 QComboBox#TableStatusCombo {
@@ -28,9 +28,9 @@ QComboBox#TableStatusCombo {
 QHeaderView::section {
     font-size: 10pt;
     font-weight: bold;
-    background-color: #fbe080;
+    background-color: #CA8A04;
     padding: 1px;
-    border: 1px solid #b3b3b3;
+    border: 1px solid #c7c7c7;
 }
    
 QWidget {

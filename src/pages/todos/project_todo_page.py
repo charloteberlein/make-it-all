@@ -187,23 +187,39 @@ class ProjectTodoPage(BasePage):
             QMessageBox.warning(self, "❌ Access Denied", "You cannot view this task's details, as you are not assigned to it.")
 
     def show_modal(self, task):
-            dialog = TaskModal(task, self)
-            dialog.exec()
-    
-            if dialog.action_result == "save":
-                write_json(TASKS_FILE, self.tasks)
-                self.load_tasks()
-                self.populate_content()
-            elif dialog.action_result == "delete":
-                confirm = QMessageBox.question(self, "Confirm Delete", 
-                    f"Are you sure you want to delete '{task.get('task_name', 'Task')}'?",
-                    QMessageBox.Yes | QMessageBox.No)
-                if confirm == QMessageBox.Yes:
-                    if task in self.tasks:
-                        self.tasks.remove(task)
-                        write_json(TASKS_FILE, self.tasks)
-                        self.load_tasks()
-                        self.populate_content()
+        current_user_name = self.get_current_user()
+        assigner = task.get("assigner", "")
+        assignees = task.get("assignees", "")
+
+        if isinstance(assignees, list):
+            assignee_list = [a.strip() for a in assignees]
+        else:
+            assignee_list = [a.strip() for a in str(assignees).split(",")]
+
+        is_assigner = current_user_name == assigner
+        is_assignee = current_user_name in assignee_list
+
+        if not (is_assigner or is_assignee):
+            QMessageBox.warning(self, "❌ Access Denied", "You cannot edit or delete this task as you are not assigned to it.")
+            return
+        
+        dialog = TaskModal(task, self)
+        dialog.exec()
+
+        if dialog.action_result == "save":
+            write_json(TASKS_FILE, self.tasks)
+            self.load_tasks()
+            self.populate_content()
+        elif dialog.action_result == "delete":
+            confirm = QMessageBox.question(self, "Confirm Delete", 
+                f"Are you sure you want to delete '{task.get('task_name', 'Task')}'?",
+                QMessageBox.Yes | QMessageBox.No)
+            if confirm == QMessageBox.Yes:
+                if task in self.tasks:
+                    self.tasks.remove(task)
+                    write_json(TASKS_FILE, self.tasks)
+                    self.load_tasks()
+                    self.populate_content()
 
     def handle_status_change(self, task, new_status, combo_box):
         # Validates current user == assigner/assignee before changing task status.
