@@ -239,7 +239,7 @@ QPushButton#PinkNavButton {
 
 QPushButton#PinkNavButton:hover, QPushButton#PinkNavButton:checked {
     background-color: #e82d58;
-    color: #000000;
+    color: #ffffff;
 }
 
 QPushButton#ToggleButton {
