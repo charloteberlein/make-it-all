@@ -237,7 +237,7 @@ QPushButton#PinkNavButton {
     font-weight: bold;
 }
 
-QPushButton#PinkNavButton:hover {
+QPushButton#PinkNavButton:hover, QPushButton#PinkNavButton:checked {
     background-color: #e82d58;
     color: #000000;
 }
