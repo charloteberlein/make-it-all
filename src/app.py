@@ -176,6 +176,7 @@ class MainWindow(QWidget):
         filepath = f"assets/styles/{filename}"
         with open(filepath, "r") as file:
             self.setStyleSheet(file.read())
+        self.dashboard_page.populate_content()
 
     def save_and_exit_post_maker(self):
         if self.make_post_page.check_post_valid():

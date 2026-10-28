@@ -1,10 +1,13 @@
 import json
-from PySide6.QtWidgets import QDoubleSpinBox, QDialog, QVBoxLayout, QTextEdit, QComboBox, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox
+from PySide6.QtWidgets import (
+    QDoubleSpinBox, QDialog, QVBoxLayout, QTextEdit, QComboBox, QLabel, QPushButton, QTableWidget,
+    QTableWidgetItem, QHeaderView, QMessageBox
+)
 from datetime import date
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
 from pages.base_page import BasePage
 from pages.todos.task_modal import TaskModal
+from pages.todos.task_status import TaskStatus, parse_task_status, task_status_options
 from helpers import read_json, write_json
 
 TASKS_FILE = "assets/mock_data/tasks.json"
@@ -62,7 +65,8 @@ class ProjectTodoPage(BasePage):
         self.table = QTableWidget()
         self.table.setColumnCount(11)
         self.table.setHorizontalHeaderLabels([
-            "Task Name", "Project Name", "Assigner", "Assignees", "Status", "Assigned Date", "Due Date", "Estimated Hours", "Actual Hours", "More Info", "Actions"
+            "Task Name", "Project Name", "Assigner", "Assignees", "Status", "Assigned Date",
+            "Due Date", "Estimated Hours", "Actual Hours", "More Info", "Actions"
         ])
         self.table.verticalHeader().setVisible(False)
         header = self.table.horizontalHeader()
@@ -93,8 +97,8 @@ class ProjectTodoPage(BasePage):
 
         # Pushes Completed and Suspended tasks to bottom of stack.
         def sort_key(task):
-            status = task.get("status", "").lower()
-            if "complete" in status or "suspended" in status:
+            status = parse_task_status(task.get("status"))
+            if status in (TaskStatus.COMPLETED, TaskStatus.SUSPENDED):
                 return (1, task.get("task_name", ""))
             return (0, task.get("task_name", ""))
         self.project_tasks.sort(key = sort_key)
@@ -112,13 +116,13 @@ class ProjectTodoPage(BasePage):
             # Dropdownm menu.
             status_combo = QComboBox()
             status_combo.setObjectName("TableStatusCombo")
-            status_combo.addItems(["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"])
-            current_status = task.get("status", "⏳ In Progress")
-            if current_status in ["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"]:
-                status_combo.setCurrentText(current_status)
-            else:
-                status_combo.setCurrentText("In Progress")
-            status_combo.currentTextChanged.connect(lambda new_status, t = task, combo = status_combo: self.handle_status_change(t, new_status, combo))
+            status_combo.addItems(task_status_options())
+            current_status = parse_task_status(task.get("status"))
+            status_combo.setCurrentText(current_status.value)
+            status_combo.currentTextChanged.connect(
+                lambda new_status, t = task, combo = status_combo:
+                self.handle_status_change(t, new_status, combo)
+            )
             self.table.setCellWidget(row_index, 4, status_combo)
             
             self.table.setItem(row_index, 5, QTableWidgetItem(task.get("assigned_date", "")))
@@ -239,13 +243,14 @@ class ProjectTodoPage(BasePage):
         if not (is_assigner or is_assignee):
             QMessageBox.warning(self, "❌ Access Denied", "You can only change the status of tasks you are assigned to.")
             combo_box.blockSignals(True)
-            combo_box.setCurrentText(task.get("status", "In Progress"))
+            combo_box.setCurrentText(parse_task_status(task.get("status")).value)
             combo_box.blockSignals(False)
             return
 
         # Task completion tracking.
-        task["status"] = new_status
-        if "complete" in new_status.lower():
+        task_status = parse_task_status(new_status)
+        task["status"] = task_status.value
+        if task_status is TaskStatus.COMPLETED:
             if not task.get("completion_date"):
                 task["completion_date"] = date.today().isoformat()
         else:
@@ -267,7 +272,7 @@ class ProjectTodoPage(BasePage):
             "project_name": "",
             "assigner": current_user_name,
             "assignees": "",
-            "status": "⏳ In Progress",
+            "status": TaskStatus.IN_PROGRESS.value,
             "assigned_date": date.today().isoformat(),
             "due_date": "",
             "estimated_time": "",

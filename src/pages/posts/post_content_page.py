@@ -38,6 +38,7 @@ class PostContentPage(BasePage):
         self.topic.setText(TopicContent.get_topic_name(self.post.topic))
         self.date.setText(self.post.date_created)
         self.content.setHtml(self.post.content)
+        self.refresh_upvote_button()
 
         self.locked = (
             True if self.post.archived
@@ -165,4 +166,10 @@ class PostContentPage(BasePage):
             if current_user.id in self.post.upvoted_users:
                 self.post.upvoted_users.remove(current_user.id)
 
-        self.upvote_btn.setText(f"👍 Upvote ({new_count})")
+        self.refresh_upvote_button()
+
+    def refresh_upvote_button(self):
+        current_user = getattr(self.window(), "current_user", None)
+        is_upvoted = current_user and current_user.id in self.post.upvoted_users
+        self.upvote_btn.setChecked(bool(is_upvoted))
+        self.upvote_btn.setText(f"👍 Upvote ({self.post.upvote_count})")

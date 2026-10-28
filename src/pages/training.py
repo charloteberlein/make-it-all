@@ -11,6 +11,11 @@ class TrainingPage(BasePage):
         super().__init__()
         self.current_user = current_user
 
+    def define_layout(self) -> None:
+        super().define_layout()
+        self.title_frame = QFrame()
+        self.title_layout = QHBoxLayout(self.title_frame)
+
     def showEvent(self, event) -> None:
         super().showEvent(event)
         self.refresh_recommendations()
@@ -21,6 +26,7 @@ class TrainingPage(BasePage):
 
         self.subheading = QLabel("High-priority training modules based on employee upvotes on posts.")
         self.subheading.setObjectName("SubheadingLabel")
+        self.subheading.setContentsMargins(9, 0, 9, 0)
 
         self.back_btn = QPushButton("◀️ Back to Dashboard")
         self.back_btn.setObjectName("NavButton")
@@ -39,11 +45,13 @@ class TrainingPage(BasePage):
         self.scroll_area.setWidget(self.container_widget)
 
     def assemble_widgets(self) -> None:
-        self.layout.addWidget(self.heading)
+        self.title_layout.addWidget(self.heading)
+        self.title_layout.addStretch()
+        self.title_layout.addWidget(self.back_btn, alignment=Qt.AlignmentFlag.AlignRight)
+
+        self.layout.addWidget(self.title_frame)
         self.layout.addWidget(self.subheading)
         self.layout.addSpacing(10)
-        self.layout.addWidget(self.back_btn)
-        self.layout.addSpacing(14)
         self.layout.addWidget(self.scroll_area)
         self.scroll_area.setWidget(self.container_widget)
         self.layout.addSpacing(14)
