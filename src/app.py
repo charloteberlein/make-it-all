@@ -216,6 +216,7 @@ class MainWindow(QWidget):
     def log_in(self, user):
         self.current_user = user
         self.posts_page.set_user(user.id)
+        self.account_page.set_user(user)
         self.topic_content_page.set_can_toggle(user.rank == "Manager")
         self.change_page(PageIndex.DASHBOARD)
 
