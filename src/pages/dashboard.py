@@ -1,12 +1,15 @@
 import json
-from PySide6.QtWidgets import QLabel, QFrame, QVBoxLayout, QProgressBar
+from PySide6.QtWidgets import QLabel, QFrame, QVBoxLayout, QProgressBar, QPushButton
 from pages.base_page import BasePage
 from helpers import read_json
 from pages.todos.task_analytics import calc_project_completion_percentages, get_emp_tasks
+from PySide6.QtCore import Signal, Qt
 
 TASKS_FILE = "assets/mock_data/tasks.json"
 
 class DashboardPage(BasePage):
+    to_Training = Signal()
+
     def __init__(self, current_user=None):
         self.current_user = current_user
         super().__init__()
@@ -18,15 +21,13 @@ class DashboardPage(BasePage):
         main_window = self.window()
         if hasattr(main_window, "current_user") and main_window.current_user:
             self.current_user = main_window.current_user
+        self.training_btn.setVisible(bool(self.current_user and self.current_user.rank in ["Manager", "Team Lead"]))
         self.load_tasks()
         self.populate_content()
 
     def get_current_user_name(self) -> str:
-        if self.current_user:
-            if hasattr(self.current_user, "name"):
-                return str(self.current_user.name).strip()
-            elif isinstance(self.current_user, dict):
-                return str(self.current_user.get("name", "")).strip()
+        if self.current_user and hasattr(self.current_user, "name"):
+            return self.current_user.name
         return ""
 
     def define_widgets(self) -> None:
@@ -38,6 +39,12 @@ class DashboardPage(BasePage):
         self.progressTrackerHeader = QLabel("My Project Progress")
         self.progressTrackerHeader.setObjectName("SubheadingLabel")
 
+        self.training_btn = QPushButton("▶️ To Training Page")
+        self.training_btn.setObjectName("NavButton")
+        self.training_btn.setCursor(Qt.PointingHandCursor)
+        self.training_btn.setFixedWidth(200)
+        self.training_btn.clicked.connect(self.to_Training.emit)
+
         self.progress_frame = QFrame()
         self.progress_frame.setObjectName("ProgFrame")
         self.progress_frame.setFrameShape(QFrame.Shape.Box)
@@ -47,7 +54,9 @@ class DashboardPage(BasePage):
     def assemble_widgets(self) -> None:
         self.main_layout = QVBoxLayout()
         self.main_layout.addWidget(self.titleLabel)
-        self.main_layout.addSpacing(15)
+        self.main_layout.addSpacing(10)
+        self.main_layout.addWidget(self.training_btn)
+        self.main_layout.addSpacing(10)
         self.main_layout.addWidget(self.progressTrackerHeader)
         self.main_layout.addWidget(self.progress_frame)
         self.main_layout.addStretch(1)
