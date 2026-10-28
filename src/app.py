@@ -136,6 +136,7 @@ class MainWindow(QWidget):
         self.header.account.connect(lambda: self.change_page(PageIndex.MY_ACCOUNT))
         self.header.toggle_theme.connect(self.toggle_theme)
         self.header.log_out.connect(self.log_out)
+        self.header.open_todo.connect(self.open_todo_page)
 
         # Sidebar events
         self.sidebar.nav_dashboard.connect(lambda: self.change_page(PageIndex.DASHBOARD))
@@ -230,6 +231,12 @@ class MainWindow(QWidget):
     def view_topic_posts(self, topic_id: str):
         self.topic_content_page.topic_id = topic_id
         self.change_page(PageIndex.TOPIC_CONTENT)
+
+    def open_todo_page(self, task_type: str):
+        if task_type == "project":
+            self.change_page(PageIndex.PROJECT_TODO)
+        else:
+            self.change_page(PageIndex.PERSONAL_TODO)
 
     def toggle_topic_writable(self):
         self.topic_content_page.toggle_topic_writable()

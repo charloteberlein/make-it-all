@@ -7,6 +7,7 @@ class Header(QFrame):
     account = Signal()
     toggle_theme = Signal()
     log_out = Signal()
+    open_todo = Signal(str)
 
     def __init__(self):
         super().__init__()
@@ -89,10 +90,13 @@ class Header(QFrame):
         menu = QMenu(self)
         notifications = get_notifications(self.user)
         if not notifications:
-            menu.addAction("No notifications")
+            menu.addAction("No notifications").setEnabled(False)
         for notification in notifications:
             dot = "" if notification.read else "● "
-            menu.addAction(dot + notification.message)
+            action = menu.addAction(dot + notification.message)
+            action.triggered.connect(
+                lambda checked=False, task_type=notification.task_type:self.open_todo.emit(task_type)
+            )
 
         point = self.bell_btn.mapToGlobal(self.bell_btn.rect().bottomRight())
         point.setX(point.x() - menu.sizeHint().width())

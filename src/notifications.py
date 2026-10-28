@@ -14,6 +14,7 @@ read_ids: dict[int, set[str]] = {}
 class Notification:
     id: str
     message: str
+    task_type: str
     read: bool = False
 
 
@@ -43,7 +44,7 @@ def get_notifications(user: User) -> list[Notification]:
         if len(name) > 35:
             name = name[:32] + "..."
         message = f"{text}: {name} (due {task['due_date']})"
-        notifications.append(Notification(notification_id, message, notification_id in user_read_ids))
+        notifications.append(Notification(notification_id, message, task["type"], notification_id in user_read_ids))
 
     return notifications
 
