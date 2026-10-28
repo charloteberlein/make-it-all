@@ -66,6 +66,7 @@ class MyAccountPage(BasePage):
         self.nickname_layout.addWidget(self.change_btn)
 
         self.form_layout = QFormLayout()
+        self.form_layout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
         self.form_layout.setSpacing(10)
         self.form_layout.addRow("First Name:", self.firstname_input)
         self.form_layout.addRow("Last Name:", self.lastname_input)
@@ -84,10 +85,18 @@ class MyAccountPage(BasePage):
         self.main_section.addStretch(1)
 
         self.main_frame.setLayout(self.main_section)
-        self.main_frame.setFixedWidth(700)
+        self.main_frame.setFixedWidth(540)
 
         self.layout.addSpacing(10)
         self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
         self.layout.addStretch(1)
 
         self.setLayout(self.layout)
+
+    def set_user(self, user) -> None:
+        first_name, _, last_name = user.name.partition(" ")
+        self.firstname_input.setText(first_name)
+        self.lastname_input.setText(last_name)
+        self.preferred_name_input.setText("")
+        self.email_input.setText(user.email)
+        self.password_input.setText(user.password)

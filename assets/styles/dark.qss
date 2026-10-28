@@ -48,6 +48,11 @@ QLabel#TaskTableHeader {
     font-weight: bold;
 }
 
+QComboBox#TableStatusCombo {
+    padding: 2px 6px;
+    font-size: 8pt;
+}
+
 QHeaderView::section {
     font-size: 10pt;
     font-weight: bold;
@@ -64,7 +69,7 @@ QWidget {
 }
 
 QMenu {
-    color: #0f172a;
+    color: #e2e8f0;
     border-radius: 4px;
     padding: 8px;
     font-family: "Segoe UI", Arial, sans-serif;
@@ -210,7 +215,7 @@ QLineEdit, QTextEdit, QComboBox {
     border: 1px solid #334155;
     border-radius: 6px;
     padding: 10px;
-    font-size: 14px;
+    font-size: 12pt;
 }
 
 QLineEdit:focus, QTextEdit:focus, QComboBox:on {
@@ -239,7 +244,7 @@ QPushButton#NavButton {
     background-color: transparent;
     color: #EAB308;
     border: 1px solid #EAB308;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 4px 12px;
     font-size: 11px;
     font-weight: bold;
@@ -254,7 +259,7 @@ QPushButton#ToggleButton {
     background-color: #1e293b;
     color: #e2e8f0;
     border: 2px solid #334155;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 4px 10px;
     font-size: 11px;
     font-weight: bold;

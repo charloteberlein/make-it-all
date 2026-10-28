@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
 )
 from datetime import date
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QFont
 from pages.base_page import BasePage
 from pages.todos.task_modal import TaskModal
 from helpers import read_json, write_json
@@ -21,7 +22,7 @@ class PersonalTodoPage(BasePage):
         self.populate_content()
 
     def showEvent(self, event):
-        # Grabs current user from Main Window on page load.
+        """ Grabs current user from Main Window on page load. """
         super().showEvent(event)
         main_window = self.window()
         if hasattr(main_window, "current_user"):
@@ -96,6 +97,7 @@ class PersonalTodoPage(BasePage):
 
             # Dropdown menu for task status.
             status_combo = QComboBox()
+            status_combo.setObjectName("TableStatusCombo")
             status_combo.addItems(["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"])
             current_status = task.get("status", "⏳ In Progress")
             if current_status in ["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"]:
@@ -161,14 +163,14 @@ class PersonalTodoPage(BasePage):
                     self.populate_content()
 
     def handle_status_change(self, task, new_status):
-        # Updates new status in JSON.
+        # Updates new status in task.json.
         task["status"] = new_status
         write_json(TASKS_FILE, self.tasks)
         self.populate_content()
 
     def add_personal_modal(self):
         current_user_name = self.get_current_user_name()
-
+        # Adds new task to task.json
         new_task = {
             "task_name": "",
             "status": "⏳ In Progress",

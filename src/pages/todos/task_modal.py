@@ -3,7 +3,7 @@ from PySide6.QtCore import QDate
 from datetime import date
 
 class TaskModal(QDialog):
-    # A clean popup modal for viewing/editing task details.
+    """ A clean popup modal for viewing/editing task details. """
     def __init__(self, task_dict: dict, parent = None):
         super().__init__(parent)
         self.task_dict = task_dict
@@ -29,9 +29,10 @@ class TaskModal(QDialog):
             self.assigner_input = QLineEdit(task_dict.get("assigner", ""))
             self.assignees_input = QLineEdit(task_dict.get("assignees", ""))
 
+            # Adds estimate hours spent counter, increments of 0.25 => easy to convert to hours.
             self.estimated_input = QDoubleSpinBox()
             self.estimated_input.setRange(0.0, 9999.0)
-            self.estimated_input.setSingleStep(0.5)
+            self.estimated_input.setSingleStep(0.25)
             try:
                 self.estimated_input.setValue(float(task_dict.get("estimated_time", 0.0)))
             except (ValueError, TypeError):
