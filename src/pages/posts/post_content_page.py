@@ -102,6 +102,7 @@ class PostContentPage(BasePage):
         self.upvote_btn.setObjectName("PinkNavButton")
         self.upvote_btn.setCursor(Qt.PointingHandCursor)
         self.upvote_btn.clicked.connect(self.upvote_clicked)
+        self.upvote_btn.setCheckable(True)
 
         self.topic = QLabel(TopicContent.get_topic_name(self.post.topic))
         self.date = QLabel(self.post.date_created)
