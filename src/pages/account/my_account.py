@@ -91,3 +91,11 @@ class MyAccountPage(BasePage):
         self.layout.addStretch(1)
 
         self.setLayout(self.layout)
+
+    def set_user(self, user) -> None:
+        first_name, _, last_name = user.name.partition(" ")
+        self.firstname_input.setText(first_name)
+        self.lastname_input.setText(last_name)
+        self.preferred_name_input.setText("")
+        self.email_input.setText(user.email)
+        self.password_input.setText(user.password)
