@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QDoubleSpinBox, QDialog, QFormLayout, QLineEdit, QTextEdit, QDialogButtonBox, QPushButton, QHBoxLayout, QFileDialog, QDateEdit
+from PySide6.QtWidgets import QLabel, QDoubleSpinBox, QDialog, QFormLayout, QLineEdit, QTextEdit, QDialogButtonBox, QPushButton, QHBoxLayout, QFileDialog, QDateEdit
 from PySide6.QtCore import QDate
 from datetime import date
 
@@ -17,11 +17,10 @@ class TaskModal(QDialog):
         self.form_layout.setContentsMargins(40, 40, 40, 40)
 
         self.name_input = QLineEdit(task_name)
-        self.status_input = QLineEdit(task_dict.get("status", ""))
+        self.status_input = QLabel(task_dict.get("status", ""))
         # Sets default task creation status.
         if not task_name:
             self.status_input.setText("⏳ In Progress")
-            self.status_input.setReadOnly(True)
         
         self.is_project = task_dict.get("type") == "project"
         if self.is_project:
@@ -95,11 +94,21 @@ class TaskModal(QDialog):
         
         bottom_layout.addStretch()
         
-        self.change_buttons = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
-        self.change_buttons.setObjectName("NavButton")
-        self.change_buttons.accepted.connect(self.accept_edits)
-        self.change_buttons.rejected.connect(self.reject)
-        bottom_layout.addWidget(self.change_buttons)
+        save_cancel_layout = QHBoxLayout()
+        save_cancel_layout.setSpacing(16)
+        
+        self.cancel_btn = QPushButton("Cancel")
+        self.cancel_btn.setObjectName("NavButton")
+        self.cancel_btn.clicked.connect(self.reject)
+        
+        self.save_btn = QPushButton("Save")
+        self.save_btn.setObjectName("NavButton")
+        self.save_btn.clicked.connect(self.accept_edits)
+        
+        save_cancel_layout.addWidget(self.cancel_btn)
+        save_cancel_layout.addWidget(self.save_btn)
+        
+        bottom_layout.addLayout(save_cancel_layout)
         
         self.form_layout.addRow(bottom_layout)
 
