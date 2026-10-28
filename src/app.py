@@ -11,6 +11,7 @@ from pages.dashboard import DashboardPage
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage
 from pages.account.forgotpassword import ForgotPasswordPage
+from pages.account.my_account import MyAccountPage
 
 from pages.todos.todo import TodoPage
 from pages.todos.personal_todo_page import PersonalTodoPage
@@ -25,8 +26,6 @@ from pages.posts.edit_post import EditPostPage
 from pages.topics.topics_page import TopicsPage
 from pages.topics.topic_content import TopicContent
 from pages.topics.topic_content_page import TopicContentPage
-
-from pages.account.my_account import MyAccountPage
 
 class MainWindow(QWidget):
     def __init__(self):

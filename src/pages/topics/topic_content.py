@@ -37,7 +37,7 @@ class TopicContent():
         write_json(filepath, {"topics": data})
 
     @staticmethod
-    def get_writable_topics() -> list[TopicContent]:
+    def get_writable_topics() -> list["TopicContent"]:
         return [
             topic for topic in TopicContent.load_topics()
             if topic.writable

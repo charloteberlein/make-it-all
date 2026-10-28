@@ -2,6 +2,7 @@ import json
 from PySide6.QtWidgets import QDoubleSpinBox, QDialog, QVBoxLayout, QTextEdit, QComboBox, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox
 from datetime import date
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QFont
 from pages.base_page import BasePage
 from pages.todos.task_modal import TaskModal
 from helpers import read_json, write_json
@@ -18,7 +19,7 @@ class ProjectTodoPage(BasePage):
         self.populate_content()
 
     def showEvent(self, event):
-        # Grabs current user from Main Window on page load.
+        """ Grabs current user from Main Window on page load. """
         super().showEvent(event)
         main_window = self.window()
         if hasattr(main_window, "current_user"):
@@ -110,6 +111,7 @@ class ProjectTodoPage(BasePage):
 
             # Dropdownm menu.
             status_combo = QComboBox()
+            status_combo.setObjectName("TableStatusCombo")
             status_combo.addItems(["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"])
             current_status = task.get("status", "⏳ In Progress")
             if current_status in ["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"]:
@@ -125,6 +127,7 @@ class ProjectTodoPage(BasePage):
             est_time = task.get("estimated_time", "0.0")
             self.table.setItem(row_index, 7, QTableWidgetItem(str(est_time)))
 
+            # Actual time spent counter.
             actual_spin = QDoubleSpinBox()
             actual_spin.setRange(0.0, 9999.0)
             actual_spin.setSingleStep(0.5)
@@ -216,6 +219,7 @@ class ProjectTodoPage(BasePage):
         is_assigner = current_user_name == assigner
         is_assignee = current_user_name in assignee_list
 
+        # Another data protection measure, POLP.
         if not (is_assigner or is_assignee):
             QMessageBox.warning(self, "❌ Access Denied", "You can only change the status of tasks you are assigned to.")
             combo_box.blockSignals(True)
@@ -223,6 +227,7 @@ class ProjectTodoPage(BasePage):
             combo_box.blockSignals(False)
             return
 
+        # Task completion tracking.
         task["status"] = new_status
         if "complete" in new_status.lower():
             if not task.get("completion_date"):
@@ -240,7 +245,7 @@ class ProjectTodoPage(BasePage):
 
     def add_project_modal(self):
         current_user_name = self.get_current_user()
-
+        # Creates new task in .json.
         new_project_task = {
             "task_name": "",
             "project_name": "",

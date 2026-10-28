@@ -33,10 +33,10 @@
 │        └── light.qss         # Light theme stylesheet
 ├── src/
 │   ├── pages/
-│   │   ├── account/
+│   │   ├── account/           # signin, register, forgotpassword, my_account, user
 │   │   ├── dashboard/         # Dashboard files
 │   │   ├── posts/             # make_post, make_content_page, post_content, posts_page
-│   │   ├── todos/             # Todo list files
+│   │   ├── todos/             # personal_todo, project-todo, task_modal, task_analytics
 │   │   ├── topics/            # topics_content_page, topic_content, topic_page
 │   │   ├── base_page.py
 │   │   ├── header.py
@@ -86,9 +86,10 @@ Charlot Eberlein | Initial Repo Set-Up, File structure and refactoring, Header m
 Yasmin Ahrabi | Posts & Topics section, Sign In credential validation, helper.py and refactoring, populating .JSON files. |
 Eleanor Cooke | Dashboard pages for each user type, incl. data widgets and progress trackers. |
 Juliette Crossman | Dashboard pages for each user type, incl. data widgets and progress trackers. |
-Kei Mann | Sign up page layout, forgot password & register pages layout & validation, sidebar & setting dropdown, light/dark config, README guide. |s
-Elizabeth Watson | Personal to-do list section, incl. status & type. |
+Kei Mann | Sign up page layout, forgot password & register pages layout & validation, to-do lists (personal & project sections), sidebar & account setting dropdown, light/dark config, README guide. |
+Elizabeth Watson ||
 
 ### Tech Stack
 Language: [Python](https://www.python.org/)
+
 GUI Framework: [PySide6 (QtWidget & Qt modules)](https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/index.html)

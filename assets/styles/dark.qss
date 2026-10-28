@@ -20,6 +20,11 @@ QTableWidget {
     gridline-color: #f1f2f6;
 }
 
+QComboBox#TableStatusCombo {
+    padding: 2px 6px;
+    font-size: 8pt;
+}
+
 QHeaderView::section {
     font-size: 10pt;
     font-weight: bold;
@@ -182,7 +187,7 @@ QLineEdit, QTextEdit, QComboBox {
     border: 1px solid #334155;
     border-radius: 6px;
     padding: 10px;
-    font-size: 14px;
+    font-size: 12pt;
 }
 
 QLineEdit:focus, QTextEdit:focus, QComboBox:on {
