@@ -1,13 +1,26 @@
 from datetime import datetime, date
 from helpers import read_json
 from collections import defaultdict
+from pages.todos.task_status import TaskStatus, parse_task_status
 
 TASKS_FILE = "assets/mock_data/tasks.json"
 
+def _project_tasks(tasks_file):
+    tasks = read_json(tasks_file)
+    return [task for task in tasks if task.get("type", "project") == "project"]
+
+def _involved_in_task(task, user_name):
+    if user_name is None or len(user_name) == "":
+        return True
+    if task["assigner"] == user_name:
+        return True
+
+    assignees = task.get("assignees", "")
+    return user_name in assignees.split(", ")
+
 def calc_project_completion_percentages(TASKS_FILE):
-    """ Calculates percentage progress for each project depending on number of 'completed' tasks. """
-    tasks = read_json(TASKS_FILE)
-    project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
+    """Calculates percentage progress for each project depending on number of 'completed' tasks."""
+    project_tasks = _project_tasks(TASKS_FILE)
     project_stats = defaultdict(lambda: {"total": 0, "completed": 0}) # Initialise
 
     # project_title == project_name, just diff vars for clarity.
@@ -15,10 +28,8 @@ def calc_project_completion_percentages(TASKS_FILE):
         project_title = task.get("project_name", "General").strip()
         if not project_title:
             project_title = "General"
-
         project_stats[project_title]["total"] += 1
-        status = task.get("status", "").lower()
-        if "complete" in status:
+        if parse_task_status(task.get("status")) is TaskStatus.COMPLETED:
             project_stats[project_title]["completed"] += 1
 
     percentages = {}
@@ -29,10 +40,54 @@ def calc_project_completion_percentages(TASKS_FILE):
         percentages[project] = {"percentage": round(percent, 1), "completed": completed, "total": total}
     return percentages
 
+def calc_project_task_status_counts(TASKS_FILE, user_name=None):
+    """Counts awaiting-info, in-progress, and completed project tasks by project."""
+    project_counts = defaultdict(lambda: {
+        TaskStatus.AWAITING_INFO: 0,
+        TaskStatus.IN_PROGRESS: 0,
+        TaskStatus.COMPLETED: 0,
+    })
+
+    for task in _project_tasks(TASKS_FILE):
+        if not _involved_in_task(task, user_name):
+            continue
+
+        project_name = task.get("project_name", "General").strip() or "General"
+        status = parse_task_status(task.get("status"))
+        if status in project_counts[project_name]:
+            project_counts[project_name][status] += 1
+
+    return dict(project_counts)
+
+def calc_employee_task_status_counts(TASKS_FILE, user_name=None):
+    """Counts each employee's assigned project tasks by status."""
+    employee_counts = defaultdict(lambda: {
+        TaskStatus.AWAITING_INFO: 0,
+        TaskStatus.IN_PROGRESS: 0,
+        TaskStatus.COMPLETED: 0,
+    })
+
+    for task in _project_tasks(TASKS_FILE):
+        if not _involved_in_task(task, user_name):
+            continue
+
+        assignees = task.get("assignees", "")
+        if isinstance(assignees, list):
+            assignee_list = [str(assignee).strip() for assignee in assignees if str(assignee).strip()]
+        else:
+            assignee_list = [assignee.strip() for assignee in str(assignees).split(",") if assignee.strip()]
+
+        status = parse_task_status(task.get("status"))
+        if status not in (TaskStatus.AWAITING_INFO, TaskStatus.IN_PROGRESS, TaskStatus.COMPLETED):
+            continue
+        for employee in assignee_list:
+            employee_counts[employee][status] += 1
+
+    return dict(employee_counts)
+
 def get_emp_tasks(TASKS_FILE):
     """ Gathers all the current tasks each employee is working on. """
-    tasks = read_json(TASKS_FILE)
-    project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
+    project_tasks = _project_tasks(TASKS_FILE)
     emp_data = defaultdict(lambda: {"completed": [], "active": []})
 
     for task in project_tasks:
@@ -42,14 +97,12 @@ def get_emp_tasks(TASKS_FILE):
         else:
             assignee_list = [a.strip() for a in str(assignees).split(",") if a.strip()]
 
-        status = task.get("status", "").lower()
-        is_completed = "complete" in status
-        is_active = "in progress" in status or "awaiting info" in status
+        status = parse_task_status(task.get("status"))
         
         for emp in assignee_list:
-            if is_completed:
+            if status is TaskStatus.COMPLETED:
                 emp_data[emp]["completed"].append(task)
-            elif is_active:
+            elif status in (TaskStatus.IN_PROGRESS, TaskStatus.AWAITING_INFO):
                 emp_data[emp]["active"].append(task)
                 
     return emp_data
@@ -58,9 +111,9 @@ def calc_task_completion_times(task):
     """ Calculates how many tasks an employee has finished on time and if they are late. """
     due_str = task.get("due_date", "")
     comp_str = task.get("completion_date", "")
-    status = task.get("status", "").lower()
+    status = parse_task_status(task.get("status"))
 
-    if "suspended" in status:
+    if status is TaskStatus.SUSPENDED:
         return None
     
     if not due_str:
@@ -71,14 +124,14 @@ def calc_task_completion_times(task):
     except ValueError:
         return None
 
-    if "complete" in status and comp_str:
+    if status is TaskStatus.COMPLETED and comp_str:
         try:
             comp_date = datetime.strptime(comp_str, "%Y-%m-%d").date()
             return (due_date - comp_date).days
         except ValueError:
             return None
             
-    if "in progress" in status or "awaiting info" in status:
+    if status in (TaskStatus.IN_PROGRESS, TaskStatus.AWAITING_INFO):
         today = date.today()
         return (due_date - today).days
         
@@ -86,8 +139,7 @@ def calc_task_completion_times(task):
 
 def calc_project_hours(TASKS_FILE):
     """ Calculates the efficiency of each project, using estimated and actual amount of time. """
-    tasks = read_json(TASKS_FILE)
-    project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
+    project_tasks = _project_tasks(TASKS_FILE)
     project_hours = defaultdict(lambda: {"total_estimated": 0.0, "total_actual": 0.0})
 
     for task in project_tasks:
@@ -146,8 +198,7 @@ def calc_project_hours(TASKS_FILE):
 
 
 def calc_emp_hours_summary(TASKS_FILE):
-    tasks = read_json(TASKS_FILE)
-    project_tasks = [t for t in tasks if t.get("type", "project") == "project"]
+    project_tasks = _project_tasks(TASKS_FILE)
     emp_hours = defaultdict(lambda: {"total_estimated": 0.0, "total_actual": 0.0})
 
     for task in project_tasks:

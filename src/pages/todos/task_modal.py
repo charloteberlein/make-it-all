@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QLabel, QDoubleSpinBox, QDialog, QFormLayout, QLineEdit, QTextEdit, QDialogButtonBox, QPushButton, QHBoxLayout, QFileDialog, QDateEdit
 from PySide6.QtCore import QDate
 from datetime import date
+from pages.todos.task_status import TaskStatus, parse_task_status
 
 class TaskModal(QDialog):
     """ A clean popup modal for viewing/editing task details. """
@@ -17,10 +18,10 @@ class TaskModal(QDialog):
         self.form_layout.setContentsMargins(40, 40, 40, 40)
 
         self.name_input = QLineEdit(task_name)
-        self.status_input = QLabel(task_dict.get("status", ""))
+        self.status_input = QLabel(parse_task_status(task_dict.get("status", "")).value)
         # Sets default task creation status.
         if not task_name:
-            self.status_input.setText("⏳ In Progress")
+            self.status_input.setText(TaskStatus.IN_PROGRESS.value)
         
         self.is_project = task_dict.get("type") == "project"
         if self.is_project:
@@ -125,14 +126,14 @@ class TaskModal(QDialog):
     # Create task structure.
     def accept_edits(self):
         self.task_dict["task_name"] = self.name_input.text()
-        new_status = self.status_input.text()
-        self.task_dict["status"] = new_status
+        new_status = parse_task_status(self.status_input.text())
+        self.task_dict["status"] = new_status.value
         if self.is_project:
             self.task_dict["project_name"] = self.project_input.text()
             self.task_dict["assigner"] = self.assigner_input.text()
             self.task_dict["assignees"] = self.assignees_input.text()
             
-            if "complete" in new_status.lower():
+            if new_status is TaskStatus.COMPLETED:
                 if not self.task_dict.get("completion_date"):
                     self.task_dict["completion_date"] = date.today().isoformat()
             else:

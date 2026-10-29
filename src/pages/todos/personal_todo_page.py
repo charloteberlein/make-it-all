@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 from pages.base_page import BasePage
 from pages.todos.task_modal import TaskModal
+from pages.todos.task_status import TaskStatus, parse_task_status, task_status_options
 from helpers import read_json, write_json
 
 TASKS_FILE = "assets/mock_data/tasks.json"
@@ -82,8 +83,8 @@ class PersonalTodoPage(BasePage):
 
         # Pushes Complete and Suspended tasks to bottom of stack.
         def sort_key(task):
-            status = task.get("status", "").lower()
-            if "complete" in status or "suspended" in status:
+            status = parse_task_status(task.get("status"))
+            if status in (TaskStatus.COMPLETED, TaskStatus.SUSPENDED):
                 return (1, task.get("task_name", ""))
             return (0, task.get("task_name", ""))
         self.personal_tasks.sort(key = sort_key)
@@ -95,12 +96,9 @@ class PersonalTodoPage(BasePage):
             # Dropdown menu for task status.
             status_combo = QComboBox()
             status_combo.setObjectName("TableStatusCombo")
-            status_combo.addItems(["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"])
-            current_status = task.get("status", "⏳ In Progress")
-            if current_status in ["⏳ In Progress", "💬 Awaiting Info", "✅ Complete", "❌ Suspended"]:
-                status_combo.setCurrentText(current_status)
-            else:
-                status_combo.setCurrentText("In Progress")
+            status_combo.addItems(task_status_options())
+            current_status = parse_task_status(task.get("status"))
+            status_combo.setCurrentText(current_status.value)
             status_combo.currentTextChanged.connect(lambda new_status, t = task: self.handle_status_change(t, new_status))
             self.table.setCellWidget(row_index, 1, status_combo)
 
@@ -161,7 +159,7 @@ class PersonalTodoPage(BasePage):
 
     def handle_status_change(self, task, new_status):
         # Updates new status in task.json.
-        task["status"] = new_status
+        task["status"] = parse_task_status(new_status).value
         write_json(TASKS_FILE, self.tasks)
         self.populate_content()
 
@@ -170,7 +168,7 @@ class PersonalTodoPage(BasePage):
         # Adds new task to task.json
         new_task = {
             "task_name": "",
-            "status": "⏳ In Progress",
+            "status": TaskStatus.IN_PROGRESS.value,
             "assigned_date": "",
             "due_date": date.today().isoformat(),
             "details": "",

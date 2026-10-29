@@ -1,5 +1,23 @@
 /* dark.qss - Stylesheet used for the dark mode.*/
 
+QProgressBar#ProjectProgressBar {
+    background-color: #334155;
+    border: 1px solid #64748b;
+    border-radius: 6px;
+}
+
+QProgressBar#ProjectProgressBar::chunk {
+    background-color: #eab308;
+    border-radius: 4px;
+}
+
+QChartView#DashboardChartView {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    border: 1px solid #334155;
+    border-radius: 6px;
+}
+
 QPushButton#ToDoButton {
     background-color: #EAB308;
     color: #000000;
