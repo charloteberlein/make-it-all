@@ -222,9 +222,9 @@ class DashboardPage(BasePage):
         for status, label in chart_statuses:
             bar_set = QBarSet(label)
             if status is TaskStatus.AWAITING_INFO:
-                bar_set.setColor("#CA8A04")
-            elif status is TaskStatus.IN_PROGRESS:
                 bar_set.setColor("#2563EA")
+            elif status is TaskStatus.IN_PROGRESS:
+                bar_set.setColor("#CA8A04")
             else:
                 bar_set.setColor("#0F766F")
             values = [counts[status] for counts in grouped_counts.values()]
