@@ -9,7 +9,7 @@ from helpers import read_json, write_json
 class PostContent():
     def __init__(
         self, id: str, viewed: bool, date_created: str, archived: bool, topic: str, title: str,
-        content: str, created_by: int | None = None
+        content: str, created_by: int| None = None, upvote_count: int = 0, upvoted_users: list[int] = None
     ):
         # Metadata
         self.id = id
@@ -21,6 +21,8 @@ class PostContent():
         self.title = title
         self.topic = topic
         self.content = content
+        self.upvote_count = upvote_count
+        self.upvoted_users = upvoted_users or []
 
     def serialise(self) -> dict:
         """Serialises a `PostContent` object to a dictionary for it to be saved to a JSON."""
@@ -34,7 +36,9 @@ class PostContent():
             },
             "title": self.title,
             "topic": self.topic,
-            "content": self.content
+            "content": self.content,
+            "upvote_count": self.upvote_count,
+            "upvoted_users": self.upvoted_users
         }
 
     @classmethod
@@ -51,7 +55,9 @@ class PostContent():
                 archived=post["metadata"]["archived"],
                 topic=post["topic"],
                 title=post["title"],
-                content=post["content"]
+                content=post["content"],
+                upvote_count=post.get("upvote_count", 0),
+                upvoted_users=post.get("upvoted_users", [])
             ))
         return posts
 
@@ -102,3 +108,29 @@ class PostContent():
             {"posts": [post.serialise() for post in [post for post in posts if post.id != post_id]]}
         )
         return deleted_post.topic
+
+    @classmethod
+    def upvote_post(cls, post_id: str, user_id: int) -> tuple[int, bool]:
+        posts = cls.load_posts("assets/mock_data/posts.json")
+        for post in posts:
+            if post.id == post_id:
+                # Toggle logic for upvote button.
+                if user_id in post.upvoted_users:
+                    post.upvoted_users.remove(user_id)
+                    post.upvote_count = max(0, post.upvote_count - 1)
+                    write_json(
+                        "assets/mock_data/posts.json",
+                        {"posts": [p.serialise() for p in posts]}
+                    )
+                    return post.upvote_count, False
+
+                post.upvoted_users.append(user_id)
+                post.upvote_count += 1
+
+                write_json(
+                    "assets/mock_data/posts.json",
+                    {"posts": [p.serialise() for p in posts]}
+                )
+                return post.upvote_count, True
+        return 0, False
+        

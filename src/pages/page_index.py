@@ -15,3 +15,4 @@ class PageIndex(Enum):
     TOPICS = 11
     TOPIC_CONTENT = 12
     MY_ACCOUNT = 13
+    TRAINING = 14

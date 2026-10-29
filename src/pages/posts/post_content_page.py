@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QLabel, QTextEdit, QFrame, QHBoxLayout, QPushButton, QStackedWidget, QSizePolicy
+    QLabel, QTextEdit, QFrame, QHBoxLayout, QPushButton, QStackedWidget, QSizePolicy, QMessageBox
 )
 from PySide6.QtCore import Qt, Signal
 
@@ -90,12 +90,19 @@ class PostContentPage(BasePage):
         self.archive_btn = QPushButton("Unarchive post" if self.post.archived else "Archive post")
         self.archive_btn.clicked.connect(self.toggle_archive_post)
         self.archive_btn.setObjectName("ToggleButton")
+        self.archive_btn.setCursor(Qt.PointingHandCursor)
         if TopicContent.get_topic_writable(self.post.topic):
             self.archive_btn.show()
         else:
             self.archive_btn.hide()
 
         self.locked_label = QLabel("Locked", alignment=Qt.AlignmentFlag.AlignRight)
+
+        self.upvote_btn = QPushButton(f"👍 Upvote ({self.post.upvote_count})")
+        self.upvote_btn.setObjectName("PinkNavButton")
+        self.upvote_btn.setCursor(Qt.PointingHandCursor)
+        self.upvote_btn.clicked.connect(self.upvote_clicked)
+        self.upvote_btn.setCheckable(True)
 
         self.topic = QLabel(TopicContent.get_topic_name(self.post.topic))
         self.date = QLabel(self.post.date_created)
@@ -126,6 +133,7 @@ class PostContentPage(BasePage):
         self.metadata_layout.addWidget(self.topic)
         self.metadata_layout.addWidget(self.date)
         self.metadata_layout.addStretch()
+        self.metadata_layout.addWidget(self.upvote_btn)
         self.metadata_layout.addWidget(self.archive_btn)
         self.metadata_frame.setLayout(self.metadata_layout)
 
@@ -142,3 +150,19 @@ class PostContentPage(BasePage):
 
         self.locked = not self.locked
         self.edit_stack.setCurrentIndex(int(self.locked))
+
+    def upvote_clicked(self):
+        current_user = getattr(self.window(), "current_user", None)
+        if not current_user:
+            return
+        
+        new_count, is_upvoted = PostContent.upvote_post(self.post.id, current_user.id)
+        self.post.upvote_count = new_count
+        if is_upvoted:
+            if current_user.id not in self.post.upvoted_users:
+                self.post.upvoted_users.append(current_user.id)
+        else:
+            if current_user.id in self.post.upvoted_users:
+                self.post.upvoted_users.remove(current_user.id)
+
+        self.upvote_btn.setText(f"👍 Upvote ({new_count})")
