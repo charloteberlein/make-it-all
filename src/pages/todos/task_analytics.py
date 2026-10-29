@@ -9,6 +9,15 @@ def _project_tasks(tasks_file):
     tasks = read_json(tasks_file)
     return [task for task in tasks if task.get("type", "project") == "project"]
 
+def _involved_in_task(task, user_name):
+    if user_name is None or len(user_name) == "":
+        return True
+    if task["assigner"] == user_name:
+        return True
+
+    assignees = task.get("assignees", "")
+    return user_name in assignees.split(", ")
+
 def calc_project_completion_percentages(TASKS_FILE):
     """Calculates percentage progress for each project depending on number of 'completed' tasks."""
     project_tasks = _project_tasks(TASKS_FILE)
@@ -31,7 +40,7 @@ def calc_project_completion_percentages(TASKS_FILE):
         percentages[project] = {"percentage": round(percent, 1), "completed": completed, "total": total}
     return percentages
 
-def calc_project_task_status_counts(TASKS_FILE):
+def calc_project_task_status_counts(TASKS_FILE, user_name=None):
     """Counts awaiting-info, in-progress, and completed project tasks by project."""
     project_counts = defaultdict(lambda: {
         TaskStatus.AWAITING_INFO: 0,
@@ -40,6 +49,9 @@ def calc_project_task_status_counts(TASKS_FILE):
     })
 
     for task in _project_tasks(TASKS_FILE):
+        if not _involved_in_task(task, user_name):
+            continue
+
         project_name = task.get("project_name", "General").strip() or "General"
         status = parse_task_status(task.get("status"))
         if status in project_counts[project_name]:
@@ -47,7 +59,7 @@ def calc_project_task_status_counts(TASKS_FILE):
 
     return dict(project_counts)
 
-def calc_employee_task_status_counts(TASKS_FILE):
+def calc_employee_task_status_counts(TASKS_FILE, user_name=None):
     """Counts each employee's assigned project tasks by status."""
     employee_counts = defaultdict(lambda: {
         TaskStatus.AWAITING_INFO: 0,
@@ -56,6 +68,9 @@ def calc_employee_task_status_counts(TASKS_FILE):
     })
 
     for task in _project_tasks(TASKS_FILE):
+        if not _involved_in_task(task, user_name):
+            continue
+
         assignees = task.get("assignees", "")
         if isinstance(assignees, list):
             assignee_list = [str(assignee).strip() for assignee in assignees if str(assignee).strip()]

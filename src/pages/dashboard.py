@@ -186,14 +186,17 @@ class DashboardPage(BasePage):
                 self.progress_layout.addWidget(bar)
                 self.progress_layout.addSpacing(14)
 
+        is_employee = self.current_user and self.current_user.rank == "Employee"
         self.chart_layout.addWidget(
             self._create_status_chart(
-                "Tasks by Project", calc_project_task_status_counts(TASKS_FILE)
+                "Tasks by Project",
+                calc_project_task_status_counts(TASKS_FILE, user_name if is_employee else None),
             ), 1,
         )
         self.chart_layout.addWidget(
             self._create_status_chart(
-                "Tasks by Employee", calc_employee_task_status_counts(TASKS_FILE)
+                "Tasks by Employee",
+                calc_employee_task_status_counts(TASKS_FILE, user_name if is_employee else None),
             ), 1,
         )
 
