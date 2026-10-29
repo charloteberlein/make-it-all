@@ -54,6 +54,12 @@ class DashboardPage(BasePage):
     def define_layout(self) -> None:
         super().define_layout()
 
+        self.training_btn = QPushButton("▶️ To Training Page")
+        self.training_btn.setObjectName("NavButton")
+        self.training_btn.setCursor(Qt.PointingHandCursor)
+        self.training_btn.setFixedWidth(200)
+        self.training_btn.clicked.connect(self.to_Training.emit)
+
         self.progress_frame = QFrame()
         self.progress_frame.setObjectName("ProgFrame")
         self.progress_layout = QVBoxLayout(self.progress_frame)

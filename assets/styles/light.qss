@@ -127,6 +127,14 @@ QPushButton#SideNavButton {
     font-size: 30px;
 }
 
+QLabel#BellBadge {
+    background-color: #dc2626;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
 QFrame#Header {
     background-color: #EAB308;
     border-bottom: 2px solid #0f172a;
