@@ -52,10 +52,11 @@ class TopicContentPage(BasePage):
         self.header_frame.setObjectName("TopBar")
         header_layout = QHBoxLayout()
 
-        self.back_btn = QPushButton("←")
+        self.back_btn = QPushButton("⟵")
         self.back_btn.clicked.connect(self.back.emit)
         self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.back_btn.setToolTip("Back to topics")
+        self.back_btn.setFixedSize(35, 35)
 
         self.topic_title = QLabel("")
         self.topic_title.setObjectName("TopicTitle")

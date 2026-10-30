@@ -49,7 +49,7 @@ class ProjectTodoPage(BasePage):
             self.add_btn.setVisible(self.add_task()) # Only Team Leaders/Managers can access make task button.
 
     def define_widgets(self) -> None:
-        self.title = QLabel("📋 Project To-Do List")
+        self.title = QLabel("📋 Project To-do List")
         self.title.setObjectName("HeadingLabel")
 
         self.add_btn = QPushButton("+ Add Project Task")
@@ -61,6 +61,11 @@ class ProjectTodoPage(BasePage):
         self.back_btn.setCursor(Qt.PointingHandCursor)
         self.back_btn.setFixedWidth(300)
         self.back_btn.clicked.connect(self.to_Todo.emit)
+
+        self.no_tasks_label = QLabel("You have no current project tasks.")
+        self.no_tasks_label.setObjectName("SubHeadingLabel")
+        self.no_tasks_label.setAlignment(Qt.AlignCenter)
+        self.no_tasks_label.setVisible(False)
 
         self.table = QTableWidget()
         self.table.setColumnCount(11)
@@ -80,8 +85,12 @@ class ProjectTodoPage(BasePage):
 
     def assemble_widgets(self) -> None:
         self.layout.addWidget(self.title)
+        self.layout.addSpacing(20)
         self.layout.addWidget(self.back_btn)
+        self.layout.addSpacing(20)
         self.layout.addWidget(self.add_btn)
+        self.layout.addSpacing(14)
+        self.layout.addWidget(self.no_tasks_label)
         self.layout.addWidget(self.table)
         self.layout.addStretch()
         self.setLayout(self.layout)
@@ -94,6 +103,14 @@ class ProjectTodoPage(BasePage):
 
     def populate_content(self):
         self.project_tasks = [t for t in self.tasks if t.get("type", "project") == "project"]
+
+        if not self.project_tasks:
+            self.table.setVisible(False)
+            self.no_tasks_label.setVisible(True)
+            return
+
+        self.table.setVisible(True)
+        self.no_tasks_label.setVisible(False)
 
         # Pushes Completed and Suspended tasks to bottom of stack.
         def sort_key(task):
@@ -145,12 +162,12 @@ class ProjectTodoPage(BasePage):
 
             # View/Edit Modal Buttons.
             details_btn = QPushButton("More Details")
-            details_btn.setObjectName("NavButton")
+            details_btn.setObjectName("EditNavButton")
             details_btn.clicked.connect(lambda checked = False, t = task: self.check_and_show_details(t))
             self.table.setCellWidget(row_index, 9, details_btn)
 
             action_btn = QPushButton("Edit/Delete")
-            action_btn.setObjectName("NavButton")
+            action_btn.setObjectName("EditNavButton")
             action_btn.clicked.connect(lambda checked = False, t = task: self.show_modal(t))
             self.table.setCellWidget(row_index, 10, action_btn)
 

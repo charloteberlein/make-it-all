@@ -23,6 +23,27 @@
     },
     {
       "id": 3,
+      "name": "Sarah Jenkins",
+      "email": "s.jenkins@make-it-all.co.uk",
+      "password": "TeamLead456#",
+      "rank": "Team Lead"
+    },
+    {
+      "id": 4,
+      "name": "Vikram Singh",
+      "email": "v.singh@make-it-all.co.uk",
+      "password": "Employee456#",
+      "rank": "Employee"
+    },
+    {
+      "id": 5,
+      "name": "Jennifer Chen",
+      "email": "e.chen@make-it-all.co.uk",
+      "password": "Employee789#",
+      "rank": "Employee"
+    },
+    {
+      "id": 6,
       "name": "",
       "email": "a.morris@make-it-all.co.uk",
       "password": "",
