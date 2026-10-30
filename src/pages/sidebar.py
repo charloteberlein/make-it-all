@@ -28,10 +28,10 @@ class Sidebar(QFrame):
         self.dashboard_btn.setToolTip("Dashboard")
 
         self.todo_btn = QPushButton("📝")
-        self.todo_btn.setToolTip("To-Do")
+        self.todo_btn.setToolTip("To-do Lists")
 
         self.posts_btn = QPushButton("📨")
-        self.posts_btn.setToolTip("Posts")
+        self.posts_btn.setToolTip("Posts & Topics")
 
         for btn in (self.dashboard_btn, self.todo_btn, self.posts_btn):
             btn.setObjectName("SideNavButton")

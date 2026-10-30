@@ -1,7 +1,12 @@
 from PySide6.QtWidgets import QLabel, QDoubleSpinBox, QDialog, QFormLayout, QLineEdit, QTextEdit, QDialogButtonBox, QPushButton, QHBoxLayout, QFileDialog, QDateEdit
 from PySide6.QtCore import QDate
+from PySide6.QtGui import QFont, QTextCharFormat
 from datetime import date
 from pages.todos.task_status import TaskStatus, parse_task_status
+import re
+import shutil
+import shutil
+import os
 
 class TaskModal(QDialog):
     """ A clean popup modal for viewing/editing task details. """
@@ -15,7 +20,7 @@ class TaskModal(QDialog):
         self.resize(650, 500)
         
         self.form_layout = QFormLayout(self)
-        self.form_layout.setContentsMargins(40, 40, 40, 40)
+        self.form_layout.setContentsMargins(50, 60, 50, 60)
 
         self.name_input = QLineEdit(task_name)
         self.status_input = QLabel(parse_task_status(task_dict.get("status", "")).value)
@@ -50,9 +55,15 @@ class TaskModal(QDialog):
                 self.due_input.setDate(QDate.currentDate())
         else:
             self.due_input.setDate(QDate.currentDate())
-        
+
+        # Allows for images to be added.
         self.details_editor = QTextEdit()
-        self.details_editor.setMarkdown(task_dict.get("details", ""))
+        raw_details = task_dict.get("details", "")
+        if raw_details:
+            converted_details = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', r'<img src="\2" width="300" style="max-width:100%;"/>', raw_details)
+            self.details_editor.setMarkdown(converted_details)
+        else:
+            self.details_editor.setMarkdown("")
         self.details_editor.setPlaceholderText("Type notes, insert code snippets, links, or images here...")
 
         self.form_layout.addRow("Task Name:", self.name_input)
@@ -69,20 +80,20 @@ class TaskModal(QDialog):
         # Rich formatting options.
         actions_layout = QHBoxLayout()
         bold_btn = QPushButton("Bold")
-        bold_btn.clicked.connect(lambda: self.details_editor.textCursor().insertHtml("<b>Bold Text</b>"))
+        bold_btn.setCheckable(True)
+        bold_btn.clicked.connect(lambda checked: self.details_editor.setFontWeight(
+            QFont.Weight.Bold if checked else QFont.Weight.Normal
+        ))
         
-        code_btn = QPushButton("💻 Code Block")
-        code_btn.clicked.connect(lambda: self.details_editor.textCursor().insertHtml("<pre><code>// Insert code here</code></pre>"))
-        
-        link_btn = QPushButton("🔗 Link")
-        link_btn.clicked.connect(self.insert_link)
+        code_btn = QPushButton("💻 Code")
+        code_btn.setCheckable(True)
+        code_btn.clicked.connect(self.apply_code)
         
         image_btn = QPushButton("🖼️ Image")
         image_btn.clicked.connect(self.insert_image)
         
         actions_layout.addWidget(bold_btn)
         actions_layout.addWidget(code_btn)
-        actions_layout.addWidget(link_btn)
         actions_layout.addWidget(image_btn)
         actions_layout.addStretch()
         self.form_layout.addRow("", actions_layout)
@@ -114,14 +125,32 @@ class TaskModal(QDialog):
         
         self.form_layout.addRow(bottom_layout)
 
-    def insert_link(self):
-        self.details_editor.textCursor().insertHtml('<a href = "https://doc.qt.io/qt-6/qtwidgets-index.html" target = "_blank">Link Text</a>')
+    def apply_code(self):
+        cursor = self.details_editor.textCursor()
+        format = QTextCharFormat()
+        
+        font_family = "Consolas" if os.name == "nt" else "Monospace"
+        code_font = QFont(font_family, 10, QFont.Weight.Normal)
+        format.setFont(code_font)
+        
+        cursor.mergeCharFormat(format)
+        self.details_editor.mergeCurrentCharFormat(format)
+        
+        if not cursor.hasSelection():
+            cursor.insertText("code_snippet")
 
     def insert_image(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Images (*.png *.jpg *.jpeg *.bmp)")
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Images: (*.png *.jpg *.jpeg *.bmp)")
         if file_path:
-            img_tag = f'<img src = "{file_path}" width = "300" style = "max-width:100%;"/>'
-            self.details_editor.textCursor().insertHtml(img_tag)
+            os.makedirs("assets/task_images", exist_ok=True)
+            filename = os.path.basename(file_path)
+            destination_path = os.path.join("assets/task_images", filename)
+            
+            shutil.copy(file_path, destination_path)
+            
+            # Inserts HTML img tag -> enables image rendering in modal.
+            html_img = f'<br><img src="{destination_path}" width="300" style="max-width:100%;"/><br>'
+            self.details_editor.textCursor().insertHtml(html_img)
 
     # Create task structure.
     def accept_edits(self):

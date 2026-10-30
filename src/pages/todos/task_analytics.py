@@ -23,7 +23,6 @@ def calc_project_completion_percentages(TASKS_FILE):
     project_tasks = _project_tasks(TASKS_FILE)
     project_stats = defaultdict(lambda: {"total": 0, "completed": 0}) # Initialise
 
-    # project_title == project_name, just diff vars for clarity.
     for task in project_tasks:
         project_title = task.get("project_name", "General").strip()
         if not project_title:

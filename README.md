@@ -6,7 +6,7 @@
     *   **Sign out & accessibility:** Quick sign out feature with a built-in light/dark theme toggle, designed to meet contrast standards for easier reading.
 
 *   **Interactive Dashboard**
-    *   **Metrics & insights:** Visual widgets and progress bars showing team performance and individual employee task progress at a glance.
+    *   **Metrics & insights:** Visual widgets, progress bars and graphs showing team performance and individual employee task progress at a glance.
     *   **Tailored user views:** Automatically changes its layout and features depending on the logged-in user's role/rank type.
 
 *   **Task & Project Management (To-Do Lists)**
@@ -34,26 +34,28 @@
 ├── src/
 │   ├── pages/
 │   │   ├── account/           # signin, register, forgotpassword, my_account, user
-│   │   ├── dashboard/         # Dashboard files
-│   │   ├── posts/             # make_post, make_content_page, post_content, posts_page
-│   │   ├── todos/             # personal_todo, project-todo, task_modal, task_analytics
+│   │   ├── dashboards/        # dashboard, training
+│   │   ├── posts/             # edit_post, make_post, make_content_page, post_content, posts_page
+│   │   ├── todos/             # personal_todo, project-todo, task_analytics, task_modal, task_status, todo
 │   │   ├── topics/            # topics_content_page, topic_content, topic_page
 │   │   ├── base_page.py
 │   │   ├── header.py
 │   │   ├── page_index.py
 │   │   └── sidebar.py
+│   ├── app.py                 # Main entry point
 │   ├── helpers.py             # Reads and writes to .JSON files
-│   └── app.py                 # Main entry point
+│   └── notifications.py       # Creates notification used in header.py
 └── README.md
 ```
 
 ## Getting Started
 ### Prerequisites
-* **Python 3.10+** installed on your system.
+* **Python 3.14+** (recommended) installed on your system.
 * **pip** Python package manager, usually included with Python.
 
 ### Installation Guide
 1. **Clone the Repository:**
+
 2. **Create & activate the virtual environment:**
 
    Windows -
@@ -67,7 +69,7 @@
    python3 -m venv venv
    source venv/bin/activate
    ```
-4. **Install dependencies:**
+3. **Install dependencies:**
    ```bash
    pip install PySide6
    ```
@@ -79,15 +81,13 @@ python src/app.py
 ```
 
 ## Authors & Acknowledgements
-### Team members
-| Team member | Responsibility |
-|---|---|
-Charlot Eberlein | Initial Repo Set-Up, File structure and refactoring, Header module, Posts and Topics section, populating .JSON files. |
-Yasmin Ahrabi | Posts & Topics section, Sign In credential validation, helper.py and refactoring, populating .JSON files. |
-Eleanor Cooke | Dashboard pages for each user type, incl. data widgets and progress trackers. |
-Juliette Crossman | Dashboard pages for each user type, incl. data widgets and progress trackers. |
-Kei Mann | Sign up page layout, forgot password & register pages layout & validation, to-do lists (personal & project sections), sidebar & account setting dropdown, light/dark config, README guide. |
-Elizabeth Watson ||
+### Team Members
+Charlot Eberlein
+Yasmin Ahrabi
+Kei Mann
+Eleanor Cooke
+Juliette Crossman
+Elizabeth Watson
 
 ### Tech Stack
 Language: [Python](https://www.python.org/)

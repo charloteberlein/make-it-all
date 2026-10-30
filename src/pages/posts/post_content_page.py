@@ -70,23 +70,30 @@ class PostContentPage(BasePage):
         self.metadata_layout = QHBoxLayout()
 
     def define_widgets(self) -> None:
-        self.back_btn = QPushButton("←")
+        self.back_btn = QPushButton("⟵")
         self.back_btn.clicked.connect(self.back.emit)
         self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.back_btn.setToolTip(
             f"Back to {TopicContent.get_topic_name(self.post.topic) or "topic"}"
         )
+        self.back_btn.setFixedSize(35, 35)
 
         self.title = QLabel(self.post.title)
         self.title.setObjectName("PostTitle")
 
         self.edit_btn = QPushButton("✏️")
+        self.edit_btn.setObjectName("SideNavButton")
+        self.edit_btn.setCursor(Qt.PointingHandCursor)
         self.edit_btn.clicked.connect(lambda: self.edit.emit(self.post.id))
         self.edit_btn.setToolTip("Edit post")
+        self.edit_btn.setFixedSize(35, 35)
 
         self.delete_btn = QPushButton("🗑️")
+        self.delete_btn.setObjectName("SideNavButton")
+        self.delete_btn.setCursor(Qt.PointingHandCursor)
         self.delete_btn.clicked.connect(lambda: self.delete.emit(self.post.id))
         self.delete_btn.setToolTip("Delete post")
+        self.delete_btn.setFixedSize(35, 35)
 
         self.archive_btn = QPushButton("Unarchive post" if self.post.archived else "Archive post")
         self.archive_btn.clicked.connect(self.toggle_archive_post)

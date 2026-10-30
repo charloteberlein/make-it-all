@@ -10,17 +10,17 @@ class TodoPage(BasePage):
         super().__init__()
 
     def define_widgets(self) -> None:
-        self.title = QLabel("My To-Do Lists")
+        self.title = QLabel("My To-do Lists")
         self.title.setObjectName("HeadingLabel")
         self.title.setAlignment(Qt.AlignCenter)
 
-        self.personal_btn = QPushButton("☑️ Personal To-Do List")
+        self.personal_btn = QPushButton("☑️ Personal To-do List")
         self.personal_btn.setObjectName("ToDoButton")
         self.personal_btn.setCursor(Qt.PointingHandCursor)
         self.personal_btn.setFixedWidth(450)
         self.personal_btn.clicked.connect(self.to_Personal_Todo.emit)
 
-        self.project_btn = QPushButton("📋 Project To-Do List")
+        self.project_btn = QPushButton("📋 Project To-do List")
         self.project_btn.setObjectName("ToDoButton")
         self.project_btn.setCursor(Qt.PointingHandCursor)
         self.project_btn.setFixedWidth(450)

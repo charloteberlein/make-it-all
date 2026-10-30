@@ -6,8 +6,8 @@ from PySide6.QtWidgets import (
 from pages.page_index import PageIndex
 from pages.header import Header
 from pages.sidebar import Sidebar
-from pages.dashboard import DashboardPage
-from pages.training import TrainingPage
+from pages.dashboards.dashboard import DashboardPage
+from pages.dashboards.training import TrainingPage
 
 from pages.account.signin import SignInPage
 from pages.account.register import RegisterPage

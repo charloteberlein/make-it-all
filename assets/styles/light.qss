@@ -32,23 +32,43 @@ QPushButton#ToDoButton:hover {
     background-color: #CA8A04;
 }
 
+
 QTableWidget {
     font-size: 8pt;
-    border: 2px solid #dcdde1;
-    gridline-color: #f1f2f6;
+    border: 2px solid #000000;
+    gridline-color: #000000; 
+}
+
+QTableWidget::item {
+    border: none;
+    padding: 1px;
 }
 
 QHeaderView::section {
-    font-size: 10pt;
+    font-size: 12pt;
     font-weight: bold;
     background-color: #fbe080;
-    padding: 1px;
-    border: 1px solid #b3b3b3;
+    border: 1px solid #000000;
+    padding: 4px;
 }
 
 QComboBox#TableStatusCombo {
     padding: 2px 6px;
     font-size: 8pt;
+}
+
+QPushButton#EditNavButton {
+    background-color: transparent;
+    color: #EAB308;
+    border: 2px solid #EAB308;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+QPushButton#EditNavButton:hover {
+    background-color: #EAB308;
+    color: #000000;
 }
 
 QWidget {
@@ -240,9 +260,9 @@ QPushButton#LoginButton:disabled {
 QPushButton#NavButton {
     background-color: transparent;
     color: #EAB308;
-    border: 1px solid #EAB308;
+    border: 2px solid #EAB308;
     border-radius: 6px;
-    padding: 4px 12px;
+    padding: 6px 16px;
     font-size: 11px;
     font-weight: bold;
 }
@@ -257,7 +277,7 @@ QPushButton#PinkNavButton {
     color: #e7597a;
     border: 2px solid #e82d58;
     border-radius: 6px;
-    padding: 4px 10px;
+    padding: 6px 16px;
     font-size: 11px;
     font-weight: bold;
 }
@@ -272,7 +292,7 @@ QPushButton#ToggleButton {
     color: #334155;
     border: 2px solid #9a9a9a;
     border-radius: 6px;
-    padding: 4px 10px;
+    padding: 6px 16px;
     font-size: 11px;
     font-weight: bold;
 }

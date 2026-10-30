@@ -16,8 +16,9 @@ class PersonalTodoPage(BasePage):
     def __init__(self, current_user = None):
         super().__init__()
         self.current_user = current_user
-        self.load_tasks()
-        self.populate_content()
+        if self.current_user:
+            self.load_tasks()
+            self.populate_content()
 
     def showEvent(self, event):
         """ Grabs current user from Main Window on page load. """
@@ -34,7 +35,7 @@ class PersonalTodoPage(BasePage):
         return ""
 
     def define_widgets(self) -> None:
-        self.title = QLabel("☑️ Personal To-Do List")
+        self.title = QLabel("☑️ Personal To-do List")
         self.title.setObjectName("HeadingLabel")
         
         self.add_btn = QPushButton("+ Add Personal Task")
@@ -47,21 +48,30 @@ class PersonalTodoPage(BasePage):
         self.back_btn.setFixedWidth(300)
         self.back_btn.clicked.connect(self.to_Todo.emit)
 
+        self.no_tasks_label = QLabel("You have no current personal tasks")
+        self.no_tasks_label.setObjectName("SubHeadingLabel")
+        self.no_tasks_label.setAlignment(Qt.AlignCenter)
+        self.no_tasks_label.setVisible(False)
+
         self.table = QTableWidget()
-        self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(["Task Name", "Status", "Assigned Date", "Due Date", "Details", "Actions"])
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["Task Name", "Status", "Due Date", "Details", "Actions"])
         
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
-        for i in range(1, 5):
+        for i in range(1, 4):
             header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
         
         self.table.verticalHeader().setVisible(False)
 
     def assemble_widgets(self) -> None:
         self.layout.addWidget(self.title)
+        self.layout.addSpacing(20)
         self.layout.addWidget(self.back_btn)
+        self.layout.addSpacing(20)
         self.layout.addWidget(self.add_btn)
+        self.layout.addWidget(self.no_tasks_label)
+        self.layout.addSpacing(10)
         self.layout.addWidget(self.table)
         self.layout.addStretch()
         self.setLayout(self.layout)
@@ -80,6 +90,14 @@ class PersonalTodoPage(BasePage):
             t for t in self.tasks 
             if t.get("type") == "personal" and t.get("owner") == current_user_name
         ]
+
+        if not self.personal_tasks:
+            self.table.setVisible(False)
+            self.no_tasks_label.setVisible(True)
+            return
+
+        self.table.setVisible(True)
+        self.no_tasks_label.setVisible(False)
 
         # Pushes Complete and Suspended tasks to bottom of stack.
         def sort_key(task):
@@ -102,19 +120,18 @@ class PersonalTodoPage(BasePage):
             status_combo.currentTextChanged.connect(lambda new_status, t = task: self.handle_status_change(t, new_status))
             self.table.setCellWidget(row_index, 1, status_combo)
 
-            self.table.setItem(row_index, 2, QTableWidgetItem(task.get("assigned_date", "")))
-            self.table.setItem(row_index, 3, QTableWidgetItem(task.get("due_date", "")))
+            self.table.setItem(row_index, 2, QTableWidgetItem(task.get("due_date", "")))
 
             # View/Edit task buttons.
             details_btn = QPushButton("More Details")
-            details_btn.setObjectName("NavButton")
+            details_btn.setObjectName("EditNavButton")
             details_btn.clicked.connect(lambda checked = False, t = task: self.show_details(t))
-            self.table.setCellWidget(row_index, 4, details_btn)
+            self.table.setCellWidget(row_index, 3, details_btn)
 
             action_btn = QPushButton("Edit/Delete")
-            action_btn.setObjectName("NavButton")
+            action_btn.setObjectName("EditNavButton")
             action_btn.clicked.connect(lambda checked = False, t = task: self.show_modal(t))
-            self.table.setCellWidget(row_index, 5, action_btn)
+            self.table.setCellWidget(row_index, 4, action_btn)
 
     def show_details(self, task):
         # Creates a dialog box to allow for read-only rich formatting.

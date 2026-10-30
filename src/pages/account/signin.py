@@ -107,8 +107,8 @@ class SignInPage(BasePage):
         user = find_user(self.email_input.text(), self.password_input.text())
 
         if user is None:
-            self.error_label.setText("❌ Incorrect email or password.")
-            self.error_label.show()
+            self.subheading.setText("❌ Incorrect email or password.")
+            self.subheading.show()
             return
 
         self.error_label.hide()
