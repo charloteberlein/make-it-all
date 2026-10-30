@@ -71,7 +71,7 @@
    ```
 3. **Install dependencies:**
    ```bash
-   pip install PySide6
+   pip install -r requirements.txt
    ```
 
 ## Running the Application
