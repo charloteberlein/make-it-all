@@ -266,6 +266,7 @@ class DashboardPage(BasePage):
             count for counts in grouped_counts.values() for count in counts.values()
         ) if len(grouped_counts) > 0 else 0
         value_axis.setRange(0, max(1, max_count))
+        value_axis.setTickCount(max(1, max_count) + 1)
         value_axis.setLabelFormat("%d")
 
         chart.addAxis(category_axis, Qt.AlignmentFlag.AlignBottom)
