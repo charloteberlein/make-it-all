@@ -32,19 +32,14 @@
 │        ├── dark.qss          # Dark theme stylesheet
 │        └── light.qss         # Light theme stylesheet
 ├── src/
-│   ├── pages/
-│   │   ├── account/           # signin, register, forgotpassword, my_account, user
-│   │   ├── dashboards/        # dashboard, training
-│   │   ├── posts/             # edit_post, make_post, make_content_page, post_content, posts_page
-│   │   ├── todos/             # personal_todo, project-todo, task_analytics, task_modal, task_status, todo
-│   │   ├── topics/            # topics_content_page, topic_content, topic_page
-│   │   ├── base_page.py
-│   │   ├── header.py
-│   │   ├── page_index.py
-│   │   └── sidebar.py
-│   ├── app.py                 # Main entry point
-│   ├── helpers.py             # Reads and writes to .JSON files
-│   └── notifications.py       # Creates notification used in header.py
+│   └── make_it_all/           # Importable application package
+│       ├── pages/
+│       ├── app.py
+│       ├── helpers.py
+│       └── notifications.py
+├── tests/                     # Pytest
+├── pyproject.toml             # Package metadata and dev tools
+├── requirements.txt
 └── README.md
 ```
 
@@ -71,14 +66,17 @@
    ```
 3. **Install dependencies:**
    ```bash
-   pip install -r requirements.txt
+   pip install -e ".[dev]"
    ```
 
 ## Running the Application
-Once the virtual environment is active and the dependencies are installed, launch the application from the root directory using:
+Once the virtual environment is active and the package is installed, launch it from the repository root using:
 ``` bash
-python src/app.py
+python -m make_it_all
 ```
+The `make-it-all` command is also available after installation. Development helpers are installed
+with the `dev` extra; launch from the repository root so the current root-level assets and JSON
+files can be found. Once tests are added, run them with `pytest` and check style with `ruff check .`.
 
 ## Authors & Acknowledgements
 ### Team Members
