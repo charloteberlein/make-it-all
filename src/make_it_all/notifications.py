@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from make_it_all.helpers import read_json
+from make_it_all.helpers import DATA_DIR, read_json
 from make_it_all.pages.account.user import User
 
-TASKS_JSON_PATH = "assets/mock_data/tasks.json"
+TASKS_JSON_PATH = DATA_DIR / "tasks.json"
 DUE_SOON_DAYS = 3
 
 # user id --> ids of the notifications they have read

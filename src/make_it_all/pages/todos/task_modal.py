@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QTextEdit,
 )
 
+from make_it_all.helpers import ASSETS_DIR
 from make_it_all.pages.todos.task_status import TaskStatus, parse_task_status
 
 
@@ -155,14 +156,18 @@ class TaskModal(QDialog):
     def insert_image(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Images: (*.png *.jpg *.jpeg *.bmp)")
         if file_path:
-            os.makedirs("assets/task_images", exist_ok=True)
+            image_directory = ASSETS_DIR / "task_images"
+            image_directory.mkdir(parents=True, exist_ok=True)
             filename = os.path.basename(file_path)
-            destination_path = os.path.join("assets/task_images", filename)
+            destination_path = image_directory / filename
             
             shutil.copy(file_path, destination_path)
             
             # Inserts HTML img tag -> enables image rendering in modal.
-            html_img = f'<br><img src="{destination_path}" width="300" style="max-width:100%;"/><br>'
+            html_img = (
+                f'<br><img src="{destination_path.as_posix()}" width="300" '
+                'style="max-width:100%;"/><br>'
+            )
             self.details_editor.textCursor().insertHtml(html_img)
 
     # Create task structure.

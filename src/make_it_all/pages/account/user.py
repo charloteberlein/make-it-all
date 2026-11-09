@@ -1,9 +1,9 @@
 import re
 from dataclasses import dataclass
 
-from make_it_all.helpers import read_json, write_json
+from make_it_all.helpers import DATA_DIR, read_json, write_json
 
-USERS_JSON_PATH = "assets/mock_data/users.json"
+USERS_JSON_PATH = DATA_DIR / "users.json"
 
 @dataclass
 class User:
@@ -123,7 +123,7 @@ def validate_reset_password(email: str, password: str, confirm_password: str) ->
 def get_user_by_id(user_id: int | None) -> User  |  None:
     if user_id is None:
         return None
-    for entry in read_json("assets/mock_data/users.json")["users"]:
+    for entry in read_json(DATA_DIR / "users.json")["users"]:
         if entry["id"] == user_id:
             return User(**entry)
     

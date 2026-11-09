@@ -26,8 +26,9 @@ from make_it_all.pages.todos.task_analytics import (
     get_emp_tasks,
 )
 from make_it_all.pages.todos.task_status import TaskStatus
+from make_it_all.helpers import DATA_DIR
 
-TASKS_FILE = "assets/mock_data/tasks.json"
+TASKS_FILE = DATA_DIR / "tasks.json"
 
 
 class ClickableChartView(QChartView):

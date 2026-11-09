@@ -1,10 +1,10 @@
 from collections import defaultdict
 from datetime import date, datetime
 
-from make_it_all.helpers import read_json
+from make_it_all.helpers import DATA_DIR, read_json
 from make_it_all.pages.todos.task_status import TaskStatus, parse_task_status
 
-TASKS_FILE = "assets/mock_data/tasks.json"
+TASKS_FILE = DATA_DIR / "tasks.json"
 
 def _project_tasks(tasks_file):
     tasks = read_json(tasks_file)

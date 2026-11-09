@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QPushButton
 
+from make_it_all.helpers import DATA_DIR
 from make_it_all.pages.base_page import BasePage
 from make_it_all.pages.topics.topic_content import TopicContent
 
@@ -13,7 +14,7 @@ class TopicsPage(BasePage):
         self.title = QLabel("Topics")
         self.title.setObjectName("TitleLabelCenter")
 
-        self.topics = TopicContent.load_topics("assets/mock_data/topics.json")
+        self.topics = TopicContent.load_topics(DATA_DIR / "topics.json")
         self.widgets = []
         for topic in self.topics:
             btn = QPushButton(topic.name)
@@ -34,7 +35,7 @@ class TopicsPage(BasePage):
             widget.deleteLater()
         self.widgets = []
 
-        self.topics = TopicContent.load_topics("assets/mock_data/topics.json")
+        self.topics = TopicContent.load_topics(DATA_DIR / "topics.json")
         for topic in self.topics:
             btn = QPushButton(topic.name)
             btn.setObjectName("LoginButton")

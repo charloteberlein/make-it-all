@@ -23,14 +23,14 @@
 ## Repository structure
 ```
 ├── assets/
-│   ├── mock_data/
-│   │    ├── posts.json
-│   │    ├── tasks.json
-│   │    ├── topics.json
-│   │    └── users.json
 │   └── styles/
 │        ├── dark.qss          # Dark theme stylesheet
 │        └── light.qss         # Light theme stylesheet
+├── data/                      # Local JSON-backed application data
+│   ├── posts.json
+│   ├── tasks.json
+│   ├── topics.json
+│   └── users.json
 ├── src/
 │   └── make_it_all/           # Importable application package
 │       ├── pages/
@@ -70,13 +70,12 @@
    ```
 
 ## Running the Application
-Once the virtual environment is active and the package is installed, launch it from the repository root using:
+Once the virtual environment is active and the package is installed, launch it using:
 ``` bash
 python -m make_it_all
 ```
 The `make-it-all` command is also available after installation. Development helpers are installed
-with the `dev` extra; launch from the repository root so the current root-level assets and JSON
-files can be found. Once tests are added, run them with `pytest` and check style with `ruff check .`.
+with the `dev` extra. Once tests are added, run them with `pytest` and check style with `ruff check .`.
 
 ## Authors & Acknowledgements
 ### Team Members

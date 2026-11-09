@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from make_it_all.helpers import generate_id, read_json, write_json
+from make_it_all.helpers import DATA_DIR, generate_id, read_json, write_json
 from make_it_all.pages.posts.post_content import PostContent
 
 
@@ -14,7 +14,7 @@ class TopicContent:
 
     @classmethod
     def load_topics(
-    cls, filepath: Path | str = "assets/mock_data/topics.json"
+    cls, filepath: Path | str = DATA_DIR / "topics.json"
     ) -> list["TopicContent"]:
         data: list[dict] = read_json(filepath)["topics"]
         topics = []
@@ -46,7 +46,7 @@ class TopicContent:
 
     @staticmethod
     def get_posts_by_topic(topic_id: str) -> list[PostContent]:
-        posts = PostContent.load_posts("assets/mock_data/posts.json")
+        posts = PostContent.load_posts(DATA_DIR / "posts.json")
         return [post for post in posts if post.topic == topic_id]
 
     @staticmethod
@@ -56,12 +56,12 @@ class TopicContent:
                 topic for topic in TopicContent.load_topics()
                 if topic.id != topic_id
             ]
-            TopicContent.save_topics("assets/mock_data/topics.json", topics)
+            TopicContent.save_topics(DATA_DIR / "topics.json", topics)
 
     @staticmethod
     def get_matching_topic(name: str) -> str:
         """Fetches or, if one does not exist, creates a given topic. Returns topic ID."""
-        topics: dict = read_json("assets/mock_data/topics.json")
+        topics: dict = read_json(DATA_DIR / "topics.json")
 
         for topic in topics["topics"]:
             if topic["name"] == name:
@@ -76,7 +76,7 @@ class TopicContent:
             }
         )
 
-        write_json("assets/mock_data/topics.json", topics)
+        write_json(DATA_DIR / "topics.json", topics)
         return id
 
     @staticmethod
@@ -96,4 +96,4 @@ class TopicContent:
         for topic in topics:
             if topic.id == topic_id:
                 topic.writable = writable
-        TopicContent.save_topics("assets/mock_data/topics.json", topics)
+        TopicContent.save_topics(DATA_DIR / "topics.json", topics)

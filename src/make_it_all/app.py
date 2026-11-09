@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from make_it_all.helpers import ASSETS_DIR
 from make_it_all.pages.account.forgotpassword import ForgotPasswordPage
 from make_it_all.pages.account.my_account import MyAccountPage
 from make_it_all.pages.account.register import RegisterPage
@@ -177,8 +178,8 @@ class MainWindow(QWidget):
 
     def apply_theme(self):
         filename = "dark.qss" if self.is_dark_mode else "light.qss"
-        filepath = f"assets/styles/{filename}"
-        with open(filepath, "r") as file:
+        filepath = ASSETS_DIR / "styles" / filename
+        with open(filepath, "r", encoding="utf-8") as file:
             self.setStyleSheet(file.read())
         self.dashboard_page.populate_content()
 

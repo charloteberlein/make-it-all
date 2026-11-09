@@ -2,6 +2,10 @@ import json
 from pathlib import Path
 from uuid import uuid4
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+ASSETS_DIR = PROJECT_ROOT / "assets"
+DATA_DIR = PROJECT_ROOT / "data"
+
 
 def read_json(filepath: str | Path) -> dict | list:
     """Reads a `.json` file contents."""

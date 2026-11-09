@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from make_it_all.helpers import read_json, write_json
+from make_it_all.helpers import DATA_DIR, read_json, write_json
 
 
 @dataclass
@@ -63,7 +63,7 @@ class PostContent:
 
     @classmethod
     def get_post_by_id(cls, id: str) -> "PostContent | None":
-        posts = cls.load_posts("assets/mock_data/posts.json")
+        posts = cls.load_posts(DATA_DIR / "posts.json")
         for post in posts:
             if post.id == id:
                 return post
@@ -71,7 +71,7 @@ class PostContent:
 
     @classmethod
     def get_recent_posts(cls, count: int = 5) -> list["PostContent"]:
-        posts = cls.load_posts("assets/mock_data/posts.json")
+        posts = cls.load_posts(DATA_DIR / "posts.json")
         newest_first = sorted(
             posts,
             key=lambda post: (datetime.strptime(post.date_created, "%d-%m-%Y"), post.id),
@@ -84,7 +84,7 @@ class PostContent:
         if user_id is None:
             return []
 
-        posts = cls.load_posts("assets/mock_data/posts.json")
+        posts = cls.load_posts(DATA_DIR / "posts.json")
         mine = [post for post in posts if post.created_by == user_id]
         return sorted(
             reversed(mine),
@@ -94,24 +94,24 @@ class PostContent:
 
     @classmethod
     def archive_post(cls, post_id: str, archive: bool) -> None:
-        posts = cls.load_posts("assets/mock_data/posts.json")
+        posts = cls.load_posts(DATA_DIR / "posts.json")
         post = next(post for post in posts if post.id == post_id)
         post.archived = archive
-        write_json("assets/mock_data/posts.json", {"posts": [post.serialise() for post in posts]})
+        write_json(DATA_DIR / "posts.json", {"posts": [post.serialise() for post in posts]})
 
     @classmethod
     def delete_post(cls, post_id: str) -> str:
-        posts = cls.load_posts("assets/mock_data/posts.json")
+        posts = cls.load_posts(DATA_DIR / "posts.json")
         deleted_post = next(post for post in posts if post.id == post_id)
         write_json(
-            "assets/mock_data/posts.json",
+            DATA_DIR / "posts.json",
             {"posts": [post.serialise() for post in [post for post in posts if post.id != post_id]]}
         )
         return deleted_post.topic
 
     @classmethod
     def upvote_post(cls, post_id: str, user_id: int) -> tuple[int, bool]:
-        posts = cls.load_posts("assets/mock_data/posts.json")
+        posts = cls.load_posts(DATA_DIR / "posts.json")
         for post in posts:
             if post.id == post_id:
                 # Toggle logic for upvote button.
@@ -119,7 +119,7 @@ class PostContent:
                     post.upvoted_users.remove(user_id)
                     post.upvote_count = max(0, post.upvote_count - 1)
                     write_json(
-                        "assets/mock_data/posts.json",
+                        DATA_DIR / "posts.json",
                         {"posts": [p.serialise() for p in posts]}
                     )
                     return post.upvote_count, False
@@ -128,7 +128,7 @@ class PostContent:
                 post.upvote_count += 1
 
                 write_json(
-                    "assets/mock_data/posts.json",
+                    DATA_DIR / "posts.json",
                     {"posts": [p.serialise() for p in posts]}
                 )
                 return post.upvote_count, True

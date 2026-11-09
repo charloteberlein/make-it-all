@@ -16,12 +16,12 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from make_it_all.helpers import read_json, write_json
+from make_it_all.helpers import DATA_DIR, read_json, write_json
 from make_it_all.pages.base_page import BasePage
 from make_it_all.pages.todos.task_modal import TaskModal
 from make_it_all.pages.todos.task_status import TaskStatus, parse_task_status, task_status_options
 
-TASKS_FILE = "assets/mock_data/tasks.json"
+TASKS_FILE = DATA_DIR / "tasks.json"
 
 class ProjectTodoPage(BasePage):
     to_Todo = Signal()
