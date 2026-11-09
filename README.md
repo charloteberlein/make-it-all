@@ -81,10 +81,15 @@ files can be found. Once tests are added, run them with `pytest` and check style
 ## Authors & Acknowledgements
 ### Team Members
 Charlot Eberlein
+
 Yasmin Ahrabi
+
 Kei Mann
+
 Eleanor Cooke
+
 Juliette Crossman
+
 Elizabeth Watson
 
 ### Tech Stack
