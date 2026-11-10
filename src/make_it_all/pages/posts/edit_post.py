@@ -96,7 +96,7 @@ class EditPostPage(BasePage):
         italic = QAction("I", self)
         italic.setCheckable(True)
         italic.triggered.connect(
-            lambda checked: self.content.setFontItalic(True if checked else False)
+            lambda checked: self.content.setFontItalic(bool(checked))
         )
         self.toolbar.addAction(italic)
         self.toolbar.widgetForAction(italic).setObjectName("ItalicFormatButton")
@@ -104,7 +104,7 @@ class EditPostPage(BasePage):
         underline = QAction("U", self)
         underline.setCheckable(True)
         underline.triggered.connect(
-            lambda checked: self.content.setFontUnderline(True if checked else False)
+            lambda checked: self.content.setFontUnderline(bool(checked))
         )
         self.toolbar.addAction(underline)
         self.toolbar.widgetForAction(underline).setObjectName("UnderlineFormatButton")

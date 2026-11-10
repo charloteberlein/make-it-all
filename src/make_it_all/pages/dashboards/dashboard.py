@@ -333,7 +333,7 @@ class DashboardPage(BasePage):
 
         categories = list(project_details.keys())
         est_values, act_values = [], []
-        for proj_name, metrics in project_details.items():
+        for metrics in project_details.values():
             est_values.append(metrics["total_estimated"])
             act_values.append(metrics["total_actual"])
 
@@ -407,7 +407,7 @@ class DashboardPage(BasePage):
 
         categories = list(emp_data.keys())
         est_values, act_values = [], []
-        for emp_name, metrics in emp_data.items():
+        for metrics in emp_data.values():
             est_values.append(metrics["total_estimated"])
             act_values.append(metrics["total_actual"])
 

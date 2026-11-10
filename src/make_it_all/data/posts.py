@@ -102,7 +102,7 @@ class PostContent:
         posts = cls.load_posts(DATA_DIR / "posts.json")
         mine = [post for post in posts if post.created_by == user_id]
         return sorted(
-            reversed(mine),
+            mine,
             key=lambda post: datetime.strptime(post.date_created, "%d-%m-%Y"),
             reverse=True,
         )

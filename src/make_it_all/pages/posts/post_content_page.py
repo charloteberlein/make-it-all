@@ -23,9 +23,7 @@ class PostContentPage(BasePage):
         self._id = id
         self.post = PostContent.get_post_by_id(id) or PostContent("", False, "", False, "", "", "")
         self.locked = (
-            True
-            if self.post.archived or not TopicContent.get_topic_writable(self.post.topic)
-            else False
+            bool(self.post.archived or not TopicContent.get_topic_writable(self.post.topic))
         )
         super().__init__()
 
@@ -50,9 +48,7 @@ class PostContentPage(BasePage):
         self.refresh_upvote_button()
 
         self.locked = (
-            True
-            if self.post.archived or not TopicContent.get_topic_writable(self.post.topic)
-            else False
+            bool(self.post.archived or not TopicContent.get_topic_writable(self.post.topic))
         )
 
         self.edit_stack.setCurrentIndex(int(self.locked))

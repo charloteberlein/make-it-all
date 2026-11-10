@@ -183,12 +183,11 @@ class PersonalTodoPage(BasePage):
                 f"Are you sure you want to delete '{task.get('task_name', 'Task')}'?",
                 QMessageBox.Yes | QMessageBox.No,
             )
-            if confirm == QMessageBox.Yes:
-                if task in self.tasks:
-                    self.tasks.remove(task)
-                    save_tasks(self.tasks)
-                    self.load_tasks()
-                    self.populate_content()
+            if confirm == QMessageBox.Yes and task in self.tasks:
+                self.tasks.remove(task)
+                save_tasks(self.tasks)
+                self.load_tasks()
+                self.populate_content()
 
     def handle_status_change(self, task, new_status):
         # Update the task status.

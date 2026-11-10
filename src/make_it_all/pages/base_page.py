@@ -8,7 +8,7 @@ class BasePage(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.define_styling()
         self.define_layout()
-        self.widgets = tuple()
+        self.widgets = ()
         self.define_widgets()
         self.assemble_widgets()
 

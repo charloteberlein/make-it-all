@@ -1,6 +1,8 @@
 import re
 from dataclasses import dataclass
 
+from loguru import logger
+
 from make_it_all.data.json_store import DATA_DIR, read_json, write_json
 
 USERS_JSON_PATH = DATA_DIR / "users.json"
@@ -31,8 +33,8 @@ def find_email(email: str) -> bool:
         for user in data.get("users", []):
             if user.get("email", "").strip().lower() == email.strip().lower():
                 return True
-    except Exception:
-        pass
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        logger.exception("Could not find user email.")
     return False
 
 
@@ -46,9 +48,7 @@ def is_strong_password(password: str) -> bool:
         return False
     if len(re.findall(r"\d", password)) < 2:
         return False
-    if not re.search(r'[!@#$%^&*(),.?":{}|<>\-_=+~`[\]\\;\/]', password):
-        return False
-    return True
+    return re.search(r'[!@#$%^&*(),.?":{}|<>\-_=+~`[\]\\;\/]', password) is not None
 
 
 def add_user_password(email: str, password: str) -> bool:
@@ -65,8 +65,8 @@ def add_user_password(email: str, password: str) -> bool:
         if updated:
             write_json(USERS_JSON_PATH, data)
             return True
-    except Exception:
-        pass
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        logger.exception("Could not update user password.")
     return False
 
 
@@ -84,8 +84,8 @@ def create_user_account(email: str, firstname: str, lastname: str, password: str
                 user["password"] = password
                 write_json(USERS_JSON_PATH, data)
                 return True
-    except Exception:
-        pass
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        logger.exception("Could not create user account.")
     return False
 
 

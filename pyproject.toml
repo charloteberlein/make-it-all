@@ -9,6 +9,7 @@ description = "A productivity and knowledge management system"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "loguru",
     "PySide6==6.12.0",
 ]
 

@@ -27,7 +27,7 @@ class MakePostPage(BasePage):
         super().__init__()
 
     def update_date(self):
-        self.date_created = dt.today().strftime("%d-%m-%Y")
+        self.date_created = dt.now().strftime("%d-%m-%Y")
 
     def define_layout(self) -> None:
         super().define_layout()
@@ -80,7 +80,7 @@ class MakePostPage(BasePage):
         italic = QAction("I", self)
         italic.setCheckable(True)
         italic.triggered.connect(
-            lambda checked: self.content.setFontItalic(True if checked else False)
+            lambda checked: self.content.setFontItalic(bool(checked))
         )
         self.toolbar.addAction(italic)
         self.toolbar.widgetForAction(italic).setObjectName("ItalicFormatButton")
@@ -88,7 +88,7 @@ class MakePostPage(BasePage):
         underline = QAction("U", self)
         underline.setCheckable(True)
         underline.triggered.connect(
-            lambda checked: self.content.setFontUnderline(True if checked else False)
+            lambda checked: self.content.setFontUnderline(bool(checked))
         )
         self.toolbar.addAction(underline)
         self.toolbar.widgetForAction(underline).setObjectName("UnderlineFormatButton")
