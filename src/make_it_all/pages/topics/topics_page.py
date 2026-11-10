@@ -23,14 +23,14 @@ class TopicsPage(BasePage):
 
     def assemble_widgets(self) -> None:
         self.layout.addWidget(self.title)
-        for (widget, _) in self.widgets:
+        for widget, _ in self.widgets:
             self.layout.addWidget(widget)
         self.layout.addStretch()
 
         self.setLayout(self.layout)
 
     def refresh_topics(self):
-        for (widget, _) in self.widgets:
+        for widget, _ in self.widgets:
             widget.deleteLater()
         self.widgets = []
 
@@ -39,5 +39,5 @@ class TopicsPage(BasePage):
             btn = QPushButton(topic.name)
             btn.setObjectName("LoginButton")
             self.widgets.append((btn, topic.id))
-        
+
         self.assemble_widgets()

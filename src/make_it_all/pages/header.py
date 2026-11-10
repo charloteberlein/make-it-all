@@ -69,7 +69,7 @@ class Header(QFrame):
         self.badge.hide()
         self.bell_btn.clicked.connect(self.show_notifications)
 
-    def show_settings_menu(self):    # Aligns right edge of icon with dropdown
+    def show_settings_menu(self):  # Aligns right edge of icon with dropdown
         point = self.settings_btn.mapToGlobal(self.settings_btn.rect().bottomRight())
         menu_width = self.menu.sizeHint().width()
         point.setX(point.x() - menu_width)
@@ -96,7 +96,9 @@ class Header(QFrame):
             dot = "" if notification.read else "● "
             action = menu.addAction(dot + notification.message)
             action.triggered.connect(
-                lambda checked=False, task_type=notification.task_type:self.open_todo.emit(task_type)
+                lambda checked=False, task_type=notification.task_type: self.open_todo.emit(
+                    task_type
+                )
             )
 
         point = self.bell_btn.mapToGlobal(self.bell_btn.rect().bottomRight())

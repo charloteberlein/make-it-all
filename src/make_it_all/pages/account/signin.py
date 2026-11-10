@@ -19,7 +19,7 @@ class SignInPage(BasePage):
 
         self.top_frame = QFrame()
         self.top_frame.setObjectName("TopBar")
-        
+
         self.top_bar = QHBoxLayout()
         self.top_bar.addStretch()
 
@@ -43,10 +43,10 @@ class SignInPage(BasePage):
         # Header (references stylesheet)
         self.title = QLabel("Make-It-All")
         self.title.setObjectName("TitleLabel")
-        
+
         self.heading = QLabel("Sign In")
         self.heading.setObjectName("HeadingLabel")
-        
+
         self.subheading = QLabel("Enter your company credentials to continue.")
         self.subheading.setObjectName("SubheadingLabel")
 

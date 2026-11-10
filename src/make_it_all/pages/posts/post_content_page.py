@@ -23,8 +23,8 @@ class PostContentPage(BasePage):
         self._id = id
         self.post = PostContent.get_post_by_id(id) or PostContent("", False, "", False, "", "", "")
         self.locked = (
-            True if self.post.archived
-            or not TopicContent.get_topic_writable(self.post.topic)
+            True
+            if self.post.archived or not TopicContent.get_topic_writable(self.post.topic)
             else False
         )
         super().__init__()
@@ -36,11 +36,13 @@ class PostContentPage(BasePage):
     @id.setter
     def id(self, new_id: str):
         self._id = new_id
-        self.post = PostContent.get_post_by_id(new_id) or PostContent("", False, "", False, "", "", "")
-        
+        self.post = PostContent.get_post_by_id(new_id) or PostContent(
+            "", False, "", False, "", "", ""
+        )
+
         self.title.setText(self.post.title)
         self.back_btn.setToolTip(
-            f"Back to {TopicContent.get_topic_name(self.post.topic) or "topic"}"
+            f"Back to {TopicContent.get_topic_name(self.post.topic) or 'topic'}"
         )
         self.topic.setText(TopicContent.get_topic_name(self.post.topic))
         self.date.setText(self.post.date_created)
@@ -48,8 +50,8 @@ class PostContentPage(BasePage):
         self.refresh_upvote_button()
 
         self.locked = (
-            True if self.post.archived
-            or not TopicContent.get_topic_writable(self.post.topic)
+            True
+            if self.post.archived or not TopicContent.get_topic_writable(self.post.topic)
             else False
         )
 
@@ -81,7 +83,7 @@ class PostContentPage(BasePage):
         self.back_btn.clicked.connect(self.back.emit)
         self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.back_btn.setToolTip(
-            f"Back to {TopicContent.get_topic_name(self.post.topic) or "topic"}"
+            f"Back to {TopicContent.get_topic_name(self.post.topic) or 'topic'}"
         )
         self.back_btn.setFixedSize(35, 35)
 
@@ -155,7 +157,7 @@ class PostContentPage(BasePage):
         self.layout.addWidget(self.title_frame)
         self.layout.addWidget(self.metadata_frame)
         self.layout.addWidget(self.content)
-        
+
         self.setLayout(self.layout)
 
     def toggle_archive_post(self):
@@ -170,7 +172,7 @@ class PostContentPage(BasePage):
         current_user = getattr(self.window(), "current_user", None)
         if not current_user:
             return
-        
+
         new_count, is_upvoted = PostContent.upvote_post(self.post.id, current_user.id)
         self.post.upvote_count = new_count
         if is_upvoted:

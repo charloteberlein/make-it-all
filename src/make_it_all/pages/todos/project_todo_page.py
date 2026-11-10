@@ -24,14 +24,14 @@ from make_it_all.pages.todos.task_status import TaskStatus, parse_task_status, t
 class ProjectTodoPage(BasePage):
     to_Todo = Signal()
 
-    def __init__(self, current_user = None):
+    def __init__(self, current_user=None):
         super().__init__()
         self.current_user = current_user
         self.load_tasks()
         self.populate_content()
 
     def showEvent(self, event):
-        """ Grabs current user from Main Window on page load. """
+        """Grabs current user from Main Window on page load."""
         super().showEvent(event)
         main_window = self.window()
         if hasattr(main_window, "current_user"):
@@ -41,9 +41,9 @@ class ProjectTodoPage(BasePage):
         self.update_permissions()
 
     def get_current_user(self) -> str:
-            if self.current_user and hasattr(self.current_user, "name"):
-                return self.current_user.name
-            return ""
+        if self.current_user and hasattr(self.current_user, "name"):
+            return self.current_user.name
+        return ""
 
     def add_task(self) -> bool:
         # Checks user's rank for project task creation.
@@ -55,7 +55,9 @@ class ProjectTodoPage(BasePage):
 
     def update_permissions(self):
         if hasattr(self, "add_btn"):
-            self.add_btn.setVisible(self.add_task()) # Only Team Leaders/Managers can access make task button.
+            self.add_btn.setVisible(
+                self.add_task()
+            )  # Only Team Leaders/Managers can access make task button.
 
     def define_widgets(self) -> None:
         self.title = QLabel("📋 Project To-do List")
@@ -78,10 +80,21 @@ class ProjectTodoPage(BasePage):
 
         self.table = QTableWidget()
         self.table.setColumnCount(11)
-        self.table.setHorizontalHeaderLabels([
-            "Task Name", "Project Name", "Assigner", "Assignees", "Status", "Assigned Date",
-            "Due Date", "Estimated Hours", "Actual Hours", "More Info", "Actions"
-        ])
+        self.table.setHorizontalHeaderLabels(
+            [
+                "Task Name",
+                "Project Name",
+                "Assigner",
+                "Assignees",
+                "Status",
+                "Assigned Date",
+                "Due Date",
+                "Estimated Hours",
+                "Actual Hours",
+                "More Info",
+                "Actions",
+            ]
+        )
         self.table.verticalHeader().setVisible(False)
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Interactive)
@@ -124,16 +137,21 @@ class ProjectTodoPage(BasePage):
             if status in (TaskStatus.COMPLETED, TaskStatus.SUSPENDED):
                 return (1, task.get("task_name", ""))
             return (0, task.get("task_name", ""))
-        self.project_tasks.sort(key = sort_key)
-        
+
+        self.project_tasks.sort(key=sort_key)
+
         self.table.setRowCount(len(self.project_tasks))
         for row_index, task in enumerate(self.project_tasks):
             self.table.setItem(row_index, 0, QTableWidgetItem(task.get("task_name", "")))
             self.table.setItem(row_index, 1, QTableWidgetItem(task.get("project_name", "")))
             self.table.setItem(row_index, 2, QTableWidgetItem(task.get("assigner", "")))
-            
+
             assignees_data = task.get("assignees", "")
-            assignees_str = ", ".join(assignees_data) if isinstance(assignees_data, list) else str(assignees_data)
+            assignees_str = (
+                ", ".join(assignees_data)
+                if isinstance(assignees_data, list)
+                else str(assignees_data)
+            )
             self.table.setItem(row_index, 3, QTableWidgetItem(assignees_str))
 
             # Dropdownm menu.
@@ -143,11 +161,12 @@ class ProjectTodoPage(BasePage):
             current_status = parse_task_status(task.get("status"))
             status_combo.setCurrentText(current_status.value)
             status_combo.currentTextChanged.connect(
-                lambda new_status, t = task, combo = status_combo:
-                self.handle_status_change(t, new_status, combo)
+                lambda new_status, t=task, combo=status_combo: self.handle_status_change(
+                    t, new_status, combo
+                )
             )
             self.table.setCellWidget(row_index, 4, status_combo)
-            
+
             self.table.setItem(row_index, 5, QTableWidgetItem(task.get("assigned_date", "")))
             self.table.setItem(row_index, 6, QTableWidgetItem(task.get("due_date", "")))
 
@@ -169,12 +188,14 @@ class ProjectTodoPage(BasePage):
             # View/Edit Modal Buttons.
             details_btn = QPushButton("More Details")
             details_btn.setObjectName("EditNavButton")
-            details_btn.clicked.connect(lambda checked = False, t = task: self.check_and_show_details(t))
+            details_btn.clicked.connect(
+                lambda checked=False, t=task: self.check_and_show_details(t)
+            )
             self.table.setCellWidget(row_index, 9, details_btn)
 
             action_btn = QPushButton("Edit/Delete")
             action_btn.setObjectName("EditNavButton")
-            action_btn.clicked.connect(lambda checked = False, t = task: self.show_modal(t))
+            action_btn.clicked.connect(lambda checked=False, t=task: self.show_modal(t))
             self.table.setCellWidget(row_index, 10, action_btn)
 
     def check_and_show_details(self, task):
@@ -197,13 +218,13 @@ class ProjectTodoPage(BasePage):
             dialog = QDialog(self)
             dialog.setWindowTitle(f"Details: {task_name}")
             dialog.resize(400, 400)
-            
+
             layout = QVBoxLayout(dialog)
             editor = QTextEdit()
             editor.setReadOnly(True)
             editor.setMarkdown(details)
             layout.addWidget(editor)
-            
+
             close_btn = QPushButton("Close")
             close_btn.setObjectName("LoginButton")
             close_btn.clicked.connect(dialog.accept)
@@ -211,7 +232,11 @@ class ProjectTodoPage(BasePage):
             dialog.exec()
 
         else:
-            QMessageBox.warning(self, "❌ Access Denied", "You cannot view this task's details, as you are not assigned to it.")
+            QMessageBox.warning(
+                self,
+                "❌ Access Denied",
+                "You cannot view this task's details, as you are not assigned to it.",
+            )
 
     def show_modal(self, task):
         current_user_name = self.get_current_user()
@@ -227,9 +252,13 @@ class ProjectTodoPage(BasePage):
         is_assignee = current_user_name in assignee_list
 
         if not (is_assigner or is_assignee):
-            QMessageBox.warning(self, "❌ Access Denied", "You cannot edit or delete this task as you are not assigned to it.")
+            QMessageBox.warning(
+                self,
+                "❌ Access Denied",
+                "You cannot edit or delete this task as you are not assigned to it.",
+            )
             return
-        
+
         dialog = TaskModal(task, self)
         dialog.exec()
 
@@ -238,9 +267,12 @@ class ProjectTodoPage(BasePage):
             self.load_tasks()
             self.populate_content()
         elif dialog.action_result == "delete":
-            confirm = QMessageBox.question(self, "Confirm Delete", 
+            confirm = QMessageBox.question(
+                self,
+                "Confirm Delete",
                 f"Are you sure you want to delete '{task.get('task_name', 'Task')}'?",
-                QMessageBox.Yes | QMessageBox.No)
+                QMessageBox.Yes | QMessageBox.No,
+            )
             if confirm == QMessageBox.Yes:
                 if task in self.tasks:
                     self.tasks.remove(task)
@@ -264,7 +296,11 @@ class ProjectTodoPage(BasePage):
 
         # Another data protection measure, POLP.
         if not (is_assigner or is_assignee):
-            QMessageBox.warning(self, "❌ Access Denied", "You can only change the status of tasks you are assigned to.")
+            QMessageBox.warning(
+                self,
+                "❌ Access Denied",
+                "You can only change the status of tasks you are assigned to.",
+            )
             combo_box.blockSignals(True)
             combo_box.setCurrentText(parse_task_status(task.get("status")).value)
             combo_box.blockSignals(False)
@@ -299,10 +335,10 @@ class ProjectTodoPage(BasePage):
             "assigned_date": date.today().isoformat(),
             "due_date": "",
             "estimated_time": "",
-            "actual_time": "0.0" ,
+            "actual_time": "0.0",
             "details": "",
             "type": "project",
-            "completion_date": ""
+            "completion_date": "",
         }
 
         dialog = TaskModal(new_project_task, self)
@@ -312,7 +348,7 @@ class ProjectTodoPage(BasePage):
             if not new_project_task.get("task_name", "").strip():
                 QMessageBox.warning(self, "❌ Error", "Task name field cannot be empty.")
                 return
-            
+
             self.tasks.append(new_project_task)
             save_tasks(self.tasks)
             self.load_tasks()

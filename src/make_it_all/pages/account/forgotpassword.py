@@ -46,13 +46,13 @@ class ForgotPasswordPage(BasePage):
         # Header (references stylesheet)
         self.title = QLabel("Make-It-All")
         self.title.setObjectName("TitleLabel")
-        
+
         self.heading = QLabel("Forgot Password?")
         self.heading.setObjectName("HeadingLabel")
 
         self.email_input = QLineEdit()
         self.email_input.setPlaceholderText("Enter company email (xxx@make-it-all.co.uk)")
-        
+
         self.subheading = QLabel("Enter your company email and new password.")
         self.subheading.setObjectName("SubheadingLabel")
 
@@ -108,7 +108,7 @@ class ForgotPasswordPage(BasePage):
         if error_message:
             self.show_message(error_message)
             return
-        
+
         # Saves new password to users.JSON.
         success_update = add_user_password(email, password)
         if success_update:
@@ -125,7 +125,7 @@ class ForgotPasswordPage(BasePage):
             self.show_message("❌ Failed to update password. Please try again.")
 
     def show_message(self, message: str) -> None:
-        """ Updates the subheading text directly to show errors or success. """
+        """Updates the subheading text directly to show errors or success."""
         self.subheading.setStyleSheet("color: #e74c3c; font-size: 14px;")
         self.subheading.setText("")
         self.subheading.setText(message)

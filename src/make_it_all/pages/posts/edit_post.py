@@ -32,8 +32,10 @@ class EditPostPage(BasePage):
     @id.setter
     def id(self, new_id: str):
         self._id = new_id
-        self.post = PostContent.get_post_by_id(new_id) or PostContent("", False, "", False, "", "", "")
-        
+        self.post = PostContent.get_post_by_id(new_id) or PostContent(
+            "", False, "", False, "", "", ""
+        )
+
         self.title_input.setText(self.post.title)
         self.topic_options.setCurrentText(TopicContent.get_topic_name(self.post.topic))
         self.date.setText(self.post.date_created)
@@ -94,9 +96,7 @@ class EditPostPage(BasePage):
         italic = QAction("I", self)
         italic.setCheckable(True)
         italic.triggered.connect(
-            lambda checked: self.content.setFontItalic(
-                True if checked else False
-            )
+            lambda checked: self.content.setFontItalic(True if checked else False)
         )
         self.toolbar.addAction(italic)
         self.toolbar.widgetForAction(italic).setObjectName("ItalicFormatButton")
@@ -104,9 +104,7 @@ class EditPostPage(BasePage):
         underline = QAction("U", self)
         underline.setCheckable(True)
         underline.triggered.connect(
-            lambda checked: self.content.setFontUnderline(
-                True if checked else False
-            )
+            lambda checked: self.content.setFontUnderline(True if checked else False)
         )
         self.toolbar.addAction(underline)
         self.toolbar.widgetForAction(underline).setObjectName("UnderlineFormatButton")
@@ -143,7 +141,7 @@ class EditPostPage(BasePage):
         self.layout.addWidget(self.toolbar)
         self.layout.addWidget(self.content)
         self.layout.addWidget(self.button_frame)
-        
+
         self.setLayout(self.layout)
 
     def save_post(self) -> None:
@@ -178,12 +176,13 @@ class EditPostPage(BasePage):
             len(self.title_input.text()) > 0
             # Topic valid and not empty
             and (
-                ( # Valid drop-down topic
+                (  # Valid drop-down topic
                     self.topic_options.currentText() != "Other"
                     and TopicContent.get_topic_writable(
                         TopicContent.get_matching_topic(self.topic_options.currentText())
                     )
-                ) or ( # Valid text input topic
+                )
+                or (  # Valid text input topic
                     len(text := self.topic_input.text()) > 0
                     and text != "Other"
                     and text not in [topic.name for topic in TopicContent.load_topics()]

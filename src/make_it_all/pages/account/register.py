@@ -48,10 +48,10 @@ class RegisterPage(BasePage):
         # Header (references stylesheet)
         self.title = QLabel("Make-It-All")
         self.title.setObjectName("TitleLabel")
-        
+
         self.heading = QLabel("Register")
         self.heading.setObjectName("HeadingLabel")
-        
+
         self.subheading = QLabel("Set up your company credentials to get started.")
         self.subheading.setObjectName("SubheadingLabel")
 
@@ -62,7 +62,7 @@ class RegisterPage(BasePage):
         self.lastname_input.setPlaceholderText("Enter Lastname")
         self.name_layout.addWidget(self.firstname_input)
         self.name_layout.addWidget(self.lastname_input)
-        
+
         self.email_input = QLineEdit()
         self.email_input.setPlaceholderText("Enter company email (xxx@make-it-all.co.uk)")
 
@@ -117,7 +117,9 @@ class RegisterPage(BasePage):
         password = self.password_input.text()
         confirm_password = self.confirm_password_input.text()
 
-        error_message = validate_registration_inputs(email, firstname, lastname, password, confirm_password)
+        error_message = validate_registration_inputs(
+            email, firstname, lastname, password, confirm_password
+        )
         if error_message:
             self.show_message(error_message)
             return
@@ -139,7 +141,7 @@ class RegisterPage(BasePage):
             self.show_message("❌ This user account is already registered. Please Sign In.")
 
     def show_message(self, message: str) -> None:
-        """ Updates the subheading text directly to show errors or success. """
+        """Updates the subheading text directly to show errors or success."""
         self.subheading.setStyleSheet("color: #e74c3c; font-size: 14px;")
         self.subheading.setText("")
         self.subheading.setText(message)

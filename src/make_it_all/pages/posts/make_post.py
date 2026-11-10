@@ -80,9 +80,7 @@ class MakePostPage(BasePage):
         italic = QAction("I", self)
         italic.setCheckable(True)
         italic.triggered.connect(
-            lambda checked: self.content.setFontItalic(
-                True if checked else False
-            )
+            lambda checked: self.content.setFontItalic(True if checked else False)
         )
         self.toolbar.addAction(italic)
         self.toolbar.widgetForAction(italic).setObjectName("ItalicFormatButton")
@@ -90,9 +88,7 @@ class MakePostPage(BasePage):
         underline = QAction("U", self)
         underline.setCheckable(True)
         underline.triggered.connect(
-            lambda checked: self.content.setFontUnderline(
-                True if checked else False
-            )
+            lambda checked: self.content.setFontUnderline(True if checked else False)
         )
         self.toolbar.addAction(underline)
         self.toolbar.widgetForAction(underline).setObjectName("UnderlineFormatButton")
@@ -128,7 +124,7 @@ class MakePostPage(BasePage):
         self.layout.addWidget(self.toolbar)
         self.layout.addWidget(self.content)
         self.layout.addWidget(self.button_frame)
-        
+
         self.setLayout(self.layout)
 
     def save_post(self, created_by: int | None = None) -> None:
@@ -146,7 +142,7 @@ class MakePostPage(BasePage):
                 ),
                 title=self.title_input.text(),
                 content=self.content.document().toHtml(),
-                created_by=created_by
+                created_by=created_by,
             )
         )
 
@@ -170,12 +166,13 @@ class MakePostPage(BasePage):
             len(self.title_input.text()) > 0
             # Topic valid and not empty
             and (
-                ( # Valid drop-down topic
+                (  # Valid drop-down topic
                     self.topic_options.currentText() != "Other"
                     and TopicContent.get_topic_writable(
                         TopicContent.get_matching_topic(self.topic_options.currentText())
                     )
-                ) or ( # Valid text input topic
+                )
+                or (  # Valid text input topic
                     len(text := self.topic_input.text()) > 0
                     and text != "Other"
                     and text not in [topic.name for topic in TopicContent.load_topics()]

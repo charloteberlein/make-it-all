@@ -15,14 +15,14 @@ from make_it_all.pages.base_page import BasePage
 class MyAccountPage(BasePage):
     switch_to_ForgotPassword = Signal()
     switch_to_Dashboard = Signal()
-    
+
     def __init__(self):
         super().__init__()
 
     def define_layout(self) -> None:
         super().define_layout()
         self.layout.setSpacing(8)
-        
+
         self.top_bar = QHBoxLayout()
         self.top_bar.addStretch()
 
@@ -32,7 +32,7 @@ class MyAccountPage(BasePage):
     def define_widgets(self) -> None:
         self.heading = QLabel("Your Account")
         self.heading.setObjectName("HeadingLabel")
-        
+
         self.subheading = QLabel("Your profile details and credentials.")
         self.subheading.setObjectName("SubheadingLabel")
 
@@ -88,7 +88,7 @@ class MyAccountPage(BasePage):
         self.main_section.addWidget(self.heading)
         self.main_section.addSpacing(5)
         self.main_section.addWidget(self.subheading)
-        self.main_section.addSpacing(15)      
+        self.main_section.addSpacing(15)
         self.main_section.addLayout(self.form_layout)
         self.main_section.addSpacing(5)
         self.main_section.addWidget(self.forgot_btn)

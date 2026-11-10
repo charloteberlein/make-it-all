@@ -9,6 +9,7 @@ DUE_SOON_DAYS = 3
 # user id --> ids of the notifications they have read
 read_ids: dict[int, set[str]] = {}
 
+
 @dataclass
 class Notification:
     id: str
@@ -19,7 +20,7 @@ class Notification:
 
 def get_notifications(user: User) -> list[Notification]:
     """Returns a message for each of the user's unfinished tasks that is overdue or due soon.
-    
+
     Lasts only until the app closes.
     """
     notifications = []
@@ -46,9 +47,12 @@ def get_notifications(user: User) -> list[Notification]:
         if len(name) > 35:
             name = name[:32] + "..."
         message = f"{text}: {name} (due {task['due_date']})"
-        notifications.append(Notification(notification_id, message, task["type"], notification_id in user_read_ids))
+        notifications.append(
+            Notification(notification_id, message, task["type"], notification_id in user_read_ids)
+        )
 
     return notifications
+
 
 def mark_all_read(user: User) -> None:
     """Marks every current notification for the user as read."""

@@ -14,36 +14,23 @@ class TopicContent:
         self.writable = writable
 
     @classmethod
-    def load_topics(
-    cls, filepath: Path | str = DATA_DIR / "topics.json"
-    ) -> list["TopicContent"]:
+    def load_topics(cls, filepath: Path | str = DATA_DIR / "topics.json") -> list["TopicContent"]:
         data: list[dict] = read_json(filepath)["topics"]
         topics = []
         for topic in data:
-            topics.append(cls(
-                id=topic["id"],
-                name=topic["name"],
-                writable=topic["writable"]
-            ))
+            topics.append(cls(id=topic["id"], name=topic["name"], writable=topic["writable"]))
         return topics
 
     @staticmethod
     def save_topics(filepath: Path | str, topics: list["TopicContent"]) -> None:
         data = []
         for topic in topics:
-            data.append({
-                "id": topic.id,
-                "name": topic.name,
-                "writable": topic.writable
-            })
+            data.append({"id": topic.id, "name": topic.name, "writable": topic.writable})
         write_json(filepath, {"topics": data})
 
     @staticmethod
     def get_writable_topics() -> list["TopicContent"]:
-        return [
-            topic for topic in TopicContent.load_topics()
-            if topic.writable
-        ]
+        return [topic for topic in TopicContent.load_topics() if topic.writable]
 
     @staticmethod
     def get_posts_by_topic(topic_id: str) -> list[PostContent]:
@@ -53,10 +40,7 @@ class TopicContent:
     @staticmethod
     def remove_topic_if_empty(topic_id: str) -> None:
         if not TopicContent.get_posts_by_topic(topic_id):
-            topics = [
-                topic for topic in TopicContent.load_topics()
-                if topic.id != topic_id
-            ]
+            topics = [topic for topic in TopicContent.load_topics() if topic.id != topic_id]
             TopicContent.save_topics(DATA_DIR / "topics.json", topics)
 
     @staticmethod
@@ -69,13 +53,7 @@ class TopicContent:
                 return topic["id"]
 
         id = generate_id()
-        topics["topics"].append(
-            {
-                "id": id,
-                "name": name,
-                "writable": True
-            }
-        )
+        topics["topics"].append({"id": id, "name": name, "writable": True})
 
         write_json(DATA_DIR / "topics.json", topics)
         return id

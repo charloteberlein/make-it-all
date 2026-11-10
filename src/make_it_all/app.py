@@ -36,7 +36,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Make-It-All Prototype")
-        self.resize(1200, 800)         # Allows for resizing the window.
+        self.resize(1200, 800)  # Allows for resizing the window.
         self.setMinimumSize(900, 600)
 
         self.is_dark_mode = False
@@ -88,7 +88,6 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.account_page)
         self.stacked_widget.addWidget(self.training_page)
 
-
         main_layout.addWidget(self.sidebar)
         main_layout.addWidget(self.stacked_widget)
         main_frame.setLayout(main_layout)
@@ -102,9 +101,15 @@ class MainWindow(QWidget):
         # Navigation events
         self.signin_page.switch_to_Register.connect(lambda: self.change_page(PageIndex.REGISTER))
         self.register_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
-        self.signin_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
-        self.forgot_password_page.switch_to_SignIn.connect(lambda: self.change_page(PageIndex.SIGN_IN))
-        self.account_page.switch_to_ForgotPassword.connect(lambda: self.change_page(PageIndex.FORGOT_PASSWORD))
+        self.signin_page.switch_to_ForgotPassword.connect(
+            lambda: self.change_page(PageIndex.FORGOT_PASSWORD)
+        )
+        self.forgot_password_page.switch_to_SignIn.connect(
+            lambda: self.change_page(PageIndex.SIGN_IN)
+        )
+        self.account_page.switch_to_ForgotPassword.connect(
+            lambda: self.change_page(PageIndex.FORGOT_PASSWORD)
+        )
 
         # Colour theme events
         self.signin_page.toggle_btn.clicked.connect(self.toggle_theme)
@@ -115,7 +120,9 @@ class MainWindow(QWidget):
         self.signin_page.login_success.connect(self.log_in)
         self.register_page.login_success.connect(self.log_in)
         self.forgot_password_page.login_success.connect(self.log_in)
-        self.dashboard_page.training_btn.clicked.connect(lambda: self.change_page(PageIndex.TRAINING))
+        self.dashboard_page.training_btn.clicked.connect(
+            lambda: self.change_page(PageIndex.TRAINING)
+        )
         # self.dashboard_page.posts.clicked.connect(lambda: self.change_page(PageIndex.POSTS))
         self.todo_page.to_Personal_Todo.connect(lambda: self.change_page(PageIndex.PERSONAL_TODO))
         self.todo_page.to_Project_Todo.connect(lambda: self.change_page(PageIndex.PROJECT_TODO))
@@ -125,13 +132,15 @@ class MainWindow(QWidget):
         self.posts_page.my_topics.clicked.connect(lambda: self.change_page(PageIndex.TOPICS))
         self.make_post_page.confirm_btn.clicked.connect(self.save_and_exit_post_maker)
         self.edit_post_page.edit.connect(self.save_and_exit_post_editor)
-        self.post_content_page.back.connect(lambda: self.view_topic_posts(self.post_content_page.post.topic))
+        self.post_content_page.back.connect(
+            lambda: self.view_topic_posts(self.post_content_page.post.topic)
+        )
         self.post_content_page.edit.connect(self.edit_post)
         self.post_content_page.delete.connect(self.delete_post)
         self.posts_page.post_selected.connect(self.view_post)
         self.training_page.back_btn.clicked.connect(lambda: self.change_page(PageIndex.DASHBOARD))
 
-        for (widget, id) in self.topics_page.widgets:
+        for widget, id in self.topics_page.widgets:
             widget.clicked.connect(
                 lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
             )
@@ -155,7 +164,7 @@ class MainWindow(QWidget):
 
     def change_page(self, index: PageIndex):
         self.stacked_widget.setCurrentIndex(index.value)
-        
+
         # Shows sidebar only when logged in.
         if index.value > 2:
             self.sidebar.show()
@@ -188,7 +197,7 @@ class MainWindow(QWidget):
             user_id = self.current_user.id if self.current_user else None
             self.make_post_page.save_post(created_by=user_id)
             self.topics_page.refresh_topics()
-            for (widget, id) in self.topics_page.widgets:
+            for widget, id in self.topics_page.widgets:
                 widget.clicked.connect(
                     lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
                 )
@@ -198,7 +207,7 @@ class MainWindow(QWidget):
         if self.edit_post_page.check_post_valid():
             self.edit_post_page.save_post()
             self.topics_page.refresh_topics()
-            for (widget, id) in self.topics_page.widgets:
+            for widget, id in self.topics_page.widgets:
                 widget.clicked.connect(
                     lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
                 )
@@ -216,7 +225,7 @@ class MainWindow(QWidget):
         topic_id = PostContent.delete_post(post_id)
         TopicContent.remove_topic_if_empty(topic_id)
         self.topics_page.refresh_topics()
-        for (widget, id) in self.topics_page.widgets:
+        for widget, id in self.topics_page.widgets:
             widget.clicked.connect(
                 lambda checked=False, topic_id=id: self.view_topic_posts(topic_id)
             )
@@ -250,7 +259,8 @@ class MainWindow(QWidget):
     def toggle_topic_writable(self):
         self.topic_content_page.toggle_topic_writable()
         self.make_post_page.refresh_topic_options()
-        
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()

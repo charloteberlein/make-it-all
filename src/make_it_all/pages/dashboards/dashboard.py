@@ -211,20 +211,28 @@ class DashboardPage(BasePage):
             self._create_status_chart(
                 "Tasks by Project",
                 calc_project_task_status_counts(self.tasks, user_name if is_employee else None),
-            ), 1,
+            ),
+            1,
         )
         self.chart_layout.addWidget(
             self._create_status_chart(
                 "Tasks by Employee",
                 calc_employee_task_status_counts(self.tasks, user_name if is_employee else None),
-            ), 1,
+            ),
+            1,
         )
 
         self.hours_chart_layout.addWidget(
-            self._create_project_efficiency_chart(clickable=True, filter_user=user_name if is_employee else None), 1
+            self._create_project_efficiency_chart(
+                clickable=True, filter_user=user_name if is_employee else None
+            ),
+            1,
         )
         self.hours_chart_layout.addWidget(
-            self._create_employee_hours_chart(clickable=True, filter_user=user_name if is_employee else None), 1
+            self._create_employee_hours_chart(
+                clickable=True, filter_user=user_name if is_employee else None
+            ),
+            1,
         )
 
     def _create_status_chart(self, title, grouped_counts, clickable=True):
@@ -234,9 +242,7 @@ class DashboardPage(BasePage):
         main_window = self.window()
         is_dark_mode = bool(getattr(main_window, "is_dark_mode", False))
         chart.setTheme(
-            QChart.ChartTheme.ChartThemeDark
-            if is_dark_mode
-            else QChart.ChartTheme.ChartThemeLight
+            QChart.ChartTheme.ChartThemeDark if is_dark_mode else QChart.ChartTheme.ChartThemeLight
         )
 
         chart.setTitle(title)
@@ -268,9 +274,11 @@ class DashboardPage(BasePage):
 
         # Define axes
         value_axis = QValueAxis()
-        max_count = max(
-            count for counts in grouped_counts.values() for count in counts.values()
-        ) if len(grouped_counts) > 0 else 0
+        max_count = (
+            max(count for counts in grouped_counts.values() for count in counts.values())
+            if len(grouped_counts) > 0
+            else 0
+        )
         value_axis.setRange(0, max(1, max_count))
         value_axis.setTickCount(max(1, max_count) + 1)
         value_axis.setLabelFormat("%d")
@@ -311,7 +319,9 @@ class DashboardPage(BasePage):
         chart = QChart()
         main_window = self.window()
         is_dark_mode = bool(getattr(main_window, "is_dark_mode", False))
-        chart.setTheme(QChart.ChartTheme.ChartThemeDark if is_dark_mode else QChart.ChartTheme.ChartThemeLight)
+        chart.setTheme(
+            QChart.ChartTheme.ChartThemeDark if is_dark_mode else QChart.ChartTheme.ChartThemeLight
+        )
         chart.setTitle("Project Efficiency (Estimated vs Actual Hours)")
         chart.legend().setAlignment(Qt.AlignmentFlag.AlignBottom)
 
@@ -348,7 +358,13 @@ class DashboardPage(BasePage):
 
         if clickable:
             chart_view = ClickableChartView(chart)
-            chart_view.clicked.connect(lambda fuser=filter_user: self.hours_chart_modal("Project Efficiency (Estimated vs Actual Time Spent)", self._create_project_efficiency_chart, fuser))
+            chart_view.clicked.connect(
+                lambda fuser=filter_user: self.hours_chart_modal(
+                    "Project Efficiency (Estimated vs Actual Time Spent)",
+                    self._create_project_efficiency_chart,
+                    fuser,
+                )
+            )
         else:
             chart_view = QChartView(chart)
 
@@ -363,13 +379,23 @@ class DashboardPage(BasePage):
         emp_data = calc_emp_hours_summary(self.tasks)
 
         if filter_user:
-            emp_data = {emp: metrics for emp, metrics in emp_data.items() if emp.lower() == filter_user.lower()}
+            emp_data = {
+                emp: metrics
+                for emp, metrics in emp_data.items()
+                if emp.lower() == filter_user.lower()
+            }
 
         chart = QChart()
         main_window = self.window()
         is_dark_mode = bool(getattr(main_window, "is_dark_mode", False))
-        chart.setTheme(QChart.ChartTheme.ChartThemeDark if is_dark_mode else QChart.ChartTheme.ChartThemeLight)
-        chart_title = "My Workload & Hours" if filter_user else "Individual Employee Workload (Estimated vs Actual Hours)"
+        chart.setTheme(
+            QChart.ChartTheme.ChartThemeDark if is_dark_mode else QChart.ChartTheme.ChartThemeLight
+        )
+        chart_title = (
+            "My Workload & Hours"
+            if filter_user
+            else "Individual Employee Workload (Estimated vs Actual Hours)"
+        )
         chart.setTitle(chart_title)
         chart.legend().setAlignment(Qt.AlignmentFlag.AlignBottom)
 
@@ -406,11 +432,13 @@ class DashboardPage(BasePage):
 
         if clickable:
             chart_view = ClickableChartView(chart)
-            chart_view.clicked.connect(lambda fuser=filter_user: self.hours_chart_modal(
-                "My Workload & Hours" if fuser else "Employee Workload", 
-                self._create_employee_hours_chart, 
-                fuser
-            ))
+            chart_view.clicked.connect(
+                lambda fuser=filter_user: self.hours_chart_modal(
+                    "My Workload & Hours" if fuser else "Employee Workload",
+                    self._create_employee_hours_chart,
+                    fuser,
+                )
+            )
         else:
             chart_view = QChartView(chart)
 
@@ -420,7 +448,6 @@ class DashboardPage(BasePage):
         chart_view.setMinimumHeight(250)
 
         return chart_view
-
 
     def chart_modal(self, title, grouped_counts):
         dialog = QDialog(self)

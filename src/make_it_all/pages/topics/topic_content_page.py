@@ -99,7 +99,7 @@ class TopicContentPage(BasePage):
 
     def assemble_widgets(self) -> None:
         self.layout.addWidget(self.header_frame)
-        for (widget, _) in self.widgets:
+        for widget, _ in self.widgets:
             self.layout.addWidget(widget)
         self.layout.addStretch()
 

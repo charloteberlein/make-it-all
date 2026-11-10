@@ -17,7 +17,7 @@ from make_it_all.pages.base_page import BasePage
 class TrainingPage(BasePage):
     to_Dashboard = Signal()
 
-    def __init__(self, current_user = None):
+    def __init__(self, current_user=None):
         super().__init__()
         self.current_user = current_user
 
@@ -34,7 +34,9 @@ class TrainingPage(BasePage):
         self.heading = QLabel("Recommended Training Areas")
         self.heading.setObjectName("HeadingLabel")
 
-        self.subheading = QLabel("High-priority training modules based on employee upvotes on posts.")
+        self.subheading = QLabel(
+            "High-priority training modules based on employee upvotes on posts."
+        )
         self.subheading.setObjectName("SubheadingLabel")
         self.subheading.setContentsMargins(9, 0, 9, 0)
 
@@ -72,7 +74,7 @@ class TrainingPage(BasePage):
 
     def refresh_recommendations(self) -> None:
         posts = PostContent.load_posts()
-        sorted_posts = sorted(posts, key = lambda posts: int(posts.upvote_count), reverse=True)
+        sorted_posts = sorted(posts, key=lambda posts: int(posts.upvote_count), reverse=True)
 
         # Clear existing cards.
         while self.card_layout.count():
@@ -90,7 +92,7 @@ class TrainingPage(BasePage):
 
             info_layout = QVBoxLayout()
             title_label = QLabel(post.title)
-            
+
             topic_name = TopicContent.get_topic_name(post.topic)
             topic_label = QLabel(f"Topic: {topic_name}")
             topic_label.setObjectName("SubheadingLabel")
@@ -101,8 +103,8 @@ class TrainingPage(BasePage):
             upvote_label = QLabel(f"👍 {post.upvote_count} Upvotes")
             upvote_label.setAlignment(Qt.AlignCenter)
 
-            card_layout.addLayout(info_layout, stretch = 2)
-            card_layout.addWidget(upvote_label, stretch = 1, alignment = Qt.AlignRight)
+            card_layout.addLayout(info_layout, stretch=2)
+            card_layout.addWidget(upvote_label, stretch=1, alignment=Qt.AlignRight)
 
             self.card_layout.addWidget(card)
 

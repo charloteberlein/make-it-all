@@ -32,7 +32,7 @@ class PostsPage(BasePage):
         # Top
         self.title = QLabel("Posts")
         self.title.setObjectName("TitleLabelCenter")
-        
+
         self.my_topics = QPushButton("View Topics")
         self.my_topics.setObjectName("LoginButton")
         self.my_topics.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -46,7 +46,7 @@ class PostsPage(BasePage):
         self.my_posts_button.setObjectName("LoginButton")
         self.my_posts_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.my_posts_button.clicked.connect(self.toggle_posts)
-        
+
         self.recent_heading = QLabel("Recent posts")
         self.recent_heading.setObjectName("HeadingLabel")
 
@@ -105,7 +105,7 @@ class PostsPage(BasePage):
             row_layout = QHBoxLayout()
 
             title = QLabel(post.title, alignment=Qt.AlignmentFlag.AlignLeft)
-            title.setObjectName("PostTitle") 
+            title.setObjectName("PostTitle")
             author = get_user_by_id(post.created_by)
             author_name = author.name if author else "Unknown"
             details = QLabel(
@@ -117,5 +117,3 @@ class PostsPage(BasePage):
             row_layout.addWidget(details)
             row.setLayout(row_layout)
             self.recent_layout.addWidget(row)
-
-    
