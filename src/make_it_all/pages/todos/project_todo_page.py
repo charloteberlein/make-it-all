@@ -33,9 +33,7 @@ class ProjectTodoPage(BasePage):
     def showEvent(self, event):
         """Grabs current user from Main Window on page load."""
         super().showEvent(event)
-        main_window = self.window()
-        if hasattr(main_window, "current_user"):
-            self.current_user = main_window.current_user
+        self.current_user = getattr(self.window(), "current_user", None)
         self.load_tasks()
         self.populate_content()
         self.update_permissions()
@@ -69,13 +67,13 @@ class ProjectTodoPage(BasePage):
 
         self.back_btn = QPushButton("◀️ To to-do menu")
         self.back_btn.setObjectName("NavButton")
-        self.back_btn.setCursor(Qt.PointingHandCursor)
+        self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.back_btn.setFixedWidth(300)
         self.back_btn.clicked.connect(self.to_Todo.emit)
 
         self.no_tasks_label = QLabel("You have no current project tasks.")
         self.no_tasks_label.setObjectName("SubHeadingLabel")
-        self.no_tasks_label.setAlignment(Qt.AlignCenter)
+        self.no_tasks_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.no_tasks_label.setVisible(False)
 
         self.table = QTableWidget()
@@ -97,25 +95,25 @@ class ProjectTodoPage(BasePage):
         )
         self.table.verticalHeader().setVisible(False)
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Interactive)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Interactive)
         self.table.setColumnWidth(0, 210)
         for i in range(1, 11):
-            header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents)
 
-        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.table.setAutoScroll(True)
 
     def assemble_widgets(self) -> None:
-        self.layout.addWidget(self.title)
-        self.layout.addSpacing(20)
-        self.layout.addWidget(self.back_btn)
-        self.layout.addSpacing(20)
-        self.layout.addWidget(self.add_btn)
-        self.layout.addSpacing(14)
-        self.layout.addWidget(self.no_tasks_label)
-        self.layout.addWidget(self.table)
-        self.layout.addStretch()
-        self.setLayout(self.layout)
+        self.page_layout.addWidget(self.title)
+        self.page_layout.addSpacing(20)
+        self.page_layout.addWidget(self.back_btn)
+        self.page_layout.addSpacing(20)
+        self.page_layout.addWidget(self.add_btn)
+        self.page_layout.addSpacing(14)
+        self.page_layout.addWidget(self.no_tasks_label)
+        self.page_layout.addWidget(self.table)
+        self.page_layout.addStretch()
+        self.setLayout(self.page_layout)
 
     def load_tasks(self):
         self.tasks = load_tasks()
@@ -133,7 +131,7 @@ class ProjectTodoPage(BasePage):
 
         # Pushes Completed and Suspended tasks to bottom of stack.
         def sort_key(task):
-            status = parse_task_status(task.get("status"))
+            status = parse_task_status(task.get("status", ""))
             if status in (TaskStatus.COMPLETED, TaskStatus.SUSPENDED):
                 return (1, task.get("task_name", ""))
             return (0, task.get("task_name", ""))
@@ -158,7 +156,7 @@ class ProjectTodoPage(BasePage):
             status_combo = QComboBox()
             status_combo.setObjectName("TableStatusCombo")
             status_combo.addItems(task_status_options())
-            current_status = parse_task_status(task.get("status"))
+            current_status = parse_task_status(task.get("status", ""))
             status_combo.setCurrentText(current_status.value)
             status_combo.currentTextChanged.connect(
                 lambda new_status, t=task, combo=status_combo: self.handle_status_change(
@@ -271,9 +269,9 @@ class ProjectTodoPage(BasePage):
                 self,
                 "Confirm Delete",
                 f"Are you sure you want to delete '{task.get('task_name', 'Task')}'?",
-                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             )
-            if confirm == QMessageBox.Yes and task in self.tasks:
+            if confirm == QMessageBox.StandardButton.Yes and task in self.tasks:
                 self.tasks.remove(task)
                 save_tasks(self.tasks)
                 self.load_tasks()
@@ -301,7 +299,7 @@ class ProjectTodoPage(BasePage):
                 "You can only change the status of tasks you are assigned to.",
             )
             combo_box.blockSignals(True)
-            combo_box.setCurrentText(parse_task_status(task.get("status")).value)
+            combo_box.setCurrentText(parse_task_status(task.get("status", "")).value)
             combo_box.blockSignals(False)
             return
 

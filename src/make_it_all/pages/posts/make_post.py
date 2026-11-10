@@ -115,13 +115,13 @@ class MakePostPage(BasePage):
         self.button_frame.setLayout(self.button_layout)
 
         # Main layout
-        self.layout.addWidget(self.title_frame)
-        self.layout.addWidget(self.metadata_frame)
-        self.layout.addWidget(self.toolbar)
-        self.layout.addWidget(self.content)
-        self.layout.addWidget(self.button_frame)
+        self.page_layout.addWidget(self.title_frame)
+        self.page_layout.addWidget(self.metadata_frame)
+        self.page_layout.addWidget(self.toolbar)
+        self.page_layout.addWidget(self.content)
+        self.page_layout.addWidget(self.button_frame)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
 
     def save_post(self, created_by: int | None = None) -> None:
         posts = PostContent.load_posts()

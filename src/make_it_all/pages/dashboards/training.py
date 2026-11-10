@@ -42,13 +42,13 @@ class TrainingPage(BasePage):
 
         self.back_btn = QPushButton("◀️ Back to Dashboard")
         self.back_btn.setObjectName("NavButton")
-        self.back_btn.setCursor(Qt.PointingHandCursor)
+        self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.back_btn.setFixedWidth(200)
         self.back_btn.clicked.connect(self.to_Dashboard.emit)
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setFrameShape(QScrollArea.NoFrame)
+        self.scroll_area.setFrameShape(QFrame.Shape.NoFrame)
 
         self.container_widget = QWidget()
         self.card_layout = QVBoxLayout(self.container_widget)
@@ -61,15 +61,15 @@ class TrainingPage(BasePage):
         self.title_layout.addStretch()
         self.title_layout.addWidget(self.back_btn, alignment=Qt.AlignmentFlag.AlignRight)
 
-        self.layout.addWidget(self.title_frame)
-        self.layout.addWidget(self.subheading)
-        self.layout.addSpacing(10)
-        self.layout.addWidget(self.scroll_area)
+        self.page_layout.addWidget(self.title_frame)
+        self.page_layout.addWidget(self.subheading)
+        self.page_layout.addSpacing(10)
+        self.page_layout.addWidget(self.scroll_area)
         self.scroll_area.setWidget(self.container_widget)
-        self.layout.addSpacing(14)
-        self.layout.addStretch()
+        self.page_layout.addSpacing(14)
+        self.page_layout.addStretch()
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
         self.refresh_recommendations()
 
     def refresh_recommendations(self) -> None:
@@ -79,8 +79,10 @@ class TrainingPage(BasePage):
         # Clear existing cards.
         while self.card_layout.count():
             child = self.card_layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
+            if child is not None:
+                widget = child.widget()
+                if widget is not None:
+                    widget.deleteLater()
 
         top_posts = sorted_posts[:2]
 
@@ -101,10 +103,10 @@ class TrainingPage(BasePage):
             info_layout.addWidget(topic_label)
 
             upvote_label = QLabel(f"👍 {post.upvote_count} Upvotes")
-            upvote_label.setAlignment(Qt.AlignCenter)
+            upvote_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
             card_layout.addLayout(info_layout, stretch=2)
-            card_layout.addWidget(upvote_label, stretch=1, alignment=Qt.AlignRight)
+            card_layout.addWidget(upvote_label, stretch=1, alignment=Qt.AlignmentFlag.AlignRight)
 
             self.card_layout.addWidget(card)
 

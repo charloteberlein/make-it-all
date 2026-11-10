@@ -59,22 +59,24 @@ class PostsPage(BasePage):
         self.post_bar.addWidget(self.my_posts_button)
         self.post_frame.setLayout(self.post_bar)
 
-        self.layout.addWidget(self.title)
-        self.layout.addWidget(self.top_frame)
-        self.layout.addWidget(self.post_frame)
+        self.page_layout.addWidget(self.title)
+        self.page_layout.addWidget(self.top_frame)
+        self.page_layout.addWidget(self.post_frame)
 
-        self.layout.addWidget(self.recent_heading)
-        self.layout.addLayout(self.recent_layout)
-        self.layout.addStretch()
+        self.page_layout.addWidget(self.recent_heading)
+        self.page_layout.addLayout(self.recent_layout)
+        self.page_layout.addStretch()
         self.refresh_recent_posts()
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
 
     def clear_recent_posts(self) -> None:
         while self.recent_layout.count():
             item = self.recent_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is not None:
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
 
     def set_user(self, user_id: int | None) -> None:
         self.user_id = user_id

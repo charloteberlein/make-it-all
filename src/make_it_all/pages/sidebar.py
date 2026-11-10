@@ -19,9 +19,9 @@ class Sidebar(QFrame):
         self.setFixedWidth(70)
 
     def define_layout(self) -> None:
-        self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(10, 15, 10, 15)
-        self.layout.setSpacing(12)
+        self.page_layout = QVBoxLayout(self)
+        self.page_layout.setContentsMargins(10, 15, 10, 15)
+        self.page_layout.setSpacing(12)
 
     def define_widgets(self) -> None:
         # Navigation Buttons with tooltips
@@ -36,7 +36,7 @@ class Sidebar(QFrame):
 
         for btn in (self.dashboard_btn, self.todo_btn, self.posts_btn):
             btn.setObjectName("SideNavButton")
-            btn.setCursor(Qt.PointingHandCursor)
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
             btn.setFixedSize(50, 50)
 
         # Connect buttons to signals
@@ -45,7 +45,7 @@ class Sidebar(QFrame):
         self.posts_btn.clicked.connect(self.nav_posts.emit)
 
     def assemble_widgets(self) -> None:
-        self.layout.addWidget(self.dashboard_btn)
-        self.layout.addWidget(self.todo_btn)
-        self.layout.addWidget(self.posts_btn)
-        self.layout.addStretch()
+        self.page_layout.addWidget(self.dashboard_btn)
+        self.page_layout.addWidget(self.todo_btn)
+        self.page_layout.addWidget(self.posts_btn)
+        self.page_layout.addStretch()

@@ -88,14 +88,14 @@ class PostContentPage(BasePage):
 
         self.edit_btn = QPushButton("✏️")
         self.edit_btn.setObjectName("SideNavButton")
-        self.edit_btn.setCursor(Qt.PointingHandCursor)
+        self.edit_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.edit_btn.clicked.connect(lambda: self.edit.emit(self.post.id))
         self.edit_btn.setToolTip("Edit post")
         self.edit_btn.setFixedSize(35, 35)
 
         self.delete_btn = QPushButton("🗑️")
         self.delete_btn.setObjectName("SideNavButton")
-        self.delete_btn.setCursor(Qt.PointingHandCursor)
+        self.delete_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.delete_btn.clicked.connect(lambda: self.delete.emit(self.post.id))
         self.delete_btn.setToolTip("Delete post")
         self.delete_btn.setFixedSize(35, 35)
@@ -103,7 +103,7 @@ class PostContentPage(BasePage):
         self.archive_btn = QPushButton("Unarchive post" if self.post.archived else "Archive post")
         self.archive_btn.clicked.connect(self.toggle_archive_post)
         self.archive_btn.setObjectName("ToggleButton")
-        self.archive_btn.setCursor(Qt.PointingHandCursor)
+        self.archive_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         if TopicContent.get_topic_writable(self.post.topic):
             self.archive_btn.show()
         else:
@@ -113,7 +113,7 @@ class PostContentPage(BasePage):
 
         self.upvote_btn = QPushButton(f"👍 Upvote ({self.post.upvote_count})")
         self.upvote_btn.setObjectName("PinkNavButton")
-        self.upvote_btn.setCursor(Qt.PointingHandCursor)
+        self.upvote_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.upvote_btn.clicked.connect(self.upvote_clicked)
         self.upvote_btn.setCheckable(True)
 
@@ -150,11 +150,11 @@ class PostContentPage(BasePage):
         self.metadata_layout.addWidget(self.archive_btn)
         self.metadata_frame.setLayout(self.metadata_layout)
 
-        self.layout.addWidget(self.title_frame)
-        self.layout.addWidget(self.metadata_frame)
-        self.layout.addWidget(self.content)
+        self.page_layout.addWidget(self.title_frame)
+        self.page_layout.addWidget(self.metadata_frame)
+        self.page_layout.addWidget(self.content)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
 
     def toggle_archive_post(self):
         self.post.archived = not self.post.archived

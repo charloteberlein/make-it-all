@@ -39,15 +39,15 @@ class TopicContentPage(BasePage):
         self.writable = TopicContent.get_topic_writable(topic_id)
         self.toggle_btn.setText("Make Read-Only" if self.writable else "Make Writable")
         for widget, _ in self.widgets:
-            self.layout.removeWidget(widget)
+            self.page_layout.removeWidget(widget)
             widget.deleteLater()
 
         self.define_widgets()
         for index, (widget, _) in enumerate(self.widgets):
-            self.layout.insertWidget(index + 1, widget)
+            self.page_layout.insertWidget(index + 1, widget)
 
     def define_layout(self) -> None:
-        self.layout = QVBoxLayout()
+        self.page_layout = QVBoxLayout()
 
         self.header_frame = QFrame()
         self.header_frame.setObjectName("TopBar")
@@ -98,12 +98,12 @@ class TopicContentPage(BasePage):
             self.widgets.append((layout_frame, post.id))
 
     def assemble_widgets(self) -> None:
-        self.layout.addWidget(self.header_frame)
+        self.page_layout.addWidget(self.header_frame)
         for widget, _ in self.widgets:
-            self.layout.addWidget(widget)
-        self.layout.addStretch()
+            self.page_layout.addWidget(widget)
+        self.page_layout.addStretch()
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
 
     def toggle_topic_writable(self) -> None:
         self.writable = not self.writable

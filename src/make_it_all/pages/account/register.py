@@ -18,7 +18,7 @@ class RegisterPage(BasePage):
 
     def define_layout(self):
         super().define_layout()
-        self.layout.setSpacing(8)
+        self.page_layout.setSpacing(8)
 
         self.top_frame = QFrame()
         self.top_frame.setObjectName("TopBar")
@@ -36,13 +36,13 @@ class RegisterPage(BasePage):
         # Navigation
         self.nav_btn = QPushButton("Sign In")
         self.nav_btn.setObjectName("NavButton")
-        self.nav_btn.setCursor(Qt.PointingHandCursor)
+        self.nav_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.nav_btn.clicked.connect(self.switch_to_SignIn.emit)
 
         # Theme toggle
         self.toggle_btn = QPushButton("🌑 Dark Mode")
         self.toggle_btn.setObjectName("ToggleButton")
-        self.toggle_btn.setCursor(Qt.PointingHandCursor)
+        self.toggle_btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
         ## Main section
         # Header (references stylesheet)
@@ -68,15 +68,15 @@ class RegisterPage(BasePage):
 
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Enter password")
-        self.password_input.setEchoMode(QLineEdit.Password)
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.confirm_password_input = QLineEdit()
         self.confirm_password_input.setPlaceholderText("Confirm password")
-        self.confirm_password_input.setEchoMode(QLineEdit.Password)
+        self.confirm_password_input.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.login_btn = QPushButton("Register")
         self.login_btn.setObjectName("LoginButton")
-        self.login_btn.setCursor(Qt.PointingHandCursor)
+        self.login_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.login_btn.clicked.connect(self.create_account)
 
     def assemble_widgets(self) -> None:
@@ -102,13 +102,13 @@ class RegisterPage(BasePage):
         self.main_frame.setFixedWidth(500)
 
         # Layout
-        self.layout.addWidget(self.top_frame)
-        self.layout.addSpacing(10)
-        self.layout.addStretch(1)
-        self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
+        self.page_layout.addWidget(self.top_frame)
+        self.page_layout.addSpacing(10)
+        self.page_layout.addStretch(1)
+        self.page_layout.addWidget(self.main_frame, alignment=Qt.AlignmentFlag.AlignHCenter)
+        self.page_layout.addStretch(1)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
 
     def create_account(self) -> None:
         email = self.email_input.text().strip().lower()

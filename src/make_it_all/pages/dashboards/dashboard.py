@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from make_it_all.data.tasks import load_tasks
+from make_it_all.data.users import User
 from make_it_all.pages.base_page import BasePage
 from make_it_all.pages.todos.task_analytics import (
     calc_emp_hours_summary,
@@ -38,7 +39,7 @@ class ClickableChartView(QChartView):
 class DashboardPage(BasePage):
     to_Training = Signal()
 
-    def __init__(self, current_user=None):
+    def __init__(self, current_user: User | None = None):
         self.current_user = current_user
         super().__init__()
         self.load_tasks()
@@ -46,9 +47,7 @@ class DashboardPage(BasePage):
 
     def showEvent(self, event):
         super().showEvent(event)
-        main_window = self.window()
-        if hasattr(main_window, "current_user") and main_window.current_user:
-            self.current_user = main_window.current_user
+        self.current_user = getattr(self.window(), "current_user", None)
         self.training_btn.setVisible(
             bool(self.current_user and self.current_user.rank in ["Manager", "Team Lead"])
         )
@@ -65,7 +64,7 @@ class DashboardPage(BasePage):
 
         self.training_btn = QPushButton("▶️ To Training Page")
         self.training_btn.setObjectName("NavButton")
-        self.training_btn.setCursor(Qt.PointingHandCursor)
+        self.training_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.training_btn.setFixedWidth(200)
         self.training_btn.clicked.connect(self.to_Training.emit)
 
@@ -129,8 +128,8 @@ class DashboardPage(BasePage):
         self.scroll_layout.addLayout(self.hours_chart_layout)
         self.scroll_layout.addStretch(1)
 
-        self.layout.addWidget(self.scroll_area)
-        self.setLayout(self.layout)
+        self.page_layout.addWidget(self.scroll_area)
+        self.setLayout(self.page_layout)
 
     def load_tasks(self):
         self.tasks = load_tasks()
@@ -138,18 +137,24 @@ class DashboardPage(BasePage):
     def populate_content(self):
         while self.progress_layout.count():
             item = self.progress_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is not None:
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
 
         while self.chart_layout.count():
             item = self.chart_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is not None:
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
 
         while self.hours_chart_layout.count():
             item = self.hours_chart_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is not None:
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
 
         user_name = self.get_current_user_name()
         if user_name:

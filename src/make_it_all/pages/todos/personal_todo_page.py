@@ -33,9 +33,7 @@ class PersonalTodoPage(BasePage):
     def showEvent(self, event):
         """Grabs current user from Main Window on page load."""
         super().showEvent(event)
-        main_window = self.window()
-        if hasattr(main_window, "current_user"):
-            self.current_user = main_window.current_user
+        self.current_user = getattr(self.window(), "current_user", None)
         self.load_tasks()
         self.populate_content()
 
@@ -54,13 +52,13 @@ class PersonalTodoPage(BasePage):
 
         self.back_btn = QPushButton("◀️ To to-do menu")
         self.back_btn.setObjectName("NavButton")
-        self.back_btn.setCursor(Qt.PointingHandCursor)
+        self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.back_btn.setFixedWidth(300)
         self.back_btn.clicked.connect(self.to_Todo.emit)
 
         self.no_tasks_label = QLabel("You have no current personal tasks")
         self.no_tasks_label.setObjectName("SubHeadingLabel")
-        self.no_tasks_label.setAlignment(Qt.AlignCenter)
+        self.no_tasks_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.no_tasks_label.setVisible(False)
 
         self.table = QTableWidget()
@@ -70,23 +68,23 @@ class PersonalTodoPage(BasePage):
         )
 
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         for i in range(1, 4):
-            header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(i, QHeaderView.ResizeMode.ResizeToContents)
 
         self.table.verticalHeader().setVisible(False)
 
     def assemble_widgets(self) -> None:
-        self.layout.addWidget(self.title)
-        self.layout.addSpacing(20)
-        self.layout.addWidget(self.back_btn)
-        self.layout.addSpacing(20)
-        self.layout.addWidget(self.add_btn)
-        self.layout.addWidget(self.no_tasks_label)
-        self.layout.addSpacing(10)
-        self.layout.addWidget(self.table)
-        self.layout.addStretch()
-        self.setLayout(self.layout)
+        self.page_layout.addWidget(self.title)
+        self.page_layout.addSpacing(20)
+        self.page_layout.addWidget(self.back_btn)
+        self.page_layout.addSpacing(20)
+        self.page_layout.addWidget(self.add_btn)
+        self.page_layout.addWidget(self.no_tasks_label)
+        self.page_layout.addSpacing(10)
+        self.page_layout.addWidget(self.table)
+        self.page_layout.addStretch()
+        self.setLayout(self.page_layout)
 
     def load_tasks(self):
         self.tasks = load_tasks()
@@ -111,7 +109,7 @@ class PersonalTodoPage(BasePage):
 
         # Pushes Complete and Suspended tasks to bottom of stack.
         def sort_key(task):
-            status = parse_task_status(task.get("status"))
+            status = parse_task_status(task.get("status", ""))
             if status in (TaskStatus.COMPLETED, TaskStatus.SUSPENDED):
                 return (1, task.get("task_name", ""))
             return (0, task.get("task_name", ""))
@@ -126,7 +124,7 @@ class PersonalTodoPage(BasePage):
             status_combo = QComboBox()
             status_combo.setObjectName("TableStatusCombo")
             status_combo.addItems(task_status_options())
-            current_status = parse_task_status(task.get("status"))
+            current_status = parse_task_status(task.get("status", ""))
             status_combo.setCurrentText(current_status.value)
             status_combo.currentTextChanged.connect(
                 lambda new_status, t=task: self.handle_status_change(t, new_status)
@@ -181,9 +179,9 @@ class PersonalTodoPage(BasePage):
                 self,
                 "Confirm Delete",
                 f"Are you sure you want to delete '{task.get('task_name', 'Task')}'?",
-                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             )
-            if confirm == QMessageBox.Yes and task in self.tasks:
+            if confirm == QMessageBox.StandardButton.Yes and task in self.tasks:
                 self.tasks.remove(task)
                 save_tasks(self.tasks)
                 self.load_tasks()

@@ -22,12 +22,12 @@ class TopicsPage(BasePage):
             self.widgets.append((btn, topic.id))
 
     def assemble_widgets(self) -> None:
-        self.layout.addWidget(self.title)
+        self.page_layout.addWidget(self.title)
         for widget, _ in self.widgets:
-            self.layout.addWidget(widget)
-        self.layout.addStretch()
+            self.page_layout.addWidget(widget)
+        self.page_layout.addStretch()
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
 
     def refresh_topics(self):
         for widget, _ in self.widgets:

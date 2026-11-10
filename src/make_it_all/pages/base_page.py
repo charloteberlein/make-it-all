@@ -13,12 +13,12 @@ class BasePage(QWidget):
         self.assemble_widgets()
 
     def define_styling(self) -> None:
-        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
 
     def define_layout(self) -> None:
-        self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(35, 30, 35, 30)
-        self.layout.setSpacing(14)
+        self.page_layout = QVBoxLayout()
+        self.page_layout.setContentsMargins(35, 30, 35, 30)
+        self.page_layout.setSpacing(14)
 
     def define_widgets(self) -> None:
         pass
@@ -32,5 +32,5 @@ class BasePage(QWidget):
                 widget.setSizePolicy(
                     QSizePolicy.Policy.Expanding, widget.sizePolicy().verticalPolicy()
                 )
-            self.layout.addWidget(widget)
-        self.setLayout(self.layout)
+            self.page_layout.addWidget(widget)
+        self.setLayout(self.page_layout)

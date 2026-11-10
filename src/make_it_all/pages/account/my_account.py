@@ -21,7 +21,7 @@ class MyAccountPage(BasePage):
 
     def define_layout(self) -> None:
         super().define_layout()
-        self.layout.setSpacing(8)
+        self.page_layout.setSpacing(8)
 
         self.top_bar = QHBoxLayout()
         self.top_bar.addStretch()
@@ -52,7 +52,7 @@ class MyAccountPage(BasePage):
 
         self.change_btn = QPushButton("Save")
         self.change_btn.setObjectName("LoginButton")
-        self.change_btn.setCursor(Qt.PointingHandCursor)
+        self.change_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.change_btn.clicked.connect(self.switch_to_Dashboard.emit)
 
         self.email_input = QLineEdit()
@@ -61,12 +61,12 @@ class MyAccountPage(BasePage):
 
         self.password_input = QLineEdit()
         self.password_input.setText("supersecret123")
-        self.password_input.setEchoMode(QLineEdit.Password)
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.password_input.setReadOnly(True)
 
         self.forgot_btn = QPushButton("Change/Forgot Password?")
         self.forgot_btn.setObjectName("NavButton")
-        self.forgot_btn.setCursor(Qt.PointingHandCursor)
+        self.forgot_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.forgot_btn.clicked.connect(self.switch_to_ForgotPassword.emit)
 
         self.nickname_layout = QHBoxLayout()
@@ -76,7 +76,7 @@ class MyAccountPage(BasePage):
         self.nickname_layout.addWidget(self.change_btn)
 
         self.form_layout = QFormLayout()
-        self.form_layout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        self.form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         self.form_layout.setSpacing(10)
         self.form_layout.addRow("First Name:", self.firstname_input)
         self.form_layout.addRow("Last Name:", self.lastname_input)
@@ -97,11 +97,11 @@ class MyAccountPage(BasePage):
         self.main_frame.setLayout(self.main_section)
         self.main_frame.setFixedWidth(540)
 
-        self.layout.addSpacing(10)
-        self.layout.addWidget(self.main_frame, alignment=Qt.AlignHCenter)
-        self.layout.addStretch(1)
+        self.page_layout.addSpacing(10)
+        self.page_layout.addWidget(self.main_frame, alignment=Qt.AlignmentFlag.AlignHCenter)
+        self.page_layout.addStretch(1)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.page_layout)
 
     def set_user(self, user) -> None:
         first_name, _, last_name = user.name.partition(" ")

@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QMenu, QPushButton
 
 from make_it_all.data.notifications import get_notifications, mark_all_read
+from make_it_all.data.users import User
 
 
 class Header(QFrame):
@@ -22,20 +23,20 @@ class Header(QFrame):
         self.setFixedHeight(60)
 
     def define_layout(self) -> None:
-        self.layout = QHBoxLayout(self)
-        self.layout.setContentsMargins(10, 15, 10, 15)
-        self.layout.setSpacing(12)
+        self.page_layout = QHBoxLayout(self)
+        self.page_layout.setContentsMargins(10, 15, 10, 15)
+        self.page_layout.setSpacing(12)
 
     def define_widgets(self) -> None:
         # Header company name
-        self.title = QLabel("Make-It-All", alignment=Qt.AlignHCenter)
+        self.title = QLabel("Make-It-All", alignment=Qt.AlignmentFlag.AlignHCenter)
         self.title.setObjectName("HeaderTitle")
 
         # Settings dropdown menu icon
         self.settings_btn = QPushButton("⚙️")
         self.settings_btn.setToolTip("Settings Menu")
         self.settings_btn.setObjectName("SideNavButton")
-        self.settings_btn.setCursor(Qt.PointingHandCursor)
+        self.settings_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.settings_btn.setFixedSize(35, 35)
 
         self.menu = QMenu(self)
@@ -53,19 +54,19 @@ class Header(QFrame):
         self.settings_btn.clicked.connect(self.show_settings_menu)
 
         # Notification Bell
-        self.user = None
+        self.user: User | None = None
         self.bell_btn = QPushButton("🔔")
         self.bell_btn.setToolTip("Notifications")
         self.bell_btn.setObjectName("SideNavButton")
-        self.bell_btn.setCursor(Qt.PointingHandCursor)
+        self.bell_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.bell_btn.setFixedSize(35, 35)
         self.bell_btn.setVisible(False)
         self.badge = QLabel("", self.bell_btn)
         self.badge.setObjectName("BellBadge")
-        self.badge.setAlignment(Qt.AlignCenter)
+        self.badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.badge.setFixedSize(16, 16)
         self.badge.move(19, 0)
-        self.badge.setAttribute(Qt.WA_TransparentForMouseEvents)
+        self.badge.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.badge.hide()
         self.bell_btn.clicked.connect(self.show_notifications)
 
@@ -75,7 +76,7 @@ class Header(QFrame):
         point.setX(point.x() - menu_width)
         self.menu.exec(point)
 
-    def set_user(self, user) -> None:
+    def set_user(self, user: User | None) -> None:
         self.user = user
         self.bell_btn.setVisible(user is not None)
         self.refresh_bell()
@@ -88,8 +89,12 @@ class Header(QFrame):
         self.badge.setVisible(unread > 0)
 
     def show_notifications(self) -> None:
+        if self.user is None:
+            return
+
+        user = self.user
         menu = QMenu(self)
-        notifications = get_notifications(self.user)
+        notifications = get_notifications(user)
         if not notifications:
             menu.addAction("No notifications").setEnabled(False)
         for notification in notifications:
@@ -105,11 +110,11 @@ class Header(QFrame):
         point.setX(point.x() - menu.sizeHint().width())
         menu.exec(point)
 
-        mark_all_read(self.user)
+        mark_all_read(user)
         self.refresh_bell()
 
     def assemble_widgets(self) -> None:
-        self.layout.addWidget(self.title)
-        self.layout.addStretch()
-        self.layout.addWidget(self.bell_btn)
-        self.layout.addWidget(self.settings_btn)
+        self.page_layout.addWidget(self.title)
+        self.page_layout.addStretch()
+        self.page_layout.addWidget(self.bell_btn)
+        self.page_layout.addWidget(self.settings_btn)
