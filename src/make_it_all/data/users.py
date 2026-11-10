@@ -1,5 +1,6 @@
 import re
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from typing import Any, cast
 
 from loguru import logger
 
@@ -17,22 +18,26 @@ class User:
     rank: str
 
 
+def _load_users() -> list[User]:
+    data = cast(dict[str, list[dict[str, Any]]], read_json(USERS_JSON_PATH))
+    return [User(**entry) for entry in data["users"]]
+
+
+def _save_users(users: list[User]) -> None:
+    write_json(USERS_JSON_PATH, {"users": [asdict(user) for user in users]})
+
+
 def find_user(email: str, password: str) -> User | None:
     """Finds matching user and password in users.JSON"""
-    data = read_json(USERS_JSON_PATH)
-
-    for entry in data["users"]:
-        if entry["email"].lower() == email.strip().lower() and entry["password"] == password:
-            return User(**entry)
+    for user in _load_users():
+        if user.email.lower() == email.strip().lower() and user.password == password:
+            return user
 
 
 def find_email(email: str) -> bool:
     """Checks if the email exists in users.JSON -> for registration."""
     try:
-        data = read_json(USERS_JSON_PATH)
-        for user in data.get("users", []):
-            if user.get("email", "").strip().lower() == email.strip().lower():
-                return True
+        return any(user.email.strip().lower() == email.strip().lower() for user in _load_users())
     except (OSError, ValueError, TypeError, KeyError, AttributeError):
         logger.exception("Could not find user email.")
     return False
@@ -54,17 +59,12 @@ def is_strong_password(password: str) -> bool:
 def add_user_password(email: str, password: str) -> bool:
     """Updates the users.JSON file with new password -> for forgot password."""
     try:
-        data = read_json(USERS_JSON_PATH)
-        updated = False
-
-        for user in data.get("users", []):
-            if user.get("email", "").strip().lower() == email.strip().lower():
-                user["password"] = password
-                updated = True
-                break
-        if updated:
-            write_json(USERS_JSON_PATH, data)
-            return True
+        users = _load_users()
+        for user in users:
+            if user.email.strip().lower() == email.strip().lower():
+                user.password = password
+                _save_users(users)
+                return True
     except (OSError, ValueError, TypeError, KeyError, AttributeError):
         logger.exception("Could not update user password.")
     return False
@@ -73,16 +73,15 @@ def add_user_password(email: str, password: str) -> bool:
 def create_user_account(email: str, firstname: str, lastname: str, password: str) -> bool:
     """Adds user's name and passowrd to users.JSON -> for Account registration page."""
     try:
-        data = read_json(USERS_JSON_PATH)
-
-        for user in data.get("users", []):
-            if user.get("email", "").strip().lower() == email.strip().lower():
-                if user.get("password"):
+        users = _load_users()
+        for user in users:
+            if user.email.strip().lower() == email.strip().lower():
+                if user.password:
                     return False
 
-                user["name"] = f"{firstname.strip()} {lastname.strip()}"
-                user["password"] = password
-                write_json(USERS_JSON_PATH, data)
+                user.name = f"{firstname.strip()} {lastname.strip()}"
+                user.password = password
+                _save_users(users)
                 return True
     except (OSError, ValueError, TypeError, KeyError, AttributeError):
         logger.exception("Could not create user account.")
@@ -91,7 +90,7 @@ def create_user_account(email: str, firstname: str, lastname: str, password: str
 
 def validate_registration_inputs(
     email: str, firstname: str, lastname: str, password: str, confirm_password: str
-):
+) -> str | None:
     """Validates fields -> for Account Registration page."""
     if not email or not firstname or not lastname or not password or not confirm_password:
         return "❌ Please fill in all fields."
@@ -132,6 +131,4 @@ def validate_reset_password(email: str, password: str, confirm_password: str) ->
 def get_user_by_id(user_id: int | None) -> User | None:
     if user_id is None:
         return None
-    for entry in read_json(DATA_DIR / "users.json")["users"]:
-        if entry["id"] == user_id:
-            return User(**entry)
+    return next((user for user in _load_users() if user.id == user_id), None)
