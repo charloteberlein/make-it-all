@@ -18,7 +18,7 @@
     *   **Rich formatting:** Posts support formatted text and custom styling to keep communications informative, clean, and easy to read.
 
 *   **Data & System Design**
-    *   **JSON data storage:** Simple local .JSON files act as the database to hold and update posts, topics, tasks, and user data.
+    *   **Separated data access:** UI pages use the `make_it_all.data` package to load and save application data.
 
 ## Repository structure
 ```
@@ -33,10 +33,10 @@
 │   └── users.json
 ├── src/
 │   └── make_it_all/           # Importable application package
-│       ├── pages/
+│       ├── data/              # Data storage and handlers
+│       ├── pages/             # PySide6 UI
 │       ├── app.py
-│       ├── helpers.py
-│       └── notifications.py
+│       └── helpers.py         # Shared non-data utilities
 ├── tests/                     # Pytest
 ├── pyproject.toml             # Package metadata and dev tools
 ├── requirements.txt

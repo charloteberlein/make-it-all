@@ -1,4 +1,3 @@
-import json
 from datetime import date
 
 from PySide6.QtCore import Qt, Signal
@@ -15,12 +14,11 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from make_it_all.helpers import DATA_DIR, read_json, write_json
+from make_it_all.data.tasks import load_tasks, save_tasks
 from make_it_all.pages.base_page import BasePage
 from make_it_all.pages.todos.task_modal import TaskModal
 from make_it_all.pages.todos.task_status import TaskStatus, parse_task_status, task_status_options
 
-TASKS_FILE = DATA_DIR / "tasks.json"
 
 class PersonalTodoPage(BasePage):
     to_Todo = Signal()
@@ -89,10 +87,7 @@ class PersonalTodoPage(BasePage):
         self.setLayout(self.layout)
 
     def load_tasks(self):
-        try:
-            self.tasks = read_json(TASKS_FILE)
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.tasks = []
+        self.tasks = load_tasks()
 
     def populate_content(self):
         current_user_name = self.get_current_user_name()
@@ -172,7 +167,7 @@ class PersonalTodoPage(BasePage):
         dialog.exec()
 
         if dialog.action_result == "save":
-            write_json(TASKS_FILE, self.tasks)
+            save_tasks(self.tasks)
             self.load_tasks()
             self.populate_content()
         elif dialog.action_result == "delete":
@@ -182,19 +177,19 @@ class PersonalTodoPage(BasePage):
             if confirm == QMessageBox.Yes:
                 if task in self.tasks:
                     self.tasks.remove(task)
-                    write_json(TASKS_FILE, self.tasks)
+                    save_tasks(self.tasks)
                     self.load_tasks()
                     self.populate_content()
 
     def handle_status_change(self, task, new_status):
-        # Updates new status in task.json.
+        # Update the task status.
         task["status"] = parse_task_status(new_status).value
-        write_json(TASKS_FILE, self.tasks)
+        save_tasks(self.tasks)
         self.populate_content()
 
     def add_personal_modal(self):
         current_user_name = self.get_current_user_name()
-        # Adds new task to task.json
+        # Add a new personal task.
         new_task = {
             "task_name": "",
             "status": TaskStatus.IN_PROGRESS.value,
@@ -214,6 +209,6 @@ class PersonalTodoPage(BasePage):
                 return
             
             self.tasks.append(new_task)
-            write_json(TASKS_FILE, self.tasks)
+            save_tasks(self.tasks)
             self.load_tasks()
             self.populate_content()

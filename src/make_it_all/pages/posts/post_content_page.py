@@ -9,9 +9,9 @@ from PySide6.QtWidgets import (
     QTextEdit,
 )
 
+from make_it_all.data.posts import PostContent
+from make_it_all.data.topics import TopicContent
 from make_it_all.pages.base_page import BasePage
-from make_it_all.pages.posts.post_content import PostContent
-from make_it_all.pages.topics.topic_content import TopicContent
 
 
 class PostContentPage(BasePage):

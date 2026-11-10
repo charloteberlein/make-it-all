@@ -2,14 +2,15 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from make_it_all.helpers import DATA_DIR, read_json, write_json
+from make_it_all.data.json_store import DATA_DIR, read_json, write_json
 
 
 @dataclass
 class PostContent:
     def __init__(
         self, id: str, viewed: bool, date_created: str, archived: bool, topic: str, title: str,
-        content: str, created_by: int| None = None, upvote_count: int = 0, upvoted_users: list[int] = None
+        content: str, created_by: int | None = None, upvote_count: int = 0,
+        upvoted_users: list[int] | None = None
     ):
         # Metadata
         self.id = id
@@ -42,7 +43,7 @@ class PostContent:
         }
 
     @classmethod
-    def load_posts(cls, filepath: Path | str) -> list["PostContent"]:
+    def load_posts(cls, filepath: Path | str = DATA_DIR / "posts.json") -> list["PostContent"]:
         """Deserialises the JSON object into a list of `PostContent` objects."""
         data: list[dict] = read_json(filepath)["posts"]
         posts = []
@@ -60,6 +61,10 @@ class PostContent:
                 upvoted_users=post.get("upvoted_users", [])
             ))
         return posts
+
+    @staticmethod
+    def save_posts(posts: list["PostContent"]) -> None:
+        write_json(DATA_DIR / "posts.json", {"posts": [post.serialise() for post in posts]})
 
     @classmethod
     def get_post_by_id(cls, id: str) -> "PostContent | None":
@@ -133,4 +138,3 @@ class PostContent:
                 )
                 return post.upvote_count, True
         return 0, False
-        

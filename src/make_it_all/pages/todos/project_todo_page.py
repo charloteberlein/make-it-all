@@ -1,4 +1,3 @@
-import json
 from datetime import date
 
 from PySide6.QtCore import Qt, Signal
@@ -16,12 +15,11 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from make_it_all.helpers import DATA_DIR, read_json, write_json
+from make_it_all.data.tasks import load_tasks, save_tasks
 from make_it_all.pages.base_page import BasePage
 from make_it_all.pages.todos.task_modal import TaskModal
 from make_it_all.pages.todos.task_status import TaskStatus, parse_task_status, task_status_options
 
-TASKS_FILE = DATA_DIR / "tasks.json"
 
 class ProjectTodoPage(BasePage):
     to_Todo = Signal()
@@ -107,10 +105,7 @@ class ProjectTodoPage(BasePage):
         self.setLayout(self.layout)
 
     def load_tasks(self):
-        try:
-            self.tasks = read_json(TASKS_FILE)
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.tasks = []
+        self.tasks = load_tasks()
 
     def populate_content(self):
         self.project_tasks = [t for t in self.tasks if t.get("type", "project") == "project"]
@@ -239,7 +234,7 @@ class ProjectTodoPage(BasePage):
         dialog.exec()
 
         if dialog.action_result == "save":
-            write_json(TASKS_FILE, self.tasks)
+            save_tasks(self.tasks)
             self.load_tasks()
             self.populate_content()
         elif dialog.action_result == "delete":
@@ -249,7 +244,7 @@ class ProjectTodoPage(BasePage):
             if confirm == QMessageBox.Yes:
                 if task in self.tasks:
                     self.tasks.remove(task)
-                    write_json(TASKS_FILE, self.tasks)
+                    save_tasks(self.tasks)
                     self.load_tasks()
                     self.populate_content()
 
@@ -284,17 +279,17 @@ class ProjectTodoPage(BasePage):
         else:
             task["completion_date"] = ""
 
-        write_json(TASKS_FILE, self.tasks)
+        save_tasks(self.tasks)
         self.load_tasks()
         self.populate_content()
 
     def handle_actual_time(self, task, value):
         task["actual_time"] = str(value)
-        write_json(TASKS_FILE, self.tasks)
+        save_tasks(self.tasks)
 
     def add_project_modal(self):
         current_user_name = self.get_current_user()
-        # Creates new task in .json.
+        # Create a new project task.
         new_project_task = {
             "task_name": "",
             "project_name": "",
@@ -319,6 +314,6 @@ class ProjectTodoPage(BasePage):
                 return
             
             self.tasks.append(new_project_task)
-            write_json(TASKS_FILE, self.tasks)
+            save_tasks(self.tasks)
             self.load_tasks()
             self.populate_content()

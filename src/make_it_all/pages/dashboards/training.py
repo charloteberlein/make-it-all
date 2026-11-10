@@ -9,10 +9,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from make_it_all.helpers import DATA_DIR
+from make_it_all.data.posts import PostContent
+from make_it_all.data.topics import TopicContent
 from make_it_all.pages.base_page import BasePage
-from make_it_all.pages.posts.post_content import PostContent
-from make_it_all.pages.topics.topic_content import TopicContent
 
 
 class TrainingPage(BasePage):
@@ -72,7 +71,7 @@ class TrainingPage(BasePage):
         self.refresh_recommendations()
 
     def refresh_recommendations(self) -> None:
-        posts = PostContent.load_posts(DATA_DIR / "posts.json")
+        posts = PostContent.load_posts()
         sorted_posts = sorted(posts, key = lambda posts: int(posts.upvote_count), reverse=True)
 
         # Clear existing cards.

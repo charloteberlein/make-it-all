@@ -1,6 +1,4 @@
-import json
-
-from PySide6.QtCharts import QBarCategoryAxis, QBarSeries, QBarSet, QChart, QChartView, QValueAxis  # type: ignore
+from PySide6.QtCharts import QBarCategoryAxis, QBarSeries, QBarSet, QChart, QChartView, QValueAxis
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QDialog,
@@ -15,7 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from make_it_all.helpers import read_json
+from make_it_all.data.tasks import load_tasks
 from make_it_all.pages.base_page import BasePage
 from make_it_all.pages.todos.task_analytics import (
     calc_emp_hours_summary,
@@ -26,9 +24,6 @@ from make_it_all.pages.todos.task_analytics import (
     get_emp_tasks,
 )
 from make_it_all.pages.todos.task_status import TaskStatus
-from make_it_all.helpers import DATA_DIR
-
-TASKS_FILE = DATA_DIR / "tasks.json"
 
 
 class ClickableChartView(QChartView):
@@ -138,10 +133,7 @@ class DashboardPage(BasePage):
         self.setLayout(self.layout)
 
     def load_tasks(self):
-        try:
-            self.tasks = read_json(TASKS_FILE)
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.tasks = []
+        self.tasks = load_tasks()
 
     def populate_content(self):
         while self.progress_layout.count():
@@ -165,8 +157,8 @@ class DashboardPage(BasePage):
         else:
             self.title_label.setText("Dashboard")
 
-        all_percentages = calc_project_completion_percentages(TASKS_FILE)
-        emp_data = get_emp_tasks(TASKS_FILE)
+        all_percentages = calc_project_completion_percentages(self.tasks)
+        emp_data = get_emp_tasks(self.tasks)
         user_projects = set()
 
         if user_name in emp_data:
@@ -218,13 +210,13 @@ class DashboardPage(BasePage):
         self.chart_layout.addWidget(
             self._create_status_chart(
                 "Tasks by Project",
-                calc_project_task_status_counts(TASKS_FILE, user_name if is_employee else None),
+                calc_project_task_status_counts(self.tasks, user_name if is_employee else None),
             ), 1,
         )
         self.chart_layout.addWidget(
             self._create_status_chart(
                 "Tasks by Employee",
-                calc_employee_task_status_counts(TASKS_FILE, user_name if is_employee else None),
+                calc_employee_task_status_counts(self.tasks, user_name if is_employee else None),
             ), 1,
         )
 
@@ -302,11 +294,11 @@ class DashboardPage(BasePage):
         return chart_view
 
     def _create_project_efficiency_chart(self, clickable=True, filter_user=None):
-        data = calc_project_hours(TASKS_FILE)
+        data = calc_project_hours(self.tasks)
         project_details = data.get("details", {})
 
         if filter_user:
-            emp_data = get_emp_tasks(TASKS_FILE)
+            emp_data = get_emp_tasks(self.tasks)
             user_projects = set()
             if filter_user in emp_data:
                 user_tasks = emp_data[filter_user]["completed"] + emp_data[filter_user]["active"]
@@ -368,7 +360,7 @@ class DashboardPage(BasePage):
         return chart_view
 
     def _create_employee_hours_chart(self, clickable=True, filter_user=None):
-        emp_data = calc_emp_hours_summary(TASKS_FILE)
+        emp_data = calc_emp_hours_summary(self.tasks)
 
         if filter_user:
             emp_data = {emp: metrics for emp, metrics in emp_data.items() if emp.lower() == filter_user.lower()}

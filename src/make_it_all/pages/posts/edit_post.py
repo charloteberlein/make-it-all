@@ -11,10 +11,9 @@ from PySide6.QtWidgets import (
     QToolBar,
 )
 
-from make_it_all.helpers import DATA_DIR, write_json
+from make_it_all.data.posts import PostContent
+from make_it_all.data.topics import TopicContent
 from make_it_all.pages.base_page import BasePage
-from make_it_all.pages.posts.post_content import PostContent
-from make_it_all.pages.topics.topic_content import TopicContent
 
 
 class EditPostPage(BasePage):
@@ -147,9 +146,8 @@ class EditPostPage(BasePage):
         
         self.setLayout(self.layout)
 
-    def save_post_to_json(self) -> None:
-        """Modifies a post in the `posts.json` file."""
-        posts = PostContent.load_posts(DATA_DIR / "posts.json")
+    def save_post(self) -> None:
+        posts = PostContent.load_posts()
         post = next(post for post in posts if post.id == self.post.id)
         initial_topic_id = post.topic
         post.title = self.title_input.text()
@@ -158,9 +156,7 @@ class EditPostPage(BasePage):
         )
         post.content = self.content.document().toHtml()
 
-        write_json(
-            DATA_DIR / "posts.json", {"posts": [post.serialise() for post in posts]},
-        )
+        PostContent.save_posts(posts)
         if post.topic != initial_topic_id:
             TopicContent.remove_topic_if_empty(initial_topic_id)
 

@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from make_it_all.helpers import DATA_DIR, read_json, write_json
+from make_it_all.data.json_store import DATA_DIR, read_json, write_json
 
 USERS_JSON_PATH = DATA_DIR / "users.json"
 

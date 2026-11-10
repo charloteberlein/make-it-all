@@ -9,6 +9,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from make_it_all.data.posts import PostContent
+from make_it_all.data.topics import TopicContent
 from make_it_all.helpers import ASSETS_DIR
 from make_it_all.pages.account.forgotpassword import ForgotPasswordPage
 from make_it_all.pages.account.my_account import MyAccountPage
@@ -20,14 +22,12 @@ from make_it_all.pages.header import Header
 from make_it_all.pages.page_index import PageIndex
 from make_it_all.pages.posts.edit_post import EditPostPage
 from make_it_all.pages.posts.make_post import MakePostPage
-from make_it_all.pages.posts.post_content import PostContent
 from make_it_all.pages.posts.post_content_page import PostContentPage
 from make_it_all.pages.posts.posts_page import PostsPage
 from make_it_all.pages.sidebar import Sidebar
 from make_it_all.pages.todos.personal_todo_page import PersonalTodoPage
 from make_it_all.pages.todos.project_todo_page import ProjectTodoPage
 from make_it_all.pages.todos.todo import TodoPage
-from make_it_all.pages.topics.topic_content import TopicContent
 from make_it_all.pages.topics.topic_content_page import TopicContentPage
 from make_it_all.pages.topics.topics_page import TopicsPage
 
@@ -186,7 +186,7 @@ class MainWindow(QWidget):
     def save_and_exit_post_maker(self):
         if self.make_post_page.check_post_valid():
             user_id = self.current_user.id if self.current_user else None
-            self.make_post_page.save_post_to_json(created_by=user_id)
+            self.make_post_page.save_post(created_by=user_id)
             self.topics_page.refresh_topics()
             for (widget, id) in self.topics_page.widgets:
                 widget.clicked.connect(
@@ -196,7 +196,7 @@ class MainWindow(QWidget):
 
     def save_and_exit_post_editor(self, post_id: str):
         if self.edit_post_page.check_post_valid():
-            self.edit_post_page.save_post_to_json()
+            self.edit_post_page.save_post()
             self.topics_page.refresh_topics()
             for (widget, id) in self.topics_page.widgets:
                 widget.clicked.connect(

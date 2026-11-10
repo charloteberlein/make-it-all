@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from make_it_all.helpers import DATA_DIR, generate_id, read_json, write_json
-from make_it_all.pages.posts.post_content import PostContent
+from make_it_all.data.json_store import DATA_DIR, read_json, write_json
+from make_it_all.data.posts import PostContent
+from make_it_all.helpers import generate_id
 
 
 @dataclass

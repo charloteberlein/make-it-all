@@ -1,7 +1,11 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout
 
-from make_it_all.pages.account.user import *
+from make_it_all.data.users import (
+    create_user_account,
+    find_user,
+    validate_registration_inputs,
+)
 from make_it_all.pages.base_page import BasePage
 
 

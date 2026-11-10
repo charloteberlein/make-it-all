@@ -1,10 +1,10 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 
-from make_it_all.pages.account.user import get_user_by_id
+from make_it_all.data.posts import PostContent
+from make_it_all.data.topics import TopicContent
+from make_it_all.data.users import get_user_by_id
 from make_it_all.pages.base_page import BasePage
-from make_it_all.pages.posts.post_content import PostContent
-from make_it_all.pages.topics.topic_content import TopicContent
 from make_it_all.pages.topics.topic_content_page import TopicFrame
 
 

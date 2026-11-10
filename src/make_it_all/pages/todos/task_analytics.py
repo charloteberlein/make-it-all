@@ -1,13 +1,10 @@
 from collections import defaultdict
 from datetime import date, datetime
 
-from make_it_all.helpers import DATA_DIR, read_json
 from make_it_all.pages.todos.task_status import TaskStatus, parse_task_status
 
-TASKS_FILE = DATA_DIR / "tasks.json"
 
-def _project_tasks(tasks_file):
-    tasks = read_json(tasks_file)
+def _project_tasks(tasks):
     return [task for task in tasks if task.get("type", "project") == "project"]
 
 def _involved_in_task(task, user_name):
@@ -19,9 +16,9 @@ def _involved_in_task(task, user_name):
     assignees = task.get("assignees", "")
     return user_name in assignees.split(", ")
 
-def calc_project_completion_percentages(TASKS_FILE):
+def calc_project_completion_percentages(tasks):
     """Calculates percentage progress for each project depending on number of 'completed' tasks."""
-    project_tasks = _project_tasks(TASKS_FILE)
+    project_tasks = _project_tasks(tasks)
     project_stats = defaultdict(lambda: {"total": 0, "completed": 0}) # Initialise
 
     for task in project_tasks:
@@ -40,7 +37,7 @@ def calc_project_completion_percentages(TASKS_FILE):
         percentages[project] = {"percentage": round(percent, 1), "completed": completed, "total": total}
     return percentages
 
-def calc_project_task_status_counts(TASKS_FILE, user_name=None):
+def calc_project_task_status_counts(tasks, user_name=None):
     """Counts awaiting-info, in-progress, and completed project tasks by project."""
     project_counts = defaultdict(lambda: {
         TaskStatus.AWAITING_INFO: 0,
@@ -48,7 +45,7 @@ def calc_project_task_status_counts(TASKS_FILE, user_name=None):
         TaskStatus.COMPLETED: 0,
     })
 
-    for task in _project_tasks(TASKS_FILE):
+    for task in _project_tasks(tasks):
         if not _involved_in_task(task, user_name):
             continue
 
@@ -59,7 +56,7 @@ def calc_project_task_status_counts(TASKS_FILE, user_name=None):
 
     return dict(project_counts)
 
-def calc_employee_task_status_counts(TASKS_FILE, user_name=None):
+def calc_employee_task_status_counts(tasks, user_name=None):
     """Counts each employee's assigned project tasks by status."""
     employee_counts = defaultdict(lambda: {
         TaskStatus.AWAITING_INFO: 0,
@@ -67,7 +64,7 @@ def calc_employee_task_status_counts(TASKS_FILE, user_name=None):
         TaskStatus.COMPLETED: 0,
     })
 
-    for task in _project_tasks(TASKS_FILE):
+    for task in _project_tasks(tasks):
         if not _involved_in_task(task, user_name):
             continue
 
@@ -85,9 +82,9 @@ def calc_employee_task_status_counts(TASKS_FILE, user_name=None):
 
     return dict(employee_counts)
 
-def get_emp_tasks(TASKS_FILE):
+def get_emp_tasks(tasks):
     """ Gathers all the current tasks each employee is working on. """
-    project_tasks = _project_tasks(TASKS_FILE)
+    project_tasks = _project_tasks(tasks)
     emp_data = defaultdict(lambda: {"completed": [], "active": []})
 
     for task in project_tasks:
@@ -137,9 +134,9 @@ def calc_task_completion_times(task):
         
     return None
 
-def calc_project_hours(TASKS_FILE):
+def calc_project_hours(tasks):
     """ Calculates the efficiency of each project, using estimated and actual amount of time. """
-    project_tasks = _project_tasks(TASKS_FILE)
+    project_tasks = _project_tasks(tasks)
     project_hours = defaultdict(lambda: {"total_estimated": 0.0, "total_actual": 0.0})
 
     for task in project_tasks:
@@ -197,8 +194,8 @@ def calc_project_hours(TASKS_FILE):
     }
 
 
-def calc_emp_hours_summary(TASKS_FILE):
-    project_tasks = _project_tasks(TASKS_FILE)
+def calc_emp_hours_summary(tasks):
+    project_tasks = _project_tasks(tasks)
     emp_hours = defaultdict(lambda: {"total_estimated": 0.0, "total_actual": 0.0})
 
     for task in project_tasks:
