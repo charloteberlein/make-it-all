@@ -18,33 +18,28 @@
     *   **Rich formatting:** Posts support formatted text and custom styling to keep communications informative, clean, and easy to read.
 
 *   **Data & System Design**
-    *   **JSON data storage:** Simple local .JSON files act as the database to hold and update posts, topics, tasks, and user data.
+    *   **Separated data access:** UI pages use the `make_it_all.data` package to load and save application data.
 
 ## Repository structure
 ```
 ├── assets/
-│   ├── mock_data/
-│   │    ├── posts.json
-│   │    ├── tasks.json
-│   │    ├── topics.json
-│   │    └── users.json
 │   └── styles/
 │        ├── dark.qss          # Dark theme stylesheet
 │        └── light.qss         # Light theme stylesheet
+├── data/                      # Local JSON-backed application data
+│   ├── posts.json
+│   ├── tasks.json
+│   ├── topics.json
+│   └── users.json
 ├── src/
-│   ├── pages/
-│   │   ├── account/           # signin, register, forgotpassword, my_account, user
-│   │   ├── dashboards/        # dashboard, training
-│   │   ├── posts/             # edit_post, make_post, make_content_page, post_content, posts_page
-│   │   ├── todos/             # personal_todo, project-todo, task_analytics, task_modal, task_status, todo
-│   │   ├── topics/            # topics_content_page, topic_content, topic_page
-│   │   ├── base_page.py
-│   │   ├── header.py
-│   │   ├── page_index.py
-│   │   └── sidebar.py
-│   ├── app.py                 # Main entry point
-│   ├── helpers.py             # Reads and writes to .JSON files
-│   └── notifications.py       # Creates notification used in header.py
+│   └── make_it_all/           # Importable application package
+│       ├── data/              # Data storage and handlers
+│       ├── pages/             # PySide6 UI
+│       ├── app.py
+│       └── helpers.py         # Shared non-data utilities
+├── tests/                     # Pytest
+├── pyproject.toml             # Package metadata and dev tools
+├── requirements.txt
 └── README.md
 ```
 
@@ -71,22 +66,38 @@
    ```
 3. **Install dependencies:**
    ```bash
-   pip install -r requirements.txt
+   pip install -e ".[dev]"
    ```
 
-## Running the Application
-Once the virtual environment is active and the dependencies are installed, launch the application from the root directory using:
-``` bash
-python src/app.py
+## Before opening a pull request
+From the repository root, run the linter and then the test suite:
+```bash
+ruff format .
+ruff check . --fix
+pytest
 ```
+Resolve any failures before opening your pull request.
+
+## Running the Application
+Once the virtual environment is active and the package is installed, launch it using:
+``` bash
+python -m make_it_all
+```
+The `make-it-all` command is also available after installation. Development helpers are installed
+with the `dev` extra.
 
 ## Authors & Acknowledgements
 ### Team Members
 Charlot Eberlein
+
 Yasmin Ahrabi
+
 Kei Mann
+
 Eleanor Cooke
+
 Juliette Crossman
+
 Elizabeth Watson
 
 ### Tech Stack

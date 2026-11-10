@@ -1,4 +1,6 @@
 # Python bytecode and caches
 __pycache__/
+*.egg-info/
 .*
 !.gitignore
+!.gitkeep
