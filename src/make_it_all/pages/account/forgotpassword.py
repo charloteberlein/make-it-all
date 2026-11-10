@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout
 
-from make_it_all.data.users import (
+from make_it_all.data.user import (
     add_user_password,
     find_user,
     validate_reset_password,

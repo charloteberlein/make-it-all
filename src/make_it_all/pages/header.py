@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QMenu, QPushButton
 
 from make_it_all.data.notifications import get_notifications, mark_all_read
-from make_it_all.data.users import User
+from make_it_all.data.user import User
 
 
 class Header(QFrame):

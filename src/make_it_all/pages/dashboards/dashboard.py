@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from make_it_all.data.tasks import load_tasks
-from make_it_all.data.users import User
+from make_it_all.data.user import User
 from make_it_all.pages.base_page import BasePage
 from make_it_all.pages.todos.task_analytics import (
     calc_emp_hours_summary,

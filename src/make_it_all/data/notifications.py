@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 
 from make_it_all.data.tasks import load_tasks
-from make_it_all.data.users import User
+from make_it_all.data.user import User
 
 DUE_SOON_DAYS = 3
 
