@@ -69,13 +69,22 @@
    pip install -e ".[dev]"
    ```
 
+## Before opening a pull request
+From the repository root, run the linter and then the test suite:
+```bash
+ruff format .
+ruff check . --fix
+pytest
+```
+Resolve any failures before opening your pull request.
+
 ## Running the Application
 Once the virtual environment is active and the package is installed, launch it using:
 ``` bash
 python -m make_it_all
 ```
 The `make-it-all` command is also available after installation. Development helpers are installed
-with the `dev` extra. Once tests are added, run them with `pytest` and check style with `ruff check .`.
+with the `dev` extra.
 
 ## Authors & Acknowledgements
 ### Team Members
